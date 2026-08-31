@@ -1,0 +1,303 @@
+{
+  "analysis": "cruxeval_to_re2_calibration_transport_v1",
+  "bootstrap_seed": 20260819,
+  "bootstraps": 5000,
+  "correctness_contract_note": "CRUXEval uses relaxed Python value equivalence; RE2 uses safe compatibility system success, so the transport target intentionally includes benchmark ecology.",
+  "information_conditions": {
+    "code_aware": {
+      "cruxeval_operational_confidence_failures": 5,
+      "held_out_re2_test": {
+        "cruxeval_full_uncorrected": {
+          "accuracy": 0.456,
+          "auroc": 0.7589331785345718,
+          "baseline_brier_score": 0.24812800000000004,
+          "baseline_probability": 0.448,
+          "brier_score": 0.298796299850322,
+          "brier_skill_score": -0.2042022659688627,
+          "calibration_gap": 0.2895081719789841,
+          "correct": 114,
+          "ece_equal_mass_5": 0.2895081719789841,
+          "log_loss": 0.8421782223593657,
+          "mean_confidence": 0.7455081719789841,
+          "n": 250
+        },
+        "cruxeval_slope_re2_intercept": {
+          "accuracy": 0.456,
+          "auroc": 0.7589331785345718,
+          "baseline_brier_score": 0.24812800000000004,
+          "baseline_probability": 0.448,
+          "brier_score": 0.2037649972799329,
+          "brier_skill_score": 0.17879079636343786,
+          "calibration_gap": -0.01228298965124408,
+          "correct": 114,
+          "ece_equal_mass_5": 0.05129558402339571,
+          "log_loss": 0.6025476350257446,
+          "mean_confidence": 0.44371701034875594,
+          "n": 250
+        },
+        "raw": {
+          "accuracy": 0.456,
+          "auroc": 0.7589331785345718,
+          "baseline_brier_score": 0.24812800000000004,
+          "baseline_probability": 0.448,
+          "brier_score": 0.32943920000000004,
+          "brier_skill_score": -0.3276986071704926,
+          "calibration_gap": 0.26624,
+          "correct": 114,
+          "ece_equal_mass_5": 0.33272000000000007,
+          "log_loss": 1.8594779782939066,
+          "mean_confidence": 0.72224,
+          "n": 250
+        },
+        "re2_full_refit": {
+          "accuracy": 0.456,
+          "auroc": 0.7589331785345718,
+          "baseline_brier_score": 0.24812800000000004,
+          "baseline_probability": 0.448,
+          "brier_score": 0.2044154728407272,
+          "brier_skill_score": 0.17616926408657163,
+          "calibration_gap": -0.014673154425361767,
+          "correct": 114,
+          "ece_equal_mass_5": 0.05765095951268241,
+          "log_loss": 0.6168659062760218,
+          "mean_confidence": 0.44132684557463825,
+          "n": 250
+        }
+      },
+      "re2_operational_confidence_failures": 8,
+      "residual_slope_penalty": {
+        "brier_difference_95_ci": [
+          -0.00742581638610018,
+          0.004974442527313335
+        ],
+        "brier_difference_point": -0.0006504755607942836,
+        "definition": "source-slope plus target-intercept loss minus target-refit loss; positive values favor refitting the slope",
+        "log_loss_difference_95_ci": [
+          -0.07444887862703808,
+          0.01686628897023621
+        ],
+        "log_loss_difference_point": -0.014318271250277181,
+        "resampling": "Independently resample source calibration, target calibration, and target test items, then refit every calibration model in each bootstrap replicate.",
+        "target_minus_source_slope_95_ci": [
+          -0.07400943049160277,
+          0.25600177567970556
+        ]
+      },
+      "slope_likelihood_ratio": {
+        "null": "RE2 calibration slope equals the CRUXEval calibration slope",
+        "p_value": 0.10956005027678989,
+        "statistic": 2.5605559362439863
+      },
+      "source_calibration_n": 400,
+      "source_calibration_prevalence": 0.8875,
+      "source_cruxeval_test": {
+        "raw": {
+          "accuracy": 0.8875,
+          "auroc": 0.8900782472613459,
+          "baseline_brier_score": 0.09984375,
+          "baseline_probability": 0.8875,
+          "brier_score": 0.052490249999999995,
+          "brier_skill_score": 0.47427605633802816,
+          "calibration_gap": 0.009175000000000044,
+          "correct": 355,
+          "ece_equal_mass_5": 0.01947500000000002,
+          "log_loss": 0.733287631310259,
+          "mean_confidence": 0.896675,
+          "n": 400
+        },
+        "source_calibrated": {
+          "accuracy": 0.8875,
+          "auroc": 0.8900782472613459,
+          "baseline_brier_score": 0.09984375,
+          "baseline_probability": 0.8875,
+          "brier_score": 0.05326594971095273,
+          "brier_skill_score": 0.46650691995289906,
+          "calibration_gap": -0.02387322585892604,
+          "correct": 355,
+          "ece_equal_mass_5": 0.04131954550938832,
+          "log_loss": 0.20911099371908512,
+          "mean_confidence": 0.8636267741410739,
+          "n": 400
+        }
+      },
+      "source_full_model": {
+        "intercept": 0.6881229743170464,
+        "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "negative_log_likelihood": 104.86039779441114,
+        "slope": 0.3014927877664476,
+        "slope_fixed": false,
+        "success": true
+      },
+      "source_slope_target_intercept_model": {
+        "intercept": -0.964530109758304,
+        "message": "Solution found.",
+        "negative_log_likelihood": 128.42422145228707,
+        "slope": 0.3014927877664476,
+        "slope_fixed": true,
+        "success": true
+      },
+      "source_test_n": 400,
+      "target_calibration_n": 250,
+      "target_calibration_prevalence": 0.448,
+      "target_full_model": {
+        "intercept": -1.1933982943564891,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "negative_log_likelihood": 127.14394348416508,
+        "slope": 0.3846712266779931,
+        "slope_fixed": false,
+        "success": true
+      },
+      "target_test_n": 250,
+      "target_test_prevalence": 0.456
+    },
+    "response_only": {
+      "cruxeval_operational_confidence_failures": 0,
+      "held_out_re2_test": {
+        "cruxeval_full_uncorrected": {
+          "accuracy": 0.456,
+          "auroc": 0.550374097007224,
+          "baseline_brier_score": 0.24812800000000004,
+          "baseline_probability": 0.448,
+          "brier_score": 0.4152973452702522,
+          "brier_skill_score": -0.6737222130120426,
+          "calibration_gap": 0.4103849428688195,
+          "correct": 114,
+          "ece_equal_mass_5": 0.41038494286881955,
+          "log_loss": 1.181468178882701,
+          "mean_confidence": 0.8663849428688195,
+          "n": 250
+        },
+        "cruxeval_slope_re2_intercept": {
+          "accuracy": 0.456,
+          "auroc": 0.550374097007224,
+          "baseline_brier_score": 0.24812800000000004,
+          "baseline_probability": 0.448,
+          "brier_score": 0.2473354733412904,
+          "brier_skill_score": 0.0031940234826768332,
+          "calibration_gap": -0.016780321213115124,
+          "correct": 114,
+          "ece_equal_mass_5": 0.0651754984960647,
+          "log_loss": 0.6898543232276535,
+          "mean_confidence": 0.4392196787868849,
+          "n": 250
+        },
+        "raw": {
+          "accuracy": 0.456,
+          "auroc": 0.550374097007224,
+          "baseline_brier_score": 0.24812800000000004,
+          "baseline_probability": 0.448,
+          "brier_score": 0.3623536,
+          "brier_skill_score": -0.4603494970337887,
+          "calibration_gap": -0.34216,
+          "correct": 114,
+          "ece_equal_mass_5": 0.34216,
+          "log_loss": 1.3519726800380498,
+          "mean_confidence": 0.11384,
+          "n": 250
+        },
+        "re2_full_refit": {
+          "accuracy": 0.456,
+          "auroc": 0.550374097007224,
+          "baseline_brier_score": 0.24812800000000004,
+          "baseline_probability": 0.448,
+          "brier_score": 0.24557333833846837,
+          "brier_skill_score": 0.01029574115590215,
+          "calibration_gap": -0.010929583787629316,
+          "correct": 114,
+          "ece_equal_mass_5": 0.0350723410545756,
+          "log_loss": 0.6842652604336392,
+          "mean_confidence": 0.4450704162123707,
+          "n": 250
+        }
+      },
+      "re2_operational_confidence_failures": 0,
+      "residual_slope_penalty": {
+        "brier_difference_95_ci": [
+          -0.012625749047566878,
+          0.0211124836124829
+        ],
+        "brier_difference_point": 0.0017621350028220462,
+        "definition": "source-slope plus target-intercept loss minus target-refit loss; positive values favor refitting the slope",
+        "log_loss_difference_95_ci": [
+          -0.02526062807946559,
+          0.06131165390146643
+        ],
+        "log_loss_difference_point": 0.005589062794014277,
+        "resampling": "Independently resample source calibration, target calibration, and target test items, then refit every calibration model in each bootstrap replicate.",
+        "target_minus_source_slope_95_ci": [
+          -0.6239204159653137,
+          0.09841889190501833
+        ]
+      },
+      "slope_likelihood_ratio": {
+        "null": "RE2 calibration slope equals the CRUXEval calibration slope",
+        "p_value": 0.01457290072216644,
+        "statistic": 5.967382010269432
+      },
+      "source_calibration_n": 400,
+      "source_calibration_prevalence": 0.8875,
+      "source_cruxeval_test": {
+        "raw": {
+          "accuracy": 0.8875,
+          "auroc": 0.614866979655712,
+          "baseline_brier_score": 0.09984375,
+          "baseline_probability": 0.8875,
+          "brier_score": 0.6657342499999999,
+          "brier_skill_score": -5.667760876369326,
+          "calibration_gap": -0.746525,
+          "correct": 355,
+          "ece_equal_mass_5": 0.7465250000000001,
+          "log_loss": 2.1287126781053263,
+          "mean_confidence": 0.140975,
+          "n": 400
+        },
+        "source_calibrated": {
+          "accuracy": 0.8875,
+          "auroc": 0.614866979655712,
+          "baseline_brier_score": 0.09984375,
+          "baseline_probability": 0.8875,
+          "brier_score": 0.09693404036757698,
+          "brier_skill_score": 0.029142631686239873,
+          "calibration_gap": -0.004395297296556744,
+          "correct": 355,
+          "ece_equal_mass_5": 0.025034893713087092,
+          "log_loss": 0.3402126912829067,
+          "mean_confidence": 0.8831047027034432,
+          "n": 400
+        }
+      },
+      "source_full_model": {
+        "intercept": 2.8509806957868054,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "negative_log_likelihood": 137.53456805533176,
+        "slope": 0.33528503696526235,
+        "slope_fixed": false,
+        "success": true
+      },
+      "source_slope_target_intercept_model": {
+        "intercept": 0.6379194202561873,
+        "message": "Solution found.",
+        "negative_log_likelihood": 174.51963938125687,
+        "slope": 0.33528503696526235,
+        "slope_fixed": true,
+        "success": true
+      },
+      "source_test_n": 400,
+      "target_calibration_n": 250,
+      "target_calibration_prevalence": 0.448,
+      "target_full_model": {
+        "intercept": 0.015532522797913801,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "negative_log_likelihood": 171.53594837612215,
+        "slope": 0.08847543156506679,
+        "slope_fixed": false,
+        "success": true
+      },
+      "target_test_n": 250,
+      "target_test_prevalence": 0.456
+    }
+  },
+  "primary_setting": "GPT-5.4 Nano low source reasoning and low verifier reasoning in both benchmarks",
+  "split_freeze_path": "C:\\Users\\drndr\\Documents\\fse2027-andor\\research_design\\2026-08-19_re2_calibration_transfer_split.json",
+  "status": "prespecified_transport_family_with_split_frozen_before_computation"
+}

@@ -1,0 +1,36 @@
+{
+  "conditions": {
+    "low": {
+      "calibration_rows": 400,
+      "rows": 800,
+      "semantic_accuracy": 0.8875,
+      "test_rows": 400
+    },
+    "none": {
+      "calibration_rows": 400,
+      "rows": 800,
+      "semantic_accuracy": 0.48375,
+      "test_rows": 400
+    }
+  },
+  "control": "cruxeval_prediction_only_confidence_v1",
+  "information_shown": "Only the proposed output; program, input, and target are withheld.",
+  "output_paths": {
+    "low": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_prediction_only_confidence_low_v1.jsonl",
+    "none": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_prediction_only_confidence_none_v1.jsonl"
+  },
+  "output_sha256": {
+    "low": "4f7bc9c6596a68c11f85e6aa5985492dd58fa9ee2718813803e575b5514062ba",
+    "none": "1e8c09bab9e1c380478f2ce49dea0e967c484e567a23f12148a606d9cb11f9b0"
+  },
+  "pairing": "IDs, source predictions, semantic-correctness labels, source reasoning conditions, and calibration/test splits are copied unchanged from the code-aware pilot.",
+  "purpose": "Negative control for whether reflective confidence derives from code-aware verification or from the proposed output's surface form and condition base rate.",
+  "source_paths": {
+    "low": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_reflective_confidence_low_v1.jsonl",
+    "none": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_reflective_confidence_none_v1.jsonl"
+  },
+  "source_sha256": {
+    "low": "a13c80ef2bb12d3b6074a962db430561662e665210d096d884c0c29919efd377",
+    "none": "b0f0513c1b728966dd003339001a3c078fdced877b4ddfe015e348c8a96437ba"
+  }
+}

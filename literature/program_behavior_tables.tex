@@ -1,0 +1,466 @@
+\begin{table*}[t]
+\centering
+\caption{
+Program-behavior prediction studies included in our literature review.
+}
+\label{tab:program_behavior_literature}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+
+\begin{tabularx}{\textwidth}{
+    @{}
+    p{0.24\textwidth}
+    p{0.12\textwidth}
+    p{0.04\textwidth}
+    X
+    @{}
+}
+\toprule
+Study & Venue & Year & Separating characteristic \\
+\midrule
+\multicolumn{4}{@{}l}{
+    \textit{Core studies}
+} \\
+\addlinespace[0.3em]
+CRUXEval~\cite{pmlr-v235-gu24c}
+& ICML & 2024
+& Establishes input and output prediction over short Python functions. \\
+
+REval~\cite{chen2025reasoning}
+& ICSE & 2025
+& Evaluates execution paths, intermediate states, final outputs, and consistency across these dependent tasks. \\
+
+CRUXEval-X~\cite{xu2025cruxeval}
+& ACL & 2025
+& Extends CruxEval to 19 programming languages. \\
+
+ExeRScope~\cite{liu2025tool}
+& FSE Companion & 2025
+& Relates output-prediction performance to static and dynamic program properties. \\
+
+ThrowBench~\cite{prenner2025throwbench}
+& arXiv & 2025
+& Predicts runtime-exception occurrence and type in four languages. \\
+
+Semantic Mutations~\cite{orvalho2025large}
+& arXiv & 2025
+& Tests output-prediction robustness under semantics-preserving transformations. \\
+
+RE2-Bench~\cite{liu2025evaluating}
+& arXiv & 2025
+& Contrasts simple benchmark programs with more complex project-derived code. \\
+
+Demystifying~\cite{abdollahi2025demystifying}
+& TOSEM & 2026
+& Develops a human-coded taxonomy of errors in explicit execution traces. \\
+
+Debugging CWM~\cite{rahmani2026debugging}
+& ICLR workshop & 2026
+& Separates token-level parsing errors from long-horizon state-tracking failures and studies their relation to inference budget. \\
+
+CodeGlance~\cite{wang2026codeglance}
+& ICPC & 2026
+& Analyzes output-prediction difficulty using multidimensional code features. \\
+
+CoRE~\cite{gao2026core}
+& Findings of ACL & 2026
+& Tests intermediate-state correctness across equivalent implementations. \\
+
+RepoReasoner~\cite{wang2026reporeasoner}
+& FSE & 2026
+& Evaluates cross-file output and call-chain prediction under different context regimes. \\
+
+CodeSense~\cite{roy2026codesense}
+& ICLR & 2026
+& Derives fine-grained semantic prediction tasks from execution traces of real Python, C, and Java projects. \\
+
+CodeCrash~\cite{lam2026codecrash}
+& NeurIPS & 2025
+& Stress-tests input and output prediction under structural perturbations and misleading natural-language cues. \\
+
+CodeMind~\cite{liu2024codemind}
+& TSE & 2026
+& Separates execution, specification, and dynamic-semantics reasoning. \\
+
+Robust Semantics~\cite{spiess2026robustly}
+& AIware & 2026
+& CruxEval robustness across input perturbations, equivalent program transformations, exceptions, execution-path decisions, and prompt changes. \\
+
+DexBench~\cite{hasanov2026path}
+& ACL & 2026
+& Evaluates statement-coverage prediction and branch-targeted input mutation on paired execution paths. \\
+
+\midrule
+
+\multicolumn{4}{@{}l}{
+    \textit{Adjacent studies}
+} \\
+\addlinespace[0.3em]
+
+TestChain~\cite{li2024large}
+& arXiv & 2024
+& Separates test-input and test-output generation and uses interpreter-assisted ReAct reasoning to compute expected outputs. \\
+
+DuET~\cite{han2026duet}
+& Findings of ACL & 2026
+& Combines executable-code and LLM-based pseudocode execution for test-output prediction. \\
+
+LiveCodeBench~\cite{jain2025livecodebench}
+& ICLR & 2025
+& Continuously refreshes evaluation across code generation, repair, code execution, and test-output prediction. \\
+
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{
+Concept matrix for closely related studies of program-behavior prediction.
+}
+\label{tab:program_behavior_concept_matrix}
+\scriptsize
+\setlength{\tabcolsep}{2.8pt}
+\renewcommand{\arraystretch}{1.15}
+
+\newcommand{\centralcov}{\(\bullet\)}
+\newcommand{\secondarycov}{\(\circ\)}
+
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{@{}l*{11}{c}@{}}
+\toprule
+&
+\shortstack{Final\\behavior}
+&
+\shortstack{Intermediate\\behavior}
+&
+\shortstack{CoT/reasoning\\used}
+&
+\shortstack{Reasoning\\analyzed}
+&
+\shortstack{Program\\properties}
+&
+\shortstack{Controlled\\variation}
+&
+\shortstack{Multi-\\lingual}
+&
+\shortstack{Synthetic/\\isolated code}
+&
+\shortstack{Real/\\repository code}
+&
+\shortstack{Inference\\configuration}
+&
+\shortstack{Replication/\\uncertainty}
+\\
+\midrule
+
+\multicolumn{4}{@{}l}{
+    \textit{Core studies}
+} \\
+\addlinespace[0.3em]
+
+CRUXEval~\cite{pmlr-v235-gu24c}
+& \centralcov
+&
+& \secondarycov
+& \secondarycov
+&
+&
+&
+& \centralcov
+&
+& \centralcov
+& \centralcov
+\\
+
+REval~\cite{chen2025reasoning}
+& \centralcov
+& \centralcov
+& \secondarycov
+&
+&
+&
+&
+& \centralcov
+&
+& \secondarycov
+& \secondarycov
+\\
+
+CRUXEval-X~\cite{xu2025cruxeval}
+& \centralcov
+&
+&
+&
+&
+&
+& \centralcov
+& \centralcov
+&
+&
+&
+\\
+
+ExeRScope~\cite{liu2025tool}
+& \centralcov
+&
+&
+&
+& \centralcov
+&
+&
+& \centralcov
+&
+&
+&
+\\
+
+ThrowBench~\cite{prenner2025throwbench}
+& \centralcov
+&
+&
+&
+& \secondarycov
+&
+& \centralcov
+& \centralcov
+&
+&
+&
+\\
+
+Semantic Mutations~\cite{orvalho2025large}
+& \centralcov
+&
+& \centralcov
+& \centralcov
+&
+& \centralcov
+&
+& \centralcov
+&
+& \secondarycov
+&
+\\
+
+RE2-Bench~\cite{liu2025evaluating}
+& \centralcov
+& \secondarycov
+& \centralcov
+& \centralcov
+& \centralcov
+&
+&
+& \centralcov
+& \centralcov
+& \secondarycov
+&
+\\
+
+Demystifying~\cite{abdollahi2025demystifying}
+& \centralcov
+&
+& \centralcov
+& \centralcov
+& \secondarycov
+& \secondarycov
+&
+& \centralcov
+&
+& \secondarycov
+&
+\\
+
+Debugging CWM~\cite{rahmani2026debugging}
+& \centralcov
+& \centralcov
+&
+&
+& \centralcov
+& \centralcov
+&
+& \centralcov
+&
+& \centralcov
+&
+\\
+
+CodeGlance~\cite{wang2026codeglance}
+& \centralcov
+&
+& \centralcov
+&
+& \centralcov
+&
+&
+& \centralcov
+& \secondarycov
+& \centralcov
+&
+\\
+
+CoRE~\cite{gao2026core}
+& \centralcov
+& \centralcov
+& \centralcov
+&
+&
+& \centralcov
+&
+& \centralcov
+&
+& \centralcov
+&
+\\
+
+RepoReasoner~\cite{wang2026reporeasoner}
+& \centralcov
+& \secondarycov
+& \secondarycov
+&
+& \secondarycov
+& \secondarycov
+&
+&
+& \centralcov
+& \centralcov
+&
+\\
+
+CodeSense~\cite{roy2026codesense}
+& \secondarycov    % Final behavior
+& \centralcov      % Intermediate behavior
+& \secondarycov    % CoT/reasoning used
+&                  % Generated reasoning analyzed
+& \centralcov      % Program properties
+&                  % Controlled variation
+& \centralcov      % Multilingual
+&                  % Synthetic/isolated code
+& \centralcov      % Project/repository code
+& \centralcov      % Inference configuration
+&                  % Replication/uncertainty
+\\
+
+CodeCrash~\cite{lam2026codecrash}
+& \centralcov      % Final behavior
+&                  % Intermediate behavior
+& \centralcov      % CoT/reasoning used
+& \secondarycov    % Generated reasoning analyzed
+& \secondarycov    % Program properties
+& \centralcov      % Controlled variation
+&                  % Multilingual
+& \centralcov      % Synthetic/isolated code
+&                  % Project/repository code
+& \centralcov      % Inference configuration
+&                  % Replication/uncertainty
+\\
+
+CodeMind~\cite{liu2024codemind}
+& \centralcov
+&
+& \centralcov
+& \centralcov
+& \centralcov
+&
+&
+& \centralcov
+&
+&
+&
+\\
+
+Robust Semantics~\cite{spiess2026robustly}
+& \centralcov      % Final behavior
+&                  % Intermediate behavior
+& \secondarycov    % CoT/reasoning used
+&                  % Generated reasoning analyzed
+& \centralcov      % Program properties
+& \centralcov      % Controlled variation
+&                  % Multilingual
+& \centralcov      % Synthetic/isolated code
+&                  % Project/repository code
+& \centralcov      % Inference configuration
+&                  % Replication/uncertainty
+\\
+
+DexBench~\cite{hasanov2026path}
+&
+& \centralcov
+& \centralcov
+& \secondarycov
+& \secondarycov
+& \centralcov
+&
+& \centralcov
+&
+& \secondarycov
+&
+\\
+
+\midrule
+
+\multicolumn{4}{@{}l}{
+    \textit{Adjacent studies}
+} \\
+\addlinespace[0.3em]
+
+TestChain~\cite{li2024large}
+& \centralcov      % Final behavior
+&                  % Intermediate behavior
+& \centralcov      % CoT/reasoning used
+&                  % Generated reasoning analyzed
+&                  % Program properties
+&                  % Controlled variation
+&                  % Multilingual
+& \centralcov      % Synthetic/isolated code
+&                  % Project/repository code
+& \centralcov      % Inference configuration
+&                  % Replication/uncertainty
+\\
+
+DuET~\cite{han2026duet}
+& \centralcov      % Final behavior
+&                  % Intermediate behavior
+& \centralcov      % CoT/reasoning used
+& \secondarycov    % Generated reasoning analyzed
+& \secondarycov    % Program properties
+&                  % Controlled program variation
+&                  % Multilingual
+& \centralcov      % Synthetic/isolated code
+& \secondarycov    % Project/repository code
+& \centralcov      % Inference configuration
+&                  % Replication/uncertainty
+\\
+
+LiveCodeBench~\cite{jain2025livecodebench}
+& \centralcov      % Final behavior
+&                  % Intermediate behavior
+& \secondarycov    % CoT/reasoning used
+&                  % Generated reasoning analyzed
+&                  % Program properties
+&                  % Controlled variation
+&                  % Multilingual
+& \centralcov      % Synthetic/isolated code
+&                  % Project/repository code
+& \secondarycov    % Inference configuration
+& \secondarycov    % Replication/uncertainty
+\\
+
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+
+\vspace{0.5em}
+\begin{minipage}{0.98\textwidth}
+\footnotesize
+\textit{Legend:}
+\centralcov\ = main focus;
+\secondarycov\ = limited focus;
+blank cell = not investigated..
+Inference configuration requires an explicit comparison involving prompting,
+reasoning strategy, context, tool use, or inference budget.
+Replication/uncertainty requires identical-condition replication or explicit
+uncertainty analysis.
+\end{minipage}
+\end{table*}

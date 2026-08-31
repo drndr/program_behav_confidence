@@ -1,0 +1,77 @@
+CRUXEval calibration internal-validity audit
+=============================================
+
+Paired complete cases: 795 (calibration=398, test=397).
+Primary correctness policy: semantic Python value equivalence.
+
+1. Signal within output types
+-----------------------------
+none: type-stratified AUROC=0.655 (95% CI 0.596-0.712; 10577 comparable correct/incorrect pairs).
+  Held-out metrics by output type (types with at least 20 items):
+     bool: n=23, accuracy=0.739, confidence=0.948, gap=0.209, AUROC=0.500
+     dict: n=30, accuracy=0.767, confidence=0.905, gap=0.139, AUROC=0.652
+      int: n=53, accuracy=0.585, confidence=0.804, gap=0.219, AUROC=0.570
+     list: n=98, accuracy=0.602, confidence=0.755, gap=0.153, AUROC=0.604
+      str: n=183, accuracy=0.322, confidence=0.715, gap=0.392, AUROC=0.680
+low: type-stratified AUROC=0.880 (95% CI 0.797-0.951; 5939 comparable correct/incorrect pairs).
+  Held-out metrics by output type (types with at least 20 items):
+     bool: n=23, accuracy=1.000, confidence=0.986, gap=-0.014, AUROC=NA
+     dict: n=30, accuracy=0.967, confidence=0.897, gap=-0.070, AUROC=0.931
+      int: n=53, accuracy=0.962, confidence=0.955, gap=-0.008, AUROC=1.000
+     list: n=98, accuracy=0.980, confidence=0.975, gap=-0.004, AUROC=1.000
+      str: n=183, accuracy=0.787, confidence=0.836, gap=0.049, AUROC=0.873
+
+2. Confidence after controlling for obvious item features
+---------------------------------------------------------
+none: n=395; OR per +10 confidence points=1.181 (95% Wald CI 1.107-1.260); LR p=7.12e-08.
+  Controls: output-type fixed effects, log code length, and log target length; excluded all-one-outcome types=['bytes'].
+low: n=364; OR per +10 confidence points=1.688 (95% Wald CI 1.473-1.934); LR p=3.8e-24.
+  Controls: output-type fixed effects, log code length, and log target length; excluded all-one-outcome types=['bool', 'bytes', 'tuple'].
+
+3. Sensitivity to scoring policy
+---------------------------------
+none: semantic accuracy=0.489, AUROC=0.644, Brier skill=-0.423; strict accuracy=0.383, AUROC=0.632, Brier skill=-0.862.
+  The scoring policy changes 42/397 held-out labels. Strict serialization was not the confidence prompt's target.
+low: semantic accuracy=0.889, AUROC=0.892, Brier skill=0.514; strict accuracy=0.526, AUROC=0.603, Brier skill=-0.536.
+  The scoring policy changes 144/397 held-out labels. Strict serialization was not the confidence prompt's target.
+
+4. Reasoning-token use
+----------------------
+none: source-token rho(confidence)=NA; reflection-token rho(confidence)=NA.
+  Source reasoning tokens, median correct/incorrect: 0.0/0.0; reflection reasoning tokens: 0.0/0.0.
+low: source-token rho(confidence)=0.006; reflection-token rho(confidence)=-0.155.
+  Source reasoning tokens, median correct/incorrect: 65.0/113.0; reflection reasoning tokens: 85.0/175.5.
+
+5. Extreme cases
+----------------
+none: 107 errors at confidence >=95%; 21 correct predictions at confidence <=50%.
+  High-confidence error target types: {'str': 57, 'list': 22, 'int': 15, 'bool': 5, 'dict': 4, 'tuple': 4}
+    sample_105 c=1.00 case_only_error: 'permission is granted' != "'Permission Is Granted'"
+    sample_130 c=1.00 same_length_wrong_chars: 'o=9' != "'h=l'"
+    sample_159 c=1.00 same_length_wrong_chars: "'gMItR'" != "'mgItr'"
+    sample_161 c=1.00 residual_edit_distance_gt_10: "'xn ipkrindifkj r'" != "'j rinpxdif'"
+    sample_168 c=1.00 residual_edit_distance_2: 'pain' != "'spaib'"
+low: 12 errors at confidence >=95%; 7 correct predictions at confidence <=50%.
+  High-confidence error target types: {'str': 12}
+    sample_121 c=1.00 formatting_only: '1001' != "'1001'"
+    sample_33 c=1.00 formatting_only: '{5:[5,5],2:[5,2,2],7:[5,2,7]}' != "'{5:[5,5],2:[5,2,2],7:[5,2,7]}'"
+    sample_499 c=1.00 separator_only_error: '........magazine.........' != "'.........magazine........'"
+    sample_613 c=1.00 separator_plus_one_char_error: 'e!a!' != "'e!t!'"
+    sample_780 c=1.00 formatting_only: '2' != "'2'"
+
+6. Confidence-call truncations
+-------------------------------
+none: 0 unparsed confidence responses.
+low: 5 unparsed confidence responses.
+  sample_112 (calibration, str): finish=length/max_output_tokens, generated=1024, reasoning=1024, source_correct=False
+  sample_250 (calibration, str): finish=length/max_output_tokens, generated=1024, reasoning=1024, source_correct=False
+  sample_427 (test, str): finish=length/max_output_tokens, generated=1024, reasoning=1024, source_correct=True
+  sample_640 (test, int): finish=length/max_output_tokens, generated=1024, reasoning=1024, source_correct=False
+  sample_698 (test, str): finish=length/max_output_tokens, generated=1024, reasoning=1015, source_correct=True
+
+Bottom line
+-----------
+Low-reasoning confidence is not explained away by output type, code length, or output length. Its type-stratified and adjusted signals remain strong.
+No-reasoning confidence retains a weak discrimination signal but remains operationally unsafe because it is heavily overconfident.
+The same predictions look radically less reliable under strict string serialization, demonstrating that scoring policy is part of a reliability claim.
+The next discriminating experiment is a prediction-only confidence control, which tests whether the signal comes from code-aware verification or output surface cues.

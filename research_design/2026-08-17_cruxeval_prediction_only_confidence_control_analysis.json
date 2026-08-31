@@ -1,0 +1,991 @@
+{
+  "analysis": "cruxeval_prediction_only_confidence_control_v1",
+  "bootstrap_seed": 20260817,
+  "bootstraps": 2000,
+  "conditions": {
+    "low": {
+      "code_aware": {
+        "adjusted_confidence": {
+          "confidence_coefficient": 0.5236221961198421,
+          "confidence_odds_ratio": 1.6881313314176998,
+          "confidence_odds_ratio_95_ci": [
+            1.4732238771885244,
+            1.9343885449050566
+          ],
+          "confidence_standard_error": 0.06947402191790648,
+          "confidence_unit": "10 percentage points",
+          "correct": 320,
+          "covariates": [
+            "z_log1p_code_chars",
+            "z_log1p_target_chars",
+            "target_type_fixed_effects"
+          ],
+          "estimable_target_types": [
+            "dict",
+            "int",
+            "list",
+            "str"
+          ],
+          "excluded_single_outcome_target_types": [
+            "bool",
+            "bytes",
+            "tuple"
+          ],
+          "full_fit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+          "full_fit_success": true,
+          "likelihood_ratio_p_value": 3.804691319230027e-24,
+          "likelihood_ratio_statistic": 102.74873287230844,
+          "n": 364,
+          "reduced_fit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+          "reduced_fit_success": true,
+          "reference_target_type": "str"
+        },
+        "metrics": {
+          "accuracy": 0.889168765743073,
+          "auroc": 0.8919005923255215,
+          "baseline_brier_score": 0.09855546163662632,
+          "baseline_probability": 0.8919597989949749,
+          "brier_score": 0.04784911838790932,
+          "brier_skill_score": 0.5144955176169854,
+          "calibration_gap": 0.014282115869017509,
+          "correct": 353,
+          "ece_equal_mass_5": 0.01428211586901763,
+          "mean_confidence": 0.9034508816120905,
+          "n": 397
+        },
+        "risk_coverage": [
+          {
+            "accepted": 193,
+            "accuracy": 0.9740932642487047,
+            "actual_coverage": 0.48614609571788414,
+            "minimum_confidence": 1.0,
+            "requested_coverage": 0.25,
+            "risk": 0.025906735751295318
+          },
+          {
+            "accepted": 324,
+            "accuracy": 0.9783950617283951,
+            "actual_coverage": 0.8161209068010076,
+            "minimum_confidence": 0.99,
+            "requested_coverage": 0.5,
+            "risk": 0.021604938271604923
+          },
+          {
+            "accepted": 324,
+            "accuracy": 0.9783950617283951,
+            "actual_coverage": 0.8161209068010076,
+            "minimum_confidence": 0.99,
+            "requested_coverage": 0.75,
+            "risk": 0.021604938271604923
+          },
+          {
+            "accepted": 397,
+            "accuracy": 0.889168765743073,
+            "actual_coverage": 1.0,
+            "minimum_confidence": 0.0,
+            "requested_coverage": 1.0,
+            "risk": 0.11083123425692698
+          }
+        ],
+        "target_type_stratified_auc": {
+          "auroc": 0.8799461188752316,
+          "comparable_pairs": 5939,
+          "strata_excluded": [
+            {
+              "auroc": null,
+              "comparable_pairs": 0,
+              "correct": 23,
+              "group": "bool",
+              "incorrect": 0,
+              "n": 23
+            },
+            {
+              "auroc": null,
+              "comparable_pairs": 0,
+              "correct": 2,
+              "group": "bytes",
+              "incorrect": 0,
+              "n": 2
+            },
+            {
+              "auroc": null,
+              "comparable_pairs": 0,
+              "correct": 8,
+              "group": "tuple",
+              "incorrect": 0,
+              "n": 8
+            }
+          ],
+          "strata_used": [
+            {
+              "auroc": 0.9310344827586207,
+              "comparable_pairs": 29,
+              "correct": 29,
+              "group": "dict",
+              "incorrect": 1,
+              "n": 30
+            },
+            {
+              "auroc": 1.0,
+              "comparable_pairs": 102,
+              "correct": 51,
+              "group": "int",
+              "incorrect": 2,
+              "n": 53
+            },
+            {
+              "auroc": 1.0,
+              "comparable_pairs": 192,
+              "correct": 96,
+              "group": "list",
+              "incorrect": 2,
+              "n": 98
+            },
+            {
+              "auroc": 0.8733974358974359,
+              "comparable_pairs": 5616,
+              "correct": 144,
+              "group": "str",
+              "incorrect": 39,
+              "n": 183
+            }
+          ]
+        },
+        "unique_confidence_values": 17
+      },
+      "comparison": {
+        "auroc_code_aware_minus_prediction_only": 0.28399433427762044,
+        "brier_prediction_only_minus_code_aware": 0.6183178841309824,
+        "confidence_spearman_p_value": 0.22859356690362953,
+        "confidence_spearman_rho": 0.06056199471308274,
+        "ece_prediction_only_minus_code_aware": 0.7330982367758186,
+        "mean_absolute_confidence_difference": 0.7761209068010075,
+        "mean_confidence_code_aware_minus_prediction_only": 0.7616624685138539
+      },
+      "incremental_confidence": {
+        "code_aware_added_after_prediction_only": {
+          "coefficient_per_10_points": 0.5339605932970722,
+          "full_fit_success": true,
+          "likelihood_ratio_p_value": 2.4581239474412413e-24,
+          "likelihood_ratio_statistic": 103.61417333972804,
+          "odds_ratio_per_10_points": 1.705674431121598,
+          "reduced_fit_success": true,
+          "standard_error": 0.07195973696949393
+        },
+        "estimable_target_types": [
+          "dict",
+          "int",
+          "list",
+          "str"
+        ],
+        "n": 364,
+        "prediction_only_added_after_code_aware": {
+          "coefficient_per_10_points": -0.33783215306166553,
+          "full_fit_success": true,
+          "likelihood_ratio_p_value": 0.21382261519788218,
+          "likelihood_ratio_statistic": 1.5453540933071963,
+          "odds_ratio_per_10_points": 0.7133150055906335,
+          "reduced_fit_success": true,
+          "standard_error": 0.26152469526760075
+        },
+        "reference_target_type": "str"
+      },
+      "paired_bootstrap_95_ci": {
+        "auroc_code_aware_minus_prediction_only": [
+          0.17762809920189215,
+          0.39580215432250965
+        ],
+        "brier_prediction_only_minus_code_aware": [
+          0.5766247418136019,
+          0.6567149181360199
+        ],
+        "brier_skill_code_aware_minus_prediction_only": [
+          4.692207010524978,
+          8.738476933794425
+        ],
+        "ece_prediction_only_minus_code_aware": [
+          0.6815591939546599,
+          0.7603551637279597
+        ]
+      },
+      "prediction_only": {
+        "adjusted_confidence": {
+          "confidence_coefficient": -0.15896982060808096,
+          "confidence_odds_ratio": 0.853022102269011,
+          "confidence_odds_ratio_95_ci": [
+            0.5891270774336308,
+            1.2351269103590259
+          ],
+          "confidence_standard_error": 0.18884874838405127,
+          "confidence_unit": "10 percentage points",
+          "correct": 320,
+          "covariates": [
+            "z_log1p_code_chars",
+            "z_log1p_target_chars",
+            "target_type_fixed_effects"
+          ],
+          "estimable_target_types": [
+            "dict",
+            "int",
+            "list",
+            "str"
+          ],
+          "excluded_single_outcome_target_types": [
+            "bool",
+            "bytes",
+            "tuple"
+          ],
+          "full_fit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+          "full_fit_success": true,
+          "likelihood_ratio_p_value": 0.40961646831754095,
+          "likelihood_ratio_statistic": 0.6799136258889575,
+          "n": 364,
+          "reduced_fit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+          "reduced_fit_success": true,
+          "reference_target_type": "str"
+        },
+        "metrics": {
+          "accuracy": 0.889168765743073,
+          "auroc": 0.6079062580479011,
+          "baseline_brier_score": 0.09855546163662632,
+          "baseline_probability": 0.8919597989949749,
+          "brier_score": 0.6661670025188917,
+          "brier_skill_score": -5.759310863714965,
+          "calibration_gap": -0.7473803526448363,
+          "correct": 353,
+          "ece_equal_mass_5": 0.7473803526448363,
+          "mean_confidence": 0.14178841309823678,
+          "n": 397
+        },
+        "risk_coverage": [
+          {
+            "accepted": 125,
+            "accuracy": 0.912,
+            "actual_coverage": 0.3148614609571788,
+            "minimum_confidence": 0.2,
+            "requested_coverage": 0.25,
+            "risk": 0.08799999999999997
+          },
+          {
+            "accepted": 244,
+            "accuracy": 0.9221311475409836,
+            "actual_coverage": 0.6146095717884131,
+            "minimum_confidence": 0.08,
+            "requested_coverage": 0.5,
+            "risk": 0.07786885245901642
+          },
+          {
+            "accepted": 300,
+            "accuracy": 0.9066666666666666,
+            "actual_coverage": 0.7556675062972292,
+            "minimum_confidence": 0.05,
+            "requested_coverage": 0.75,
+            "risk": 0.09333333333333338
+          },
+          {
+            "accepted": 397,
+            "accuracy": 0.889168765743073,
+            "actual_coverage": 1.0,
+            "minimum_confidence": 0.0,
+            "requested_coverage": 1.0,
+            "risk": 0.11083123425692698
+          }
+        ],
+        "target_type_stratified_auc": {
+          "auroc": 0.4771005219733962,
+          "comparable_pairs": 5939,
+          "strata_excluded": [
+            {
+              "auroc": null,
+              "comparable_pairs": 0,
+              "correct": 23,
+              "group": "bool",
+              "incorrect": 0,
+              "n": 23
+            },
+            {
+              "auroc": null,
+              "comparable_pairs": 0,
+              "correct": 2,
+              "group": "bytes",
+              "incorrect": 0,
+              "n": 2
+            },
+            {
+              "auroc": null,
+              "comparable_pairs": 0,
+              "correct": 8,
+              "group": "tuple",
+              "incorrect": 0,
+              "n": 8
+            }
+          ],
+          "strata_used": [
+            {
+              "auroc": 0.1206896551724138,
+              "comparable_pairs": 29,
+              "correct": 29,
+              "group": "dict",
+              "incorrect": 1,
+              "n": 30
+            },
+            {
+              "auroc": 0.4166666666666667,
+              "comparable_pairs": 102,
+              "correct": 51,
+              "group": "int",
+              "incorrect": 2,
+              "n": 53
+            },
+            {
+              "auroc": 0.5807291666666666,
+              "comparable_pairs": 192,
+              "correct": 96,
+              "group": "list",
+              "incorrect": 2,
+              "n": 98
+            },
+            {
+              "auroc": 0.47649572649572647,
+              "comparable_pairs": 5616,
+              "correct": 144,
+              "group": "str",
+              "incorrect": 39,
+              "n": 183
+            }
+          ]
+        },
+        "unique_confidence_values": 30
+      }
+    },
+    "none": {
+      "code_aware": {
+        "adjusted_confidence": {
+          "confidence_coefficient": 0.1666620063790536,
+          "confidence_odds_ratio": 1.1813549073991758,
+          "confidence_odds_ratio_95_ci": [
+            1.107295949421023,
+            1.2603671294614949
+          ],
+          "confidence_standard_error": 0.03303114527146542,
+          "confidence_unit": "10 percentage points",
+          "correct": 192,
+          "covariates": [
+            "z_log1p_code_chars",
+            "z_log1p_target_chars",
+            "target_type_fixed_effects"
+          ],
+          "estimable_target_types": [
+            "bool",
+            "dict",
+            "int",
+            "list",
+            "str",
+            "tuple"
+          ],
+          "excluded_single_outcome_target_types": [
+            "bytes"
+          ],
+          "full_fit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+          "full_fit_success": true,
+          "likelihood_ratio_p_value": 7.117075945258607e-08,
+          "likelihood_ratio_statistic": 29.03259235082976,
+          "n": 395,
+          "reduced_fit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+          "reduced_fit_success": true,
+          "reference_target_type": "str"
+        },
+        "metrics": {
+          "accuracy": 0.48866498740554154,
+          "auroc": 0.6435427352597634,
+          "baseline_brier_score": 0.2498855078145051,
+          "baseline_probability": 0.4849246231155779,
+          "brier_score": 0.3556984886649874,
+          "brier_skill_score": -0.423445848364401,
+          "calibration_gap": 0.2800755667506297,
+          "correct": 194,
+          "ece_equal_mass_5": 0.3390176322418137,
+          "mean_confidence": 0.7687405541561713,
+          "n": 397
+        },
+        "risk_coverage": [
+          {
+            "accepted": 173,
+            "accuracy": 0.5780346820809249,
+            "actual_coverage": 0.4357682619647355,
+            "minimum_confidence": 1.0,
+            "requested_coverage": 0.25,
+            "risk": 0.4219653179190751
+          },
+          {
+            "accepted": 225,
+            "accuracy": 0.5911111111111111,
+            "actual_coverage": 0.5667506297229219,
+            "minimum_confidence": 0.99,
+            "requested_coverage": 0.5,
+            "risk": 0.40888888888888886
+          },
+          {
+            "accepted": 298,
+            "accuracy": 0.5771812080536913,
+            "actual_coverage": 0.7506297229219143,
+            "minimum_confidence": 0.72,
+            "requested_coverage": 0.75,
+            "risk": 0.42281879194630867
+          },
+          {
+            "accepted": 397,
+            "accuracy": 0.48866498740554154,
+            "actual_coverage": 1.0,
+            "minimum_confidence": 0.0,
+            "requested_coverage": 1.0,
+            "risk": 0.5113350125944585
+          }
+        ],
+        "target_type_stratified_auc": {
+          "auroc": 0.6545334215751158,
+          "comparable_pairs": 10577,
+          "strata_excluded": [
+            {
+              "auroc": null,
+              "comparable_pairs": 0,
+              "correct": 2,
+              "group": "bytes",
+              "incorrect": 0,
+              "n": 2
+            }
+          ],
+          "strata_used": [
+            {
+              "auroc": 0.5,
+              "comparable_pairs": 102,
+              "correct": 17,
+              "group": "bool",
+              "incorrect": 6,
+              "n": 23
+            },
+            {
+              "auroc": 0.6521739130434783,
+              "comparable_pairs": 161,
+              "correct": 23,
+              "group": "dict",
+              "incorrect": 7,
+              "n": 30
+            },
+            {
+              "auroc": 0.5696480938416423,
+              "comparable_pairs": 682,
+              "correct": 31,
+              "group": "int",
+              "incorrect": 22,
+              "n": 53
+            },
+            {
+              "auroc": 0.6040851803563668,
+              "comparable_pairs": 2301,
+              "correct": 59,
+              "group": "list",
+              "incorrect": 39,
+              "n": 98
+            },
+            {
+              "auroc": 0.6802214324767633,
+              "comparable_pairs": 7316,
+              "correct": 59,
+              "group": "str",
+              "incorrect": 124,
+              "n": 183
+            },
+            {
+              "auroc": 0.8,
+              "comparable_pairs": 15,
+              "correct": 3,
+              "group": "tuple",
+              "incorrect": 5,
+              "n": 8
+            }
+          ]
+        },
+        "unique_confidence_values": 45
+      },
+      "comparison": {
+        "auroc_code_aware_minus_prediction_only": 0.01981869889797372,
+        "brier_prediction_only_minus_code_aware": 0.0006264483627204109,
+        "confidence_spearman_p_value": 8.34186580472328e-06,
+        "confidence_spearman_rho": 0.2215639973582679,
+        "ece_prediction_only_minus_code_aware": -0.009294710327456046,
+        "mean_absolute_confidence_difference": 0.6310075566750629,
+        "mean_confidence_code_aware_minus_prediction_only": 0.6097984886649873
+      },
+      "incremental_confidence": {
+        "code_aware_added_after_prediction_only": {
+          "coefficient_per_10_points": 0.16109166443293013,
+          "full_fit_success": true,
+          "likelihood_ratio_p_value": 2.7311440143375956e-07,
+          "likelihood_ratio_statistic": 26.431052232222385,
+          "odds_ratio_per_10_points": 1.174792650580628,
+          "reduced_fit_success": true,
+          "standard_error": 0.033370819813946996
+        },
+        "estimable_target_types": [
+          "bool",
+          "dict",
+          "int",
+          "list",
+          "str",
+          "tuple"
+        ],
+        "n": 395,
+        "prediction_only_added_after_code_aware": {
+          "coefficient_per_10_points": 0.07254941657508918,
+          "full_fit_success": true,
+          "likelihood_ratio_p_value": 0.30458190682185193,
+          "likelihood_ratio_statistic": 1.0540250181492183,
+          "odds_ratio_per_10_points": 1.0752459397490235,
+          "reduced_fit_success": true,
+          "standard_error": 0.07153819308784808
+        },
+        "reference_target_type": "str"
+      },
+      "paired_bootstrap_95_ci": {
+        "auroc_code_aware_minus_prediction_only": [
+          -0.04498046171894084,
+          0.0871233057001265
+        ],
+        "brier_prediction_only_minus_code_aware": [
+          -0.07106435138539045,
+          0.07240144836272037
+        ],
+        "brier_skill_code_aware_minus_prediction_only": [
+          -0.28611120838927157,
+          0.28838935510010044
+        ],
+        "ece_prediction_only_minus_code_aware": [
+          -0.10097103274559184,
+          0.07521977329974804
+        ]
+      },
+      "prediction_only": {
+        "adjusted_confidence": {
+          "confidence_coefficient": 0.1303767282777387,
+          "confidence_odds_ratio": 1.1392574930039119,
+          "confidence_odds_ratio_95_ci": [
+            0.9937103838647228,
+            1.3061226454309114
+          ],
+          "confidence_standard_error": 0.06973786090782488,
+          "confidence_unit": "10 percentage points",
+          "correct": 192,
+          "covariates": [
+            "z_log1p_code_chars",
+            "z_log1p_target_chars",
+            "target_type_fixed_effects"
+          ],
+          "estimable_target_types": [
+            "bool",
+            "dict",
+            "int",
+            "list",
+            "str",
+            "tuple"
+          ],
+          "excluded_single_outcome_target_types": [
+            "bytes"
+          ],
+          "full_fit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+          "full_fit_success": true,
+          "likelihood_ratio_p_value": 0.055882193804910184,
+          "likelihood_ratio_statistic": 3.655565136757275,
+          "n": 395,
+          "reduced_fit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+          "reduced_fit_success": true,
+          "reference_target_type": "str"
+        },
+        "metrics": {
+          "accuracy": 0.48866498740554154,
+          "auroc": 0.6237240363617896,
+          "baseline_brier_score": 0.2498855078145051,
+          "baseline_probability": 0.4849246231155779,
+          "brier_score": 0.3563249370277078,
+          "brier_skill_score": -0.42595278991615126,
+          "calibration_gap": -0.32972292191435765,
+          "correct": 194,
+          "ece_equal_mass_5": 0.32972292191435765,
+          "mean_confidence": 0.1589420654911839,
+          "n": 397
+        },
+        "risk_coverage": [
+          {
+            "accepted": 104,
+            "accuracy": 0.6634615384615384,
+            "actual_coverage": 0.2619647355163728,
+            "minimum_confidence": 0.15,
+            "requested_coverage": 0.25,
+            "risk": 0.33653846153846156
+          },
+          {
+            "accepted": 205,
+            "accuracy": 0.5756097560975609,
+            "actual_coverage": 0.5163727959697733,
+            "minimum_confidence": 0.12,
+            "requested_coverage": 0.5,
+            "risk": 0.42439024390243907
+          },
+          {
+            "accepted": 338,
+            "accuracy": 0.5029585798816568,
+            "actual_coverage": 0.8513853904282116,
+            "minimum_confidence": 0.02,
+            "requested_coverage": 0.75,
+            "risk": 0.4970414201183432
+          },
+          {
+            "accepted": 397,
+            "accuracy": 0.48866498740554154,
+            "actual_coverage": 1.0,
+            "minimum_confidence": 0.0,
+            "requested_coverage": 1.0,
+            "risk": 0.5113350125944585
+          }
+        ],
+        "target_type_stratified_auc": {
+          "auroc": 0.5549777819797674,
+          "comparable_pairs": 10577,
+          "strata_excluded": [
+            {
+              "auroc": null,
+              "comparable_pairs": 0,
+              "correct": 2,
+              "group": "bytes",
+              "incorrect": 0,
+              "n": 2
+            }
+          ],
+          "strata_used": [
+            {
+              "auroc": 0.5392156862745098,
+              "comparable_pairs": 102,
+              "correct": 17,
+              "group": "bool",
+              "incorrect": 6,
+              "n": 23
+            },
+            {
+              "auroc": 0.4161490683229814,
+              "comparable_pairs": 161,
+              "correct": 23,
+              "group": "dict",
+              "incorrect": 7,
+              "n": 30
+            },
+            {
+              "auroc": 0.5703812316715543,
+              "comparable_pairs": 682,
+              "correct": 31,
+              "group": "int",
+              "incorrect": 22,
+              "n": 53
+            },
+            {
+              "auroc": 0.5940895262929161,
+              "comparable_pairs": 2301,
+              "correct": 59,
+              "group": "list",
+              "incorrect": 39,
+              "n": 98
+            },
+            {
+              "auroc": 0.5436030617823947,
+              "comparable_pairs": 7316,
+              "correct": 59,
+              "group": "str",
+              "incorrect": 124,
+              "n": 183
+            },
+            {
+              "auroc": 1.0,
+              "comparable_pairs": 15,
+              "correct": 3,
+              "group": "tuple",
+              "incorrect": 5,
+              "n": 8
+            }
+          ]
+        },
+        "unique_confidence_values": 39
+      }
+    }
+  },
+  "data": {
+    "code_aware": {
+      "confidence_extraction_failures": {
+        "low": [
+          {
+            "error": "Could not parse confidence from ''",
+            "finish_reason": "length",
+            "generated_token_count": 1024,
+            "id": "sample_112",
+            "native_finish_reason": "max_output_tokens",
+            "reasoning_token_count": 1024,
+            "source_prediction": "XYZLRRHLTTBIGGXET",
+            "source_semantic_correct": false,
+            "split": "calibration",
+            "target_output": "'XYZLtRRdnHodLTTBIGGeXET fult'",
+            "target_type": "str"
+          },
+          {
+            "error": "Could not parse confidence from ''",
+            "finish_reason": "length",
+            "generated_token_count": 1024,
+            "id": "sample_250",
+            "native_finish_reason": "max_output_tokens",
+            "reasoning_token_count": 1024,
+            "source_prediction": "wlace Alc l",
+            "source_semantic_correct": false,
+            "split": "calibration",
+            "target_output": "'wlace Alc l  '",
+            "target_type": "str"
+          },
+          {
+            "error": "Could not parse confidence from ''",
+            "finish_reason": "length",
+            "generated_token_count": 1024,
+            "id": "sample_427",
+            "native_finish_reason": "max_output_tokens",
+            "reasoning_token_count": 1024,
+            "source_prediction": "",
+            "source_semantic_correct": true,
+            "split": "test",
+            "target_output": "''",
+            "target_type": "str"
+          },
+          {
+            "error": "Could not parse confidence from ''",
+            "finish_reason": "length",
+            "generated_token_count": 1024,
+            "id": "sample_640",
+            "native_finish_reason": "max_output_tokens",
+            "reasoning_token_count": 1024,
+            "source_prediction": "",
+            "source_semantic_correct": false,
+            "split": "test",
+            "target_output": "18",
+            "target_type": "int"
+          },
+          {
+            "error": "Could not parse confidence from ''",
+            "finish_reason": "length",
+            "generated_token_count": 1024,
+            "id": "sample_698",
+            "native_finish_reason": "max_output_tokens",
+            "reasoning_token_count": 1015,
+            "source_prediction": "(((((((((((d.(((((",
+            "source_semantic_correct": true,
+            "split": "test",
+            "target_output": "'(((((((((((d.((((('",
+            "target_type": "str"
+          }
+        ],
+        "none": []
+      },
+      "input_paths": {
+        "low": {
+          "confidence": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_reflective_confidence_gpt_5_4_nano_low_predictions.jsonl",
+          "prompts": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_reflective_confidence_low_v1.jsonl",
+          "source_predictions": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_direct_gpt_5_4_nano_low_predictions.jsonl",
+          "source_scores": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_direct_gpt_5_4_nano_low_scores.jsonl"
+        },
+        "none": {
+          "confidence": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_reflective_confidence_gpt_5_4_nano_none_predictions.jsonl",
+          "prompts": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_reflective_confidence_none_v1.jsonl",
+          "source_predictions": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_direct_gpt_5_4_nano_none_predictions.jsonl",
+          "source_scores": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_direct_gpt_5_4_nano_none_scores.jsonl"
+        }
+      },
+      "paired_complete_cases": 795,
+      "paired_split_sizes": {
+        "calibration": 398,
+        "test": 397
+      }
+    },
+    "paired_complete_cases": 795,
+    "paired_split_sizes": {
+      "calibration": 398,
+      "test": 397
+    },
+    "prediction_only": {
+      "parse_failures": {
+        "low": [],
+        "none": []
+      },
+      "paths": {
+        "low": {
+          "metadata": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_prediction_only_confidence_gpt_5_4_nano_low_predictions_metadata.json",
+          "prompts": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_prediction_only_confidence_low_v1.jsonl",
+          "results": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_prediction_only_confidence_gpt_5_4_nano_low_predictions.jsonl"
+        },
+        "none": {
+          "metadata": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_prediction_only_confidence_gpt_5_4_nano_none_predictions_metadata.json",
+          "prompts": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_prediction_only_confidence_none_v1.jsonl",
+          "results": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_prediction_only_confidence_gpt_5_4_nano_none_predictions.jsonl"
+        }
+      },
+      "run_metadata": {
+        "low": {
+          "api_key_env": "OPENROUTER_API_KEY",
+          "api_url": "https://openrouter.ai/api/v1/chat/completions",
+          "completed_at_utc": "2026-08-17T11:44:04.761557+00:00",
+          "completed_rows": 800,
+          "config_file": "C:\\Users\\drndr\\Documents\\fse2027-andor\\scripts\\inference\\configs\\openrouter_cruxeval_prediction_only_confidence_gpt_5_4_nano_low.json",
+          "config_file_sha256": "e3c51d1b94d87206ca3feaeec29f7e61abc3bb462390559b6e88e334b532ec41",
+          "config_hash": "160ad9dd768c765b976a04ac8d9dc0a336b76c1366b051e3af7899b9f76564f6",
+          "error_rows": 0,
+          "expected_provider_name": "OpenAI",
+          "generation": {
+            "max_tokens": 1024,
+            "response_format": {
+              "json_schema": {
+                "name": "confidence_rating",
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "confidence": {
+                      "maximum": 100,
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "confidence"
+                  ],
+                  "type": "object"
+                },
+                "strict": true
+              },
+              "type": "json_schema"
+            },
+            "seed": 0
+          },
+          "limit": null,
+          "metadata_path": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_prediction_only_confidence_gpt_5_4_nano_low_predictions_metadata.json",
+          "model_name": "openai/gpt-5.4-nano",
+          "model_revision": "openai/gpt-5.4-nano-20260317",
+          "output_path": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_prediction_only_confidence_gpt_5_4_nano_low_predictions.jsonl",
+          "platform": "Windows-10-10.0.26200-SP0",
+          "prompt_count": 800,
+          "prompt_file_sha256": "4f7bc9c6596a68c11f85e6aa5985492dd58fa9ee2718813803e575b5514062ba",
+          "prompt_mode": "direct",
+          "prompt_path": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_prediction_only_confidence_low_v1.jsonl",
+          "provider": {
+            "allow_fallbacks": false,
+            "only": [
+              "openai"
+            ],
+            "require_parameters": true
+          },
+          "python_version": "3.10.11",
+          "reasoning": {
+            "effort": "low",
+            "exclude": false
+          },
+          "reported_cost_usd": 0.1014669,
+          "request_delay_seconds": 0.0,
+          "resolved_models": [
+            "openai/gpt-5.4-nano"
+          ],
+          "resolved_providers": [
+            "OpenAI"
+          ],
+          "retries": 2,
+          "retry_backoff_seconds": 2.0,
+          "runner_file_sha256": "a1f02536ae1c1a31d4f259b5c00bec2c09ae9f7d358ca0df39389e3f42013b5a",
+          "started_at_utc": "2026-08-17T10:20:45.186337+00:00",
+          "status": "complete",
+          "timeout_seconds": 300.0,
+          "total_generated_tokens": 63342,
+          "total_prompt_tokens": 111447,
+          "total_reasoning_tokens": 51342,
+          "truncated_rows": 0
+        },
+        "none": {
+          "api_key_env": "OPENROUTER_API_KEY",
+          "api_url": "https://openrouter.ai/api/v1/chat/completions",
+          "completed_at_utc": "2026-08-17T10:32:13.663382+00:00",
+          "completed_rows": 800,
+          "config_file": "C:\\Users\\drndr\\Documents\\fse2027-andor\\scripts\\inference\\configs\\openrouter_cruxeval_prediction_only_confidence_gpt_5_4_nano_none.json",
+          "config_file_sha256": "b2e557d6dddeb669ea9147345236fdfbef773a3dbcc81c36a34d33cd5bee38b7",
+          "config_hash": "848733b897f8eb89b0dc79217d8054040eed761ecef603d9c08f6134098662d7",
+          "error_rows": 0,
+          "expected_provider_name": "OpenAI",
+          "generation": {
+            "max_tokens": 128,
+            "response_format": {
+              "json_schema": {
+                "name": "confidence_rating",
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "confidence": {
+                      "maximum": 100,
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "confidence"
+                  ],
+                  "type": "object"
+                },
+                "strict": true
+              },
+              "type": "json_schema"
+            },
+            "seed": 0
+          },
+          "limit": null,
+          "metadata_path": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_prediction_only_confidence_gpt_5_4_nano_none_predictions_metadata.json",
+          "model_name": "openai/gpt-5.4-nano",
+          "model_revision": "openai/gpt-5.4-nano-20260317",
+          "output_path": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_prediction_only_confidence_gpt_5_4_nano_none_predictions.jsonl",
+          "platform": "Windows-10-10.0.26200-SP0",
+          "prompt_count": 800,
+          "prompt_file_sha256": "1e8c09bab9e1c380478f2ce49dea0e967c484e567a23f12148a606d9cb11f9b0",
+          "prompt_mode": "direct",
+          "prompt_path": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_prediction_only_confidence_none_v1.jsonl",
+          "provider": {
+            "allow_fallbacks": false,
+            "only": [
+              "openai"
+            ],
+            "require_parameters": true
+          },
+          "python_version": "3.10.11",
+          "reasoning": {
+            "effort": "none",
+            "exclude": false
+          },
+          "reported_cost_usd": 0.0353963,
+          "request_delay_seconds": 0.0,
+          "resolved_models": [
+            "openai/gpt-5.4-nano"
+          ],
+          "resolved_providers": [
+            "OpenAI"
+          ],
+          "retries": 2,
+          "retry_backoff_seconds": 2.0,
+          "runner_file_sha256": "a1f02536ae1c1a31d4f259b5c00bec2c09ae9f7d358ca0df39389e3f42013b5a",
+          "started_at_utc": "2026-08-17T10:20:45.182335+00:00",
+          "status": "complete",
+          "timeout_seconds": 300.0,
+          "total_generated_tokens": 10402,
+          "total_prompt_tokens": 111969,
+          "total_reasoning_tokens": 0,
+          "truncated_rows": 0
+        }
+      }
+    }
+  },
+  "interpretation": "For low reasoning, access to the program and input produces significantly greater error discrimination than candidate surface cues alone. The reflective-confidence signal therefore cannot be reduced to output plausibility or output-type base rates.",
+  "primary_correctness": "relaxed_correct semantic Python value equivalence"
+}

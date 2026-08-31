@@ -1,0 +1,601 @@
+{
+  "analysis": "cruxeval_calibration_deconfounding_v1",
+  "bootstrap_seed": 20260818,
+  "bootstraps": 2000,
+  "calibration_decomposition": {
+    "low": {
+      "calibration_in_the_large_model": {
+        "intercept": -1.8176906121698342,
+        "message": "Solution found.",
+        "negative_log_likelihood": 166.271317815364,
+        "slope": 1.0,
+        "slope_fixed": true,
+        "success": true
+      },
+      "calibration_prevalence": 0.8919597989949749,
+      "full_calibration_model": {
+        "intercept": 0.7141953578598028,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "negative_log_likelihood": 104.6188164757242,
+        "slope": 0.29640105816575446,
+        "slope_fixed": false,
+        "success": true
+      },
+      "full_model_test": {
+        "accuracy": 0.889168765743073,
+        "auroc": 0.8919005923255215,
+        "baseline_brier_score": 0.09855546163662632,
+        "baseline_probability": 0.8919597989949749,
+        "brier_score": 0.0499035253281203,
+        "brier_skill_score": 0.49365033150456494,
+        "calibration_gap": -0.019105063781343024,
+        "correct": 353,
+        "ece_equal_mass_5": 0.05036560761557869,
+        "log_loss": 0.19979464241273895,
+        "mean_confidence": 0.87006370196173,
+        "n": 397
+      },
+      "raw_test": {
+        "accuracy": 0.889168765743073,
+        "auroc": 0.8919005923255215,
+        "baseline_brier_score": 0.09855546163662632,
+        "baseline_probability": 0.8919597989949749,
+        "brier_score": 0.04784911838790932,
+        "brier_skill_score": 0.5144955176169854,
+        "calibration_gap": 0.014282115869017509,
+        "correct": 353,
+        "ece_equal_mass_5": 0.01428211586901763,
+        "log_loss": 0.5996297488469658,
+        "mean_confidence": 0.9034508816120905,
+        "n": 397
+      },
+      "test_prevalence": 0.889168765743073
+    },
+    "none": {
+      "calibration_in_the_large_model": {
+        "intercept": -4.679741572995506,
+        "message": "Solution found.",
+        "negative_log_likelihood": 606.0858146088381,
+        "slope": 1.0,
+        "slope_fixed": true,
+        "success": true
+      },
+      "calibration_prevalence": 0.4849246231155779,
+      "full_calibration_model": {
+        "intercept": -0.5174044240036746,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "negative_log_likelihood": 258.4420077925272,
+        "slope": 0.11415230346458015,
+        "slope_fixed": false,
+        "success": true
+      },
+      "full_model_test": {
+        "accuracy": 0.48866498740554154,
+        "auroc": 0.6435427352597634,
+        "baseline_brier_score": 0.2498855078145051,
+        "baseline_probability": 0.4849246231155779,
+        "brier_score": 0.23144449246572715,
+        "brier_skill_score": 0.07379785850753329,
+        "calibration_gap": 0.005742623530667679,
+        "correct": 194,
+        "ece_equal_mass_5": 0.0678719964701273,
+        "log_loss": 0.6550603407178899,
+        "mean_confidence": 0.4944076109362092,
+        "n": 397
+      },
+      "raw_test": {
+        "accuracy": 0.48866498740554154,
+        "auroc": 0.6435427352597634,
+        "baseline_brier_score": 0.2498855078145051,
+        "baseline_probability": 0.4849246231155779,
+        "brier_score": 0.3556984886649874,
+        "brier_skill_score": -0.423445848364401,
+        "calibration_gap": 0.2800755667506297,
+        "correct": 194,
+        "ece_equal_mass_5": 0.3390176322418137,
+        "log_loss": 6.083641975597731,
+        "mean_confidence": 0.7687405541561713,
+        "n": 397
+      },
+      "test_prevalence": 0.48866498740554154
+    }
+  },
+  "data": {
+    "paired_complete_cases": 795,
+    "paired_split_sizes": {
+      "calibration": 398,
+      "test": 397
+    }
+  },
+  "discrimination": {
+    "base_rate_and_type_matched": {
+      "correctness_prevalence": 0.5,
+      "limitations": "The common support is dominated by string errors and remains exploratory; a second benchmark is needed for confirmation.",
+      "low_auroc_95_interval": [
+        0.8099108987603305,
+        0.9535253099173553
+      ],
+      "low_auroc_median": 0.8920454545454546,
+      "low_minus_none_95_interval": [
+        0.09035382231404963,
+        0.34685563016528925
+      ],
+      "low_minus_none_median": 0.21926652892561982,
+      "matching_policy": "For each output type, use the minimum correct/incorrect count shared by both reasoning conditions; sample that count per class and condition with replacement.",
+      "none_auroc_95_interval": [
+        0.5586260330578512,
+        0.7768724173553718
+      ],
+      "none_auroc_median": 0.6698088842975207,
+      "per_class_output_type_counts": {
+        "dict": 1,
+        "int": 2,
+        "list": 2,
+        "str": 39
+      },
+      "per_condition_sample_size": 88
+    },
+    "paired_all_items": {
+      "low_auroc": 0.8919005923255215,
+      "low_minus_none_95_ci": [
+        0.15350885303509346,
+        0.3365514104317534
+      ],
+      "low_minus_none_point": 0.2483578570657582,
+      "n_paired_items": 397,
+      "none_auroc": 0.6435427352597634,
+      "note": "AUROC is prevalence-invariant; this bootstrap preserves paired item sampling."
+    },
+    "type_stratified_point": {
+      "low": {
+        "auroc": 0.8799461188752316,
+        "comparable_pairs": 5939,
+        "strata_excluded": [
+          {
+            "auroc": null,
+            "comparable_pairs": 0,
+            "correct": 23,
+            "group": "bool",
+            "incorrect": 0,
+            "n": 23
+          },
+          {
+            "auroc": null,
+            "comparable_pairs": 0,
+            "correct": 2,
+            "group": "bytes",
+            "incorrect": 0,
+            "n": 2
+          },
+          {
+            "auroc": null,
+            "comparable_pairs": 0,
+            "correct": 8,
+            "group": "tuple",
+            "incorrect": 0,
+            "n": 8
+          }
+        ],
+        "strata_used": [
+          {
+            "auroc": 0.9310344827586207,
+            "comparable_pairs": 29,
+            "correct": 29,
+            "group": "dict",
+            "incorrect": 1,
+            "n": 30
+          },
+          {
+            "auroc": 1.0,
+            "comparable_pairs": 102,
+            "correct": 51,
+            "group": "int",
+            "incorrect": 2,
+            "n": 53
+          },
+          {
+            "auroc": 1.0,
+            "comparable_pairs": 192,
+            "correct": 96,
+            "group": "list",
+            "incorrect": 2,
+            "n": 98
+          },
+          {
+            "auroc": 0.8733974358974359,
+            "comparable_pairs": 5616,
+            "correct": 144,
+            "group": "str",
+            "incorrect": 39,
+            "n": 183
+          }
+        ]
+      },
+      "none": {
+        "auroc": 0.6545334215751158,
+        "comparable_pairs": 10577,
+        "strata_excluded": [
+          {
+            "auroc": null,
+            "comparable_pairs": 0,
+            "correct": 2,
+            "group": "bytes",
+            "incorrect": 0,
+            "n": 2
+          }
+        ],
+        "strata_used": [
+          {
+            "auroc": 0.5,
+            "comparable_pairs": 102,
+            "correct": 17,
+            "group": "bool",
+            "incorrect": 6,
+            "n": 23
+          },
+          {
+            "auroc": 0.6521739130434783,
+            "comparable_pairs": 161,
+            "correct": 23,
+            "group": "dict",
+            "incorrect": 7,
+            "n": 30
+          },
+          {
+            "auroc": 0.5696480938416423,
+            "comparable_pairs": 682,
+            "correct": 31,
+            "group": "int",
+            "incorrect": 22,
+            "n": 53
+          },
+          {
+            "auroc": 0.6040851803563668,
+            "comparable_pairs": 2301,
+            "correct": 59,
+            "group": "list",
+            "incorrect": 39,
+            "n": 98
+          },
+          {
+            "auroc": 0.6802214324767633,
+            "comparable_pairs": 7316,
+            "correct": 59,
+            "group": "str",
+            "incorrect": 124,
+            "n": 183
+          },
+          {
+            "auroc": 0.8,
+            "comparable_pairs": 15,
+            "correct": 3,
+            "group": "tuple",
+            "incorrect": 5,
+            "n": 8
+          }
+        ]
+      }
+    }
+  },
+  "selective_risk": {
+    "low": {
+      "answer_all_accuracy": 0.889168765743073,
+      "answer_all_risk": 0.11083123425692698,
+      "fixed_coverage": [
+        {
+          "accepted": 324,
+          "accuracy": 0.9783950617283951,
+          "accuracy_wilson_95_ci": [
+            0.956082457903337,
+            0.9894961385896036
+          ],
+          "actual_coverage": 0.8161209068010076,
+          "minimum_confidence": 0.99,
+          "relative_error_reduction_vs_answer_all": 0.8050645342312011,
+          "requested_coverage": 0.7,
+          "risk": 0.021604938271604923
+        },
+        {
+          "accepted": 324,
+          "accuracy": 0.9783950617283951,
+          "accuracy_wilson_95_ci": [
+            0.956082457903337,
+            0.9894961385896036
+          ],
+          "actual_coverage": 0.8161209068010076,
+          "minimum_confidence": 0.99,
+          "relative_error_reduction_vs_answer_all": 0.8050645342312011,
+          "requested_coverage": 0.8,
+          "risk": 0.021604938271604923
+        },
+        {
+          "accepted": 358,
+          "accuracy": 0.9636871508379888,
+          "accuracy_wilson_95_ci": [
+            0.9388705242497666,
+            0.9786580296810141
+          ],
+          "actual_coverage": 0.9017632241813602,
+          "minimum_confidence": 0.9,
+          "relative_error_reduction_vs_answer_all": 0.6723590655154903,
+          "requested_coverage": 0.9,
+          "risk": 0.03631284916201116
+        }
+      ],
+      "n": 397,
+      "tie_policy": "Do not split equal-confidence groups; actual coverage may exceed requested."
+    },
+    "none": {
+      "answer_all_accuracy": 0.48866498740554154,
+      "answer_all_risk": 0.5113350125944585,
+      "fixed_coverage": [
+        {
+          "accepted": 281,
+          "accuracy": 0.5871886120996441,
+          "accuracy_wilson_95_ci": [
+            0.5288239368388081,
+            0.6432014976482892
+          ],
+          "actual_coverage": 0.707808564231738,
+          "minimum_confidence": 0.92,
+          "relative_error_reduction_vs_answer_all": 0.19267920691408238,
+          "requested_coverage": 0.7,
+          "risk": 0.4128113879003559
+        },
+        {
+          "accepted": 318,
+          "accuracy": 0.559748427672956,
+          "accuracy_wilson_95_ci": [
+            0.5047952840137561,
+            0.6132752202342965
+          ],
+          "actual_coverage": 0.801007556675063,
+          "minimum_confidence": 0.25,
+          "relative_error_reduction_vs_answer_all": 0.13901539796139667,
+          "requested_coverage": 0.8,
+          "risk": 0.44025157232704404
+        },
+        {
+          "accepted": 359,
+          "accuracy": 0.5153203342618384,
+          "accuracy_wilson_95_ci": [
+            0.4637341438352733,
+            0.5665821153808696
+          ],
+          "actual_coverage": 0.9042821158690176,
+          "minimum_confidence": 0.04,
+          "relative_error_reduction_vs_answer_all": 0.05212892956625549,
+          "requested_coverage": 0.9,
+          "risk": 0.48467966573816157
+        }
+      ],
+      "n": 397,
+      "tie_policy": "Do not split equal-confidence groups; actual coverage may exceed requested."
+    }
+  },
+  "status": "exploratory_existing_test_reanalysis",
+  "transfer_decomposition": {
+    "low->none": {
+      "held_out_residual_slope_penalty": {
+        "brier_difference_95_ci": [
+          0.005276991117708371,
+          0.050514222610955346
+        ],
+        "brier_difference_point": 0.024163075195762745,
+        "definition": "source-slope plus target-intercept loss minus target-refit loss; positive values favor refitting the slope",
+        "log_loss_difference_95_ci": [
+          0.019183811319945156,
+          0.20628791464876367
+        ],
+        "log_loss_difference_point": 0.08491244933050968,
+        "resampling": "Independently resample source calibration, target calibration, and target test items, then refit every calibration model in each bootstrap replicate.",
+        "target_minus_source_slope_95_ci": [
+          -0.3048393212333158,
+          -0.08801364793594271
+        ]
+      },
+      "held_out_target": {
+        "raw": {
+          "accuracy": 0.48866498740554154,
+          "auroc": 0.6435427352597634,
+          "baseline_brier_score": 0.2498855078145051,
+          "baseline_probability": 0.4849246231155779,
+          "brier_score": 0.3556984886649874,
+          "brier_skill_score": -0.423445848364401,
+          "calibration_gap": 0.2800755667506297,
+          "correct": 194,
+          "ece_equal_mass_5": 0.3390176322418137,
+          "log_loss": 6.083641975597731,
+          "mean_confidence": 0.7687405541561713,
+          "n": 397
+        },
+        "source_full_uncorrected": {
+          "accuracy": 0.48866498740554154,
+          "auroc": 0.6435427352597634,
+          "baseline_brier_score": 0.2498855078145051,
+          "baseline_probability": 0.4849246231155779,
+          "brier_score": 0.3342441765616315,
+          "brier_skill_score": -0.3375892803265226,
+          "calibration_gap": 0.30639918799758015,
+          "correct": 194,
+          "ece_equal_mass_5": 0.30639918799757987,
+          "log_loss": 1.1012062983124924,
+          "mean_confidence": 0.7950641754031217,
+          "n": 397
+        },
+        "source_slope_target_intercept": {
+          "accuracy": 0.48866498740554154,
+          "auroc": 0.6435427352597634,
+          "baseline_brier_score": 0.2498855078145051,
+          "baseline_probability": 0.4849246231155779,
+          "brier_score": 0.2556075676614899,
+          "brier_skill_score": -0.02289872628881051,
+          "calibration_gap": 0.016642965919612118,
+          "correct": 194,
+          "ece_equal_mass_5": 0.16282001259346776,
+          "log_loss": 0.7399727900483996,
+          "mean_confidence": 0.5053079533251537,
+          "n": 397
+        },
+        "target_full_refit": {
+          "accuracy": 0.48866498740554154,
+          "auroc": 0.6435427352597634,
+          "baseline_brier_score": 0.2498855078145051,
+          "baseline_probability": 0.4849246231155779,
+          "brier_score": 0.23144449246572715,
+          "brier_skill_score": 0.07379785850753329,
+          "calibration_gap": 0.005742623530667679,
+          "correct": 194,
+          "ece_equal_mass_5": 0.0678719964701273,
+          "log_loss": 0.6550603407178899,
+          "mean_confidence": 0.4944076109362092,
+          "n": 397
+        }
+      },
+      "source_calibration_prevalence": 0.8919597989949749,
+      "source_condition": "low",
+      "source_full_model": {
+        "intercept": 0.7141953578598028,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "negative_log_likelihood": 104.6188164757242,
+        "slope": 0.29640105816575446,
+        "slope_fixed": false,
+        "success": true
+      },
+      "source_slope_target_intercept_model": {
+        "intercept": -1.3740723399969141,
+        "message": "Solution found.",
+        "negative_log_likelihood": 288.17977631730366,
+        "slope": 0.29640105816575446,
+        "slope_fixed": true,
+        "success": true
+      },
+      "target_calibration_prevalence": 0.4849246231155779,
+      "target_calibration_slope_likelihood_ratio": {
+        "null": "target calibration slope equals source calibration slope",
+        "p_value": 1.238238117284681e-14,
+        "statistic": 59.47553704955294
+      },
+      "target_condition": "none",
+      "target_full_model": {
+        "intercept": -0.5174044240036746,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "negative_log_likelihood": 258.4420077925272,
+        "slope": 0.11415230346458015,
+        "slope_fixed": false,
+        "success": true
+      }
+    },
+    "none->low": {
+      "held_out_residual_slope_penalty": {
+        "brier_difference_95_ci": [
+          0.010589726835680083,
+          0.040353807195198176
+        ],
+        "brier_difference_point": 0.023801704747410488,
+        "definition": "source-slope plus target-intercept loss minus target-refit loss; positive values favor refitting the slope",
+        "log_loss_difference_95_ci": [
+          0.026509716958432496,
+          0.10514899469590204
+        ],
+        "log_loss_difference_point": 0.06221581735058099,
+        "resampling": "Independently resample source calibration, target calibration, and target test items, then refit every calibration model in each bootstrap replicate.",
+        "target_minus_source_slope_95_ci": [
+          0.08685286092046118,
+          0.31658621064551523
+        ]
+      },
+      "held_out_target": {
+        "raw": {
+          "accuracy": 0.889168765743073,
+          "auroc": 0.8919005923255215,
+          "baseline_brier_score": 0.09855546163662632,
+          "baseline_probability": 0.8919597989949749,
+          "brier_score": 0.04784911838790932,
+          "brier_skill_score": 0.5144955176169854,
+          "calibration_gap": 0.014282115869017509,
+          "correct": 353,
+          "ece_equal_mass_5": 0.01428211586901763,
+          "log_loss": 0.5996297488469658,
+          "mean_confidence": 0.9034508816120905,
+          "n": 397
+        },
+        "source_full_uncorrected": {
+          "accuracy": 0.889168765743073,
+          "auroc": 0.8919005923255215,
+          "baseline_brier_score": 0.09855546163662632,
+          "baseline_probability": 0.8919597989949749,
+          "brier_score": 0.1901658684555755,
+          "brier_skill_score": -0.9295315074137289,
+          "calibration_gap": -0.3522518625695249,
+          "correct": 353,
+          "ece_equal_mass_5": 0.35225186256952484,
+          "log_loss": 0.5696281627455397,
+          "mean_confidence": 0.5369169031735481,
+          "n": 397
+        },
+        "source_slope_target_intercept": {
+          "accuracy": 0.889168765743073,
+          "auroc": 0.8919005923255215,
+          "baseline_brier_score": 0.09855546163662632,
+          "baseline_probability": 0.8919597989949749,
+          "brier_score": 0.07370523007553079,
+          "brier_skill_score": 0.2521446416913784,
+          "calibration_gap": -0.00608988456117876,
+          "correct": 353,
+          "ece_equal_mass_5": 0.11098270715043973,
+          "log_loss": 0.26201045976331994,
+          "mean_confidence": 0.8830788811818943,
+          "n": 397
+        },
+        "target_full_refit": {
+          "accuracy": 0.889168765743073,
+          "auroc": 0.8919005923255215,
+          "baseline_brier_score": 0.09855546163662632,
+          "baseline_probability": 0.8919597989949749,
+          "brier_score": 0.0499035253281203,
+          "brier_skill_score": 0.49365033150456494,
+          "calibration_gap": -0.019105063781343024,
+          "correct": 353,
+          "ece_equal_mass_5": 0.05036560761557869,
+          "log_loss": 0.19979464241273895,
+          "mean_confidence": 0.87006370196173,
+          "n": 397
+        }
+      },
+      "source_calibration_prevalence": 0.4849246231155779,
+      "source_condition": "none",
+      "source_full_model": {
+        "intercept": -0.5174044240036746,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "negative_log_likelihood": 258.4420077925272,
+        "slope": 0.11415230346458015,
+        "slope_fixed": false,
+        "success": true
+      },
+      "source_slope_target_intercept_model": {
+        "intercept": 1.4687691162223335,
+        "message": "Solution found.",
+        "negative_log_likelihood": 116.05420915611103,
+        "slope": 0.11415230346458015,
+        "slope_fixed": true,
+        "success": true
+      },
+      "target_calibration_prevalence": 0.8919597989949749,
+      "target_calibration_slope_likelihood_ratio": {
+        "null": "target calibration slope equals source calibration slope",
+        "p_value": 1.732654335165336e-06,
+        "statistic": 22.870785360773652
+      },
+      "target_condition": "low",
+      "target_full_model": {
+        "intercept": 0.7141953578598028,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "negative_log_likelihood": 104.6188164757242,
+        "slope": 0.29640105816575446,
+        "slope_fixed": false,
+        "success": true
+      }
+    }
+  }
+}

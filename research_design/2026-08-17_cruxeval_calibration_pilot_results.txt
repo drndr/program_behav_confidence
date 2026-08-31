@@ -1,0 +1,38 @@
+CRUXEval reflective-confidence calibration pilot
+=================================================
+
+Correctness target: semantic Python value equivalence.
+Calibration and test IDs are paired across reasoning conditions.
+Confidence extraction: none=800/800, low=795/800; paired complete cases=795
+
+Raw held-out confidence
+-----------------------
+none: n=397, accuracy=0.489, mean_confidence=0.769, gap=0.280, AUROC=0.644, Brier=0.356, BrierSkill=-0.423, ECE5=0.339
+ low: n=397, accuracy=0.889, mean_confidence=0.903, gap=0.014, AUROC=0.892, Brier=0.048, BrierSkill=0.514, ECE5=0.014
+
+Platt-scaled held-out and transfer evaluations
+----------------------------------------------
+none->none: accuracy=0.489, mean_confidence=0.494, gap=0.006, AUROC=0.644, Brier=0.231, BrierSkill=0.074, ECE5=0.068
+ none->low: accuracy=0.889, mean_confidence=0.537, gap=-0.352, AUROC=0.892, Brier=0.190, BrierSkill=0.274, ECE5=0.352
+ low->none: accuracy=0.489, mean_confidence=0.795, gap=0.306, AUROC=0.644, Brier=0.334, BrierSkill=0.190, ECE5=0.306
+  low->low: accuracy=0.889, mean_confidence=0.870, gap=-0.019, AUROC=0.892, Brier=0.050, BrierSkill=0.494, ECE5=0.050
+
+Raw-confidence risk/coverage on the held-out set
+-----------------------------------------------
+none:
+  coverage=0.44: accuracy=0.578, risk=0.422
+  coverage=0.57: accuracy=0.591, risk=0.409
+  coverage=0.75: accuracy=0.577, risk=0.423
+  coverage=1.00: accuracy=0.489, risk=0.511
+low:
+  coverage=0.49: accuracy=0.974, risk=0.026
+  coverage=0.82: accuracy=0.978, risk=0.022
+  coverage=0.82: accuracy=0.978, risk=0.022
+  coverage=1.00: accuracy=0.889, risk=0.111
+
+Threshold transfer
+------------------
+none: no threshold met the calibration criterion
+low: selected threshold=0.02, calibration accuracy=0.905, coverage=0.975
+  -> none: accepted=370, coverage=0.932, accuracy=0.508
+  -> low: accepted=379, coverage=0.955, accuracy=0.926

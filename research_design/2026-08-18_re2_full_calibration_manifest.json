@@ -1,0 +1,56 @@
+{
+  "conditions": {
+    "low": {
+      "accuracy": 0.452,
+      "correct": 226,
+      "parse_invalid_json": 1,
+      "parse_missing_output_tag": 64,
+      "parse_parsed": 435,
+      "total": 500
+    },
+    "none": {
+      "accuracy": 0.396,
+      "correct": 198,
+      "parse_invalid_json": 2,
+      "parse_missing_output_tag": 66,
+      "parse_parsed": 432,
+      "total": 500
+    }
+  },
+  "correctness_target": "safe_compatibility_correct",
+  "matched_prompt_path": "C:\\Users\\drndr\\Documents\\fse2027-andor\\tmp\\re2_bench_output_confirmatory_holdout_prompts.jsonl",
+  "matched_prompt_sha256": "1ff0431aac1f0e4f6b4dcfd88dfd6d6954423b980a6d344b748baa78e2c8125e",
+  "output_paths": {
+    "low_code_aware": "C:\\Users\\drndr\\Documents\\fse2027-andor\\tmp\\re2_bench_full_confidence_low_code_aware_v1.jsonl",
+    "low_response_only": "C:\\Users\\drndr\\Documents\\fse2027-andor\\tmp\\re2_bench_full_confidence_low_response_only_v1.jsonl",
+    "none_code_aware": "C:\\Users\\drndr\\Documents\\fse2027-andor\\tmp\\re2_bench_full_confidence_none_code_aware_v1.jsonl",
+    "none_response_only": "C:\\Users\\drndr\\Documents\\fse2027-andor\\tmp\\re2_bench_full_confidence_none_response_only_v1.jsonl"
+  },
+  "output_sha256": {
+    "low_code_aware": "742c065b18d63f09b554ce2f567d663cddf635d537b05afd38313474fe198bfb",
+    "low_response_only": "34e27fb6143b1e4eb2ff230f806a69c9cab99833d2ec2a65889c854d1e2fbd6c",
+    "none_code_aware": "4ec79d0bbb248027be23373056fcf70aaa09a3a153213af03fef74ccd3fd0684",
+    "none_response_only": "4813b187d86fa0e4e36132668bf141295f3dfed206e5cb8e2745a24c4246462b"
+  },
+  "prediction_paths": {
+    "low": "C:\\Users\\drndr\\Documents\\fse2027-andor\\tmp\\re2_bench_full_gpt_5_4_nano_low_t4096_seed0_predictions.jsonl",
+    "none": "C:\\Users\\drndr\\Documents\\fse2027-andor\\tmp\\re2_bench_full_gpt_5_4_nano_none_t4096_seed0_predictions.jsonl"
+  },
+  "prediction_sha256": {
+    "low": "2ab076e0f00f1c74852e3a69128ba3090eeeea612824493d5f9346cd48d48fa9",
+    "none": "ae65afaa05fe422d916a4a5687d3b131918e059663c534e7e57df2911b12b47f"
+  },
+  "protocol_path": "C:\\Users\\drndr\\Documents\\fse2027-andor\\research_design\\2026-08-18_re2_full_calibration_protocol.md",
+  "score_paths": {
+    "low": "C:\\Users\\drndr\\Documents\\fse2027-andor\\tmp\\re2_bench_full_gpt_5_4_nano_low_scores.jsonl",
+    "none": "C:\\Users\\drndr\\Documents\\fse2027-andor\\tmp\\re2_bench_full_gpt_5_4_nano_none_scores.jsonl"
+  },
+  "score_sha256": {
+    "low": "a53a276f42598edf23f73b6509df667d36ce8b235181a4c61181b9384c094b96",
+    "none": "8de2bd053c40fd5a61efb72b8ae0e654ded7d27a95209db2d41102a9dc4bd6dd"
+  },
+  "source_prompt_path": "C:\\Users\\drndr\\Documents\\fse2027-andor\\tmp\\re2_bench_lite_output_prediction_prompts.jsonl",
+  "source_prompt_sha256": "5dd091f2c4b7d7c27245752c0a40161f993a27d3ee1a4f41f8670ded47c1b8ab",
+  "study": "re2_full_calibration_v1",
+  "verifier_reasoning_effort": "low for all four conditions"
+}

@@ -1,0 +1,29 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.idea/
+.vscode/
+
+# Generated or licensing-sensitive artifacts.
+tmp/
+_local/
+results/private/
+
+# Generated manuscript and analysis products.
+paper/build/
+figures/generated/
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+
+# Secrets must never enter the repository.
+.env
+*.key
+

@@ -1,0 +1,486 @@
+{
+  "bootstrap_seed": 20260817,
+  "bootstraps": 2000,
+  "calibration_prevalence": {
+    "low": 0.8919597989949749,
+    "none": 0.4849246231155779
+  },
+  "confidence_extraction": {
+    "low": {
+      "excluded_for_pairing": [],
+      "failed": 5,
+      "failures": [
+        {
+          "error": "Could not parse confidence from ''",
+          "finish_reason": "length",
+          "generated_token_count": 1024,
+          "id": "sample_112",
+          "reasoning_token_count": 1024
+        },
+        {
+          "error": "Could not parse confidence from ''",
+          "finish_reason": "length",
+          "generated_token_count": 1024,
+          "id": "sample_250",
+          "reasoning_token_count": 1024
+        },
+        {
+          "error": "Could not parse confidence from ''",
+          "finish_reason": "length",
+          "generated_token_count": 1024,
+          "id": "sample_427",
+          "reasoning_token_count": 1024
+        },
+        {
+          "error": "Could not parse confidence from ''",
+          "finish_reason": "length",
+          "generated_token_count": 1024,
+          "id": "sample_640",
+          "reasoning_token_count": 1024
+        },
+        {
+          "error": "Could not parse confidence from ''",
+          "finish_reason": "length",
+          "generated_token_count": 1024,
+          "id": "sample_698",
+          "reasoning_token_count": 1015
+        }
+      ],
+      "parsed": 795,
+      "total": 800
+    },
+    "none": {
+      "excluded_for_pairing": [
+        "sample_112",
+        "sample_250",
+        "sample_427",
+        "sample_640",
+        "sample_698"
+      ],
+      "failed": 0,
+      "failures": [],
+      "parsed": 800,
+      "total": 800
+    }
+  },
+  "confidence_prompt_paths": {
+    "low": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_reflective_confidence_low_v1.jsonl",
+    "none": "C:\\Users\\drndr\\Documents\\fse2027-andor\\data\\prompts\\cruxeval\\cruxeval_reflective_confidence_none_v1.jsonl"
+  },
+  "confidence_result_paths": {
+    "low": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_reflective_confidence_gpt_5_4_nano_low_predictions.jsonl",
+    "none": "C:\\Users\\drndr\\Documents\\fse2027-andor\\results\\cruxeval_reflective_confidence_gpt_5_4_nano_none_predictions.jsonl"
+  },
+  "confidence_unique_values": {
+    "low": 21,
+    "none": 58
+  },
+  "correctness_target": "relaxed_correct: equal Python literal type and value, with bare string content accepted for string targets",
+  "paired_complete_cases": 795,
+  "pilot": "cruxeval_reflective_confidence_v1",
+  "platt_evaluations": {
+    "low->low": {
+      "bootstrap_95_ci": {
+        "accuracy": [
+          0.8589420654911839,
+          0.9168765743073047
+        ],
+        "auroc": [
+          0.8141641570100614,
+          0.9531668003925753
+        ],
+        "brier_score": [
+          0.0353697966685162,
+          0.06627132212122641
+        ],
+        "brier_skill_score": [
+          0.3586986477125297,
+          0.6176539539262541
+        ],
+        "calibration_gap": [
+          -0.04012771949146525,
+          0.0032571641254301033
+        ],
+        "ece_equal_mass_5": [
+          0.03213527339517581,
+          0.07088583077474936
+        ],
+        "mean_confidence": [
+          0.8511230426774612,
+          0.8876293021621684
+        ]
+      },
+      "metrics": {
+        "accuracy": 0.889168765743073,
+        "auroc": 0.8919005923255215,
+        "baseline_brier_score": 0.09855546163662632,
+        "baseline_probability": 0.8919597989949749,
+        "brier_score": 0.04990352265491824,
+        "brier_skill_score": 0.4936503586283998,
+        "calibration_gap": -0.01910510194405246,
+        "correct": 353,
+        "ece_equal_mass_5": 0.05036560245304549,
+        "mean_confidence": 0.8700636637990206,
+        "n": 397
+      },
+      "source_calibrator": "low",
+      "target_condition": "low"
+    },
+    "low->none": {
+      "bootstrap_95_ci": {
+        "accuracy": [
+          0.43828715365239296,
+          0.5390428211586902
+        ],
+        "auroc": [
+          0.5883149109813126,
+          0.6953698767213333
+        ],
+        "brier_score": [
+          0.2976764841801395,
+          0.37304793945583004
+        ],
+        "brier_skill_score": [
+          0.12769834394214805,
+          0.25224421025486077
+        ],
+        "calibration_gap": [
+          0.2596615081838536,
+          0.3561984880799011
+        ],
+        "ece_equal_mass_5": [
+          0.25973575290914785,
+          0.35619848807990095
+        ],
+        "mean_confidence": [
+          0.7715407674096215,
+          0.8193119081156509
+        ]
+      },
+      "metrics": {
+        "accuracy": 0.48866498740554154,
+        "auroc": 0.6435427352597634,
+        "baseline_brier_score": 0.4125182225444399,
+        "baseline_probability": 0.8919597989949749,
+        "brier_score": 0.3342441448922455,
+        "brier_skill_score": 0.189746957526857,
+        "calibration_gap": 0.3063991255480152,
+        "correct": 194,
+        "ece_equal_mass_5": 0.306399125548015,
+        "mean_confidence": 0.7950641129535567,
+        "n": 397
+      },
+      "source_calibrator": "low",
+      "target_condition": "none"
+    },
+    "none->low": {
+      "bootstrap_95_ci": {
+        "accuracy": [
+          0.8564231738035264,
+          0.9193954659949622
+        ],
+        "auroc": [
+          0.8190508217614388,
+          0.9567802170698855
+        ],
+        "brier_score": [
+          0.18176569551589625,
+          0.1988410046581005
+        ],
+        "brier_skill_score": [
+          0.2415341275070985,
+          0.30597764599724686
+        ],
+        "calibration_gap": [
+          -0.3763279475169673,
+          -0.32496398800323517
+        ],
+        "ece_equal_mass_5": [
+          0.3249639880032354,
+          0.3763279475169675
+        ],
+        "mean_confidence": [
+          0.525175605452079,
+          0.5480117309759215
+        ]
+      },
+      "metrics": {
+        "accuracy": 0.889168765743073,
+        "auroc": 0.8919005923255215,
+        "baseline_brier_score": 0.2619609986186518,
+        "baseline_probability": 0.4849246231155779,
+        "brier_score": 0.19016585696666158,
+        "brier_skill_score": 0.27406805604870055,
+        "calibration_gap": -0.35225185049732766,
+        "correct": 353,
+        "ece_equal_mass_5": 0.35225185049732766,
+        "mean_confidence": 0.5369169152457454,
+        "n": 397
+      },
+      "source_calibrator": "none",
+      "target_condition": "low"
+    },
+    "none->none": {
+      "bootstrap_95_ci": {
+        "accuracy": [
+          0.43828715365239296,
+          0.5365239294710328
+        ],
+        "auroc": [
+          0.5878874163738066,
+          0.694992605692161
+        ],
+        "brier_score": [
+          0.21862303205075934,
+          0.24532583053478085
+        ],
+        "brier_skill_score": [
+          0.018562508671241647,
+          0.12510807953421235
+        ],
+        "calibration_gap": [
+          -0.040612541420395006,
+          0.05448862930872526
+        ],
+        "ece_equal_mass_5": [
+          0.032996858374521036,
+          0.11024456869197308
+        ],
+        "mean_confidence": [
+          0.4801580116800832,
+          0.5088780676597149
+        ]
+      },
+      "metrics": {
+        "accuracy": 0.48866498740554154,
+        "auroc": 0.6435427352597634,
+        "baseline_brier_score": 0.2498855078145051,
+        "baseline_probability": 0.4849246231155779,
+        "brier_score": 0.23144449285521337,
+        "brier_skill_score": 0.07379785694887464,
+        "calibration_gap": 0.005742628147072049,
+        "correct": 194,
+        "ece_equal_mass_5": 0.06787200112782514,
+        "mean_confidence": 0.4944076155526136,
+        "n": 397
+      },
+      "source_calibrator": "none",
+      "target_condition": "none"
+    }
+  },
+  "platt_models": {
+    "low": {
+      "intercept": 0.7141947111236028,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "slope": 0.29640110494739047,
+      "success": true
+    },
+    "none": {
+      "intercept": -0.5174045064750389,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "slope": 0.11415232578099647,
+      "success": true
+    }
+  },
+  "raw_test": {
+    "low": {
+      "bootstrap_95_ci": {
+        "accuracy": [
+          0.8588790931989925,
+          0.9193954659949622
+        ],
+        "auroc": [
+          0.8221513385412816,
+          0.9553363186006524
+        ],
+        "brier_score": [
+          0.029576032745591934,
+          0.06795742443324937
+        ],
+        "brier_skill_score": [
+          0.32089914396021785,
+          0.6822205350369227
+        ],
+        "calibration_gap": [
+          -0.006953400503778231,
+          0.037134760705289684
+        ],
+        "ece_equal_mass_5": [
+          0.009243073047858924,
+          0.040378463476070534
+        ],
+        "mean_confidence": [
+          0.8741309823677581,
+          0.9296278337531487
+        ]
+      },
+      "metrics": {
+        "accuracy": 0.889168765743073,
+        "auroc": 0.8919005923255215,
+        "baseline_brier_score": 0.09855546163662632,
+        "baseline_probability": 0.8919597989949749,
+        "brier_score": 0.04784911838790932,
+        "brier_skill_score": 0.5144955176169854,
+        "calibration_gap": 0.014282115869017509,
+        "correct": 353,
+        "ece_equal_mass_5": 0.01428211586901763,
+        "mean_confidence": 0.9034508816120905,
+        "n": 397
+      },
+      "risk_coverage": [
+        {
+          "accepted": 193,
+          "accuracy": 0.9740932642487047,
+          "actual_coverage": 0.48614609571788414,
+          "minimum_confidence": 1.0,
+          "requested_coverage": 0.25,
+          "risk": 0.025906735751295318
+        },
+        {
+          "accepted": 324,
+          "accuracy": 0.9783950617283951,
+          "actual_coverage": 0.8161209068010076,
+          "minimum_confidence": 0.99,
+          "requested_coverage": 0.5,
+          "risk": 0.021604938271604923
+        },
+        {
+          "accepted": 324,
+          "accuracy": 0.9783950617283951,
+          "actual_coverage": 0.8161209068010076,
+          "minimum_confidence": 0.99,
+          "requested_coverage": 0.75,
+          "risk": 0.021604938271604923
+        },
+        {
+          "accepted": 397,
+          "accuracy": 0.889168765743073,
+          "actual_coverage": 1.0,
+          "minimum_confidence": 0.0,
+          "requested_coverage": 1.0,
+          "risk": 0.11083123425692698
+        }
+      ]
+    },
+    "none": {
+      "bootstrap_95_ci": {
+        "accuracy": [
+          0.43828715365239296,
+          0.5390428211586902
+        ],
+        "auroc": [
+          0.5887860795531713,
+          0.6960534249836025
+        ],
+        "brier_score": [
+          0.31024047858942067,
+          0.4008153400503778
+        ],
+        "brier_skill_score": [
+          -0.6112989932565926,
+          -0.23815878038334073
+        ],
+        "calibration_gap": [
+          0.22755604534005047,
+          0.33197481108312327
+        ],
+        "ece_equal_mass_5": [
+          0.29473362720403024,
+          0.3915188916876574
+        ],
+        "mean_confidence": [
+          0.7312084382871535,
+          0.8068041561712846
+        ]
+      },
+      "metrics": {
+        "accuracy": 0.48866498740554154,
+        "auroc": 0.6435427352597634,
+        "baseline_brier_score": 0.2498855078145051,
+        "baseline_probability": 0.4849246231155779,
+        "brier_score": 0.3556984886649874,
+        "brier_skill_score": -0.423445848364401,
+        "calibration_gap": 0.2800755667506297,
+        "correct": 194,
+        "ece_equal_mass_5": 0.3390176322418137,
+        "mean_confidence": 0.7687405541561713,
+        "n": 397
+      },
+      "risk_coverage": [
+        {
+          "accepted": 173,
+          "accuracy": 0.5780346820809249,
+          "actual_coverage": 0.4357682619647355,
+          "minimum_confidence": 1.0,
+          "requested_coverage": 0.25,
+          "risk": 0.4219653179190751
+        },
+        {
+          "accepted": 225,
+          "accuracy": 0.5911111111111111,
+          "actual_coverage": 0.5667506297229219,
+          "minimum_confidence": 0.99,
+          "requested_coverage": 0.5,
+          "risk": 0.40888888888888886
+        },
+        {
+          "accepted": 298,
+          "accuracy": 0.5771812080536913,
+          "actual_coverage": 0.7506297229219143,
+          "minimum_confidence": 0.72,
+          "requested_coverage": 0.75,
+          "risk": 0.42281879194630867
+        },
+        {
+          "accepted": 397,
+          "accuracy": 0.48866498740554154,
+          "actual_coverage": 1.0,
+          "minimum_confidence": 0.0,
+          "requested_coverage": 1.0,
+          "risk": 0.5113350125944585
+        }
+      ]
+    }
+  },
+  "split_policy": "Paired 50/50 split, stratified by the joint no/low semantic-correctness pattern and ordered by a seeded SHA-256 key.",
+  "split_sizes": {
+    "low": {
+      "calibration": 398,
+      "test": 397
+    },
+    "none": {
+      "calibration": 398,
+      "test": 397
+    }
+  },
+  "threshold_transfer": {
+    "low": {
+      "applied_to_test": {
+        "low": {
+          "accepted": 379,
+          "accuracy": 0.9261213720316622,
+          "coverage": 0.9546599496221663,
+          "risk": 0.07387862796833777
+        },
+        "none": {
+          "accepted": 370,
+          "accuracy": 0.5081081081081081,
+          "coverage": 0.9319899244332494,
+          "risk": 0.49189189189189186
+        }
+      },
+      "selected_on_calibration": {
+        "accepted": 388,
+        "accuracy": 0.904639175257732,
+        "coverage": 0.9748743718592965,
+        "minimum_items": 40,
+        "target_accuracy": 0.9,
+        "threshold": 0.02
+      }
+    },
+    "none": {
+      "applied_to_test": {},
+      "selected_on_calibration": null
+    }
+  }
+}

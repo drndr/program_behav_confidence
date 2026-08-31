@@ -1,0 +1,4396 @@
+code,id,input,output
+"def f(nums):
+    output = []
+    for n in nums:
+        output.append((nums.count(n), n))
+    output.sort(reverse=True)
+    return output",sample_0,"[1, 1, 3, 1, 3, 1]","[(4, 1), (4, 1), (4, 1), (4, 1), (2, 3), (2, 3)]"
+"def f(a, b, c):
+    result = {}
+    for d in a, b, c:
+        result.update(dict.fromkeys(d))
+    return result",sample_1,"(1, ), (1, ), (1, 2)","{1: None, 2: None}"
+"def f(text):
+    new_text = list(text)
+    for i in '+':
+        if i in new_text:
+            new_text.remove(i)
+    return ''.join(new_text)",sample_2,'hbtofdeiequ','hbtofdeiequ'
+"def f(text, value):
+    text_list = list(text)
+    text_list.append(value)
+    return ''.join(text_list)",sample_3,"'bcksrut', 'q'",'bcksrutq'
+"def f(array):
+    s = ' '
+    s += ''.join(array)
+    return s",sample_4,"[' ', '  ', '    ', '   ']",'           '
+"def f(text, lower, upper):
+    count = 0
+    new_text = list()
+    for char in text:
+        char = lower if char.isdecimal() else upper
+        if char in ['p', 'C']:
+            count += 1
+        new_text.append(char)
+    return count, ''.join(new_text)",sample_5,"'DSUWeqExTQdCMGpqur', 'a', 'x'","(0, 'xxxxxxxxxxxxxxxxxx')"
+"def f(dic):
+    for k,v in sorted(dic.items(), key=lambda x: len(str(x)))[:-1]:
+        dic.pop(k)
+    return list(dic.items())",sample_6,"{'11': 52, '65': 34, 'a': 12, '4': 52, '74': 31}","[('74', 31)]"
+"def f(list):
+    original = list[:]
+    while len(list) > 1:
+        list.pop(len(list) - 1)
+        for i in range(len(list)):
+            list.pop(i)
+    list = original[:]
+    if list:
+        list.pop(0)
+    return list",sample_7,[],[]
+"def f(string, encryption):
+    if encryption == 0:
+        return string
+    else:
+        return string.upper().encode('rot13')",sample_8,"'UppEr', 0",'UppEr'
+"def f(t):
+    for c in t:
+        if not c.isnumeric():
+            return False
+    return True",sample_9,'#284376598',False
+"def f(text):
+    new_text = ''
+    for ch in text.lower().strip():
+        if ch.isnumeric() or ch in 'ÄäÏïÖöÜü':
+            new_text += ch
+    return new_text",sample_10,'',''
+"def f(a, b):
+    for key, value in b.items():
+        if key not in a:
+            a[key] = [value]
+        else:
+            a[key].append(value)
+    return a",sample_11,"{}, {'foo': 'bar'}",{'foo': ['bar']}
+"def f(s, x):
+    count = 0
+    while s[:len(x)] == x and count < len(s)-len(x):
+        s = s[len(x):]
+        count += len(x)
+    return s",sample_12,"'If you want to live a happy life! Daniel', 'Daniel'",'If you want to live a happy life! Daniel'
+"def f(names):
+    count = len(names)
+    numberOfNames = 0
+    for i in names:
+        if i.isalpha():
+            numberOfNames += 1
+    return numberOfNames",sample_13,"['sharron', 'Savannah', 'Mike Cherokee']",2
+"def f(s):
+    arr = list(s.strip())
+    arr.reverse()
+    return ''.join(arr)",sample_14,'   OOP   ','POO'
+"def f(text, wrong, right):
+    new_text = text.replace(wrong, right)
+    return new_text.upper()",sample_15,"""zn kgd jw lnt"", ""h"", ""u""",'ZN KGD JW LNT'
+"def f(text, suffix):
+    if text.endswith(suffix):
+        return text[:-len(suffix)]
+    return text",sample_16,"'zejrohaj', 'owc'",'zejrohaj'
+"def f(text):
+    return text.find("","")",sample_17,"""There are, no, commas, in this text""",9
+"def f(array, elem):
+    k = 0
+    l = array.copy()
+    for i in l:
+        if i > elem:
+            array.insert(k, elem)
+            break
+        k += 1
+    return array",sample_18,"[5, 4, 3, 2, 1, 0], 3","[3, 5, 4, 3, 2, 1, 0]"
+"def f(x, y):
+    tmp = ''.join(['0' if c == '9' else '9' for c in y[::-1]])
+    if (x.isnumeric() and tmp.isnumeric()):
+        return x + tmp
+    else:
+        return x",sample_19,""""", ""sdasdnakjsda80""",''
+"def f(text):
+    result = ''
+    for i in range(len(text)-1, -1, -1):
+        result += text[i]
+    return result",sample_20,"'was,'","',saw'"
+"def f(array):
+    n = array.pop()
+    array.extend([n, n])
+    return array",sample_21,"[1, 1, 2, 2]","[1, 1, 2, 2, 2]"
+"def f(a):
+    if a == 0:
+        return [0]
+    result = []
+    while a > 0:
+        result.append(a%10)
+        a = a//10
+    result.reverse()
+    return int(''.join(str(i) for i in result))",sample_22,000,[0]
+"def f(text, chars):
+    if chars:
+        text = text.rstrip(chars)
+    else:
+        text = text.rstrip(' ')
+    if text == '':
+        return '-'
+    return text",sample_23,"'new-medium-performing-application - XQuery 2.2', '0123456789-'",'new-medium-performing-application - XQuery 2.'
+"def f(nums, i):
+    nums.pop(i)
+    return nums",sample_24,"[35, 45, 3, 61, 39, 27, 47], 0","[45, 3, 61, 39, 27, 47]"
+"def f(d):
+    d = d.copy()
+    d.popitem()
+    return d",sample_25,"{""l"": 1, ""t"": 2, ""x:"": 3}","{'l': 1, 't': 2}"
+"def f(items, target):
+    for i in items.split():
+        if i in target:
+            return items.index(i)+1
+        if i.index('.') == len(i)-1 or i.index('.') == 0:
+            return 'error'
+    return '.'",sample_26,"""qy. dg. rnvprt rse.. irtwv tx.."", ""wtwdoacb""",'error'
+"def f(w):
+    ls = list(w)
+    omw = ''
+    while len(ls) > 0:
+        omw += ls.pop(0)
+        if len(ls) * 2 > len(w):
+            return w[len(ls):] == omw
+    return False",sample_27,'flak',False
+"def f(mylist):
+    revl = mylist[:]
+    revl.reverse()
+    mylist.sort(reverse=True)
+    return mylist == revl",sample_28,"[5, 8]",True
+"def f(text):
+    nums = list(filter(str.isnumeric, text))
+    assert len(nums) > 0
+    return ''.join(nums)",sample_29,'-123   \t+314','123314'
+"def f(array):
+    result = []
+    for elem in array:
+        if elem.isascii() or (isinstance(elem, int) and not str(abs(elem)).isascii()):
+            result.append(elem)
+    return result",sample_30,"[""a"", ""b"", ""c""]","['a', 'b', 'c']"
+"def f(string):
+    upper = 0
+    for c in string:
+        if c.isupper():
+            upper += 1
+    return upper * (2,1)[upper % 2]",sample_31,'PoIOarTvpoead',8
+"def f(s, sep):
+    reverse = ['*' + e for e in s.split(sep)]
+    return ';'.join(reversed(reverse))",sample_32,"'volume', 'l'",'*ume;*vo'
+"def f(lists):
+    dic = {}
+    for n in lists:
+        if n in dic:
+            dic[n].append(lists.pop(lists.index(n)))
+        else:
+            dic[n] = lists[:lists.index(n) + 1]
+    return str(dic).replace(' ', '')",sample_33,"[5, 2, 7, 2, 3, 5]","'{5:[5,5],2:[5,2,2],7:[5,2,7]}'"
+"def f(nums, odd1, odd2):
+    while odd1 in nums:
+        nums.remove(odd1)
+    while odd2 in nums:
+        nums.remove(odd2)
+    return nums",sample_34,"[1, 2, 3, 7, 7, 6, 8, 4, 1, 2, 3, 5, 1, 3, 21, 1, 3], 3, 1","[2, 7, 7, 6, 8, 4, 2, 5, 21]"
+"def f(pattern, items):
+    result = []
+    for text in items:
+        pos = text.rfind(pattern)
+        if pos >= 0:
+            result.append(pos)
+
+    return result",sample_35,""" B "", ["" bBb "", "" BaB "", "" bB"", "" bBbB "", "" bbb""]",[]
+"def f(text, chars):
+    return text.rstrip(chars) if text else text",sample_36,"'ha', ''",'ha'
+"def f(text):
+    text_arr = []
+    for j in range(len(text)):
+        text_arr.append(text[j:])
+    return text_arr",sample_37,'123',"['123', '23', '3']"
+"def f(string):
+    return string.title().replace(' ', '')",sample_38,'1oE-err bzz-bmm','1Oe-ErrBzz-Bmm'
+"def f(array, elem):
+    if elem in array:
+        return array.index(elem)
+    return -1",sample_39,"[6, 2, 7, 1], 6",0
+"def f(text):
+    return text.ljust(len(text) + 1, ""#"")",sample_40,"""the cow goes moo""",'the cow goes moo#'
+"def f(array, values):
+    array.reverse()
+    for value in values:
+        array.insert(len(array) // 2, value)
+    array.reverse()
+    return array",sample_41,"[58], [21, 92]","[58, 92, 21]"
+"def f(nums):
+    nums.clear()
+    for num in nums:
+        nums.append(num*2)
+    return nums",sample_42,"[4, 3, 2, 1, 2, -1, 4, 2]",[]
+"def f(n):
+    for i in str(n):
+        if not i.isdigit():
+            n = -1
+            break
+    return n",sample_43,"""6 ** 2""",-1
+"def f(text):
+    ls = list(text)
+    for i in range(0, len(ls)):
+        if ls[i]!='+':
+            ls.insert(i, '+')
+            ls.insert(i, '*')
+            break
+    return '+'.join(ls)",sample_44,'nzoh','*+++n+z+o+h'
+"def f(text, letter):
+    counts = {}
+    for char in text:
+        if char not in counts:
+            counts[char] = 1
+        else:
+            counts[char] += 1
+    return counts.get(letter, 0)",sample_45,"'za1fd1as8f7afasdfam97adfa', '7'",2
+"def f(l, c):
+    return c.join(l)",sample_46,"['many', 'letters', 'asvsz', 'hello', 'man'], ''",'manylettersasvszhelloman'
+"def f(text):
+    length = len(text)
+    half = length // 2
+    encode = text[:half].encode('ascii')
+    if text[half:] == encode.decode():
+        return True
+    else:
+        return False",sample_47,'bbbbr',False
+"def f(names):
+    if names == []:
+        return """"
+    smallest = names[0]
+    for name in names[1:]:
+        if name < smallest:
+            smallest = name
+    names.remove(smallest)
+    return names.join(smallest)",sample_48,[],''
+"def f(text):
+    if text.isidentifier():
+        return ''.join(c for c in text if c.isdigit())
+    else:
+        return ''.join(text)",sample_49,'816','816'
+"def f(lst):
+    lst.clear()
+    lst += [1] * (len(lst) + 1)
+    return lst",sample_50,"['a', 'c', 'v']",[1]
+"s = '<' * 10
+def f(num):
+    if num % 2 == 0:
+        return s
+    else:
+        return num - 1",sample_51,21,20
+"def f(text):
+    a = []
+    for i in range(len(text)):
+        if not text[i].isdecimal():
+            a.append(text[i])
+    return ''.join(a)",sample_52,"""seiq7229 d27""",'seiq d'
+"def f(text):
+    occ = {}
+    for ch in text:
+        name = {'a': 'b', 'b': 'c', 'c': 'd', 'd': 'e', 'e': 'f'}
+        name = name.get(ch, ch)
+        occ[name] = occ.get(name, 0) + 1
+    return [x for _, x in occ.items()]",sample_53,"""URW rNB""","[1, 1, 1, 1, 1, 1, 1]"
+"def f(text, s, e):
+    sublist = text[s:e]
+    if not sublist:
+        return -1
+    return sublist.index(min(sublist))",sample_54,"'happy', 0, 3",1
+"def f(array):
+    array_2 = []
+    for i in array:
+        if i>0:
+            array_2 += [i]
+    array_2.sort(reverse=True)
+    return array_2",sample_55,"[4, 8, 17, 89, 43, 14]","[89, 43, 17, 14, 8, 4]"
+"def f(sentence):
+    for c in sentence:
+        if c.isascii() is False:
+            return False
+        else:
+            continue
+    return True",sample_56,'1z1z1',True
+"def f(text):
+    text = text.upper()
+    count_upper = 0
+    for char in text:
+        if char.isupper():
+            count_upper += 1
+        else:
+            return 'no'
+    return count_upper // 2",sample_57,'ax',1
+"def f(nums):
+    count = len(nums)
+    for i in [i % 2 for i in range(count)]:
+        nums.append(nums[i])
+    return nums",sample_58,"[-1, 0, 0, 1, 1]","[-1, 0, 0, 1, 1, -1, 0, -1, 0, -1]"
+"def f(s):
+    a = [char for char in s if char != ' ']
+    b = a
+    for c in reversed(a):
+        if c == ' ':
+            b.pop()
+        else:
+            break
+    return ''.join(b)",sample_59,'hi ','hi'
+"def f(doc):
+    for x in doc:
+        if x.isalpha():
+            return x.capitalize()
+    return '-'",sample_60,'raruwa','R'
+"def f(text):
+    texts = text.split()
+    if texts:
+        xtexts = [t for t in texts if t.isascii() and t not in ('nada', '0')]
+        return max(xtexts, key=len) if xtexts else 'nada'
+    return 'nada'",sample_61,"""""",'nada'
+"def f(user):
+    if len(list(user.keys())) > len(list(user.values())):
+        return tuple(user.keys())
+    return tuple(user.values())",sample_62,"{""eating"" : ""ja"", ""books"" : ""nee"", ""piano"" : ""coke"", ""excitement"" : ""zoo""}","('ja', 'nee', 'coke', 'zoo')"
+"def f(text, prefix):
+    while text.startswith(prefix):
+        text = text[len(prefix):] or text
+    return text",sample_63,"'ndbtdabdahesyehu', 'n'",'dbtdabdahesyehu'
+"def f(text, size):
+    counter = len(text)
+    for i in range(size-int(size%2)):
+        text = ' '+text+' '
+        counter += 2
+        if counter >= size:
+            return text",sample_64,"""7"", 10",'     7     '
+"def f(nums, index):
+    return nums[index] % 42 + nums.pop(index) * 2",sample_65,"[3, 2, 0, 3, 7], 3",9
+"def f(text, prefix):
+    prefix_length = len(prefix)
+    if text.startswith(prefix):
+        return text[(prefix_length - 1) // 2:
+                    (prefix_length + 1) // 2 * -1:-1]
+    else:
+        return text",sample_66,"'happy', 'ha'",''
+"def f(num1, num2, num3):
+    nums = [num1, num2, num3]
+    nums.sort()    
+    return f'{nums[0]},{nums[1]},{nums[2]}'",sample_67,"6,8,8","'6,8,8'"
+"def f(text, pref):
+    if text.startswith(pref):
+        n = len(pref)
+        text = '.'.join(text[n:].split('.')[1:] + text[:n].split('.')[:-1])
+    return text",sample_68,"'omeunhwpvr.dq', 'omeunh'",'dq'
+"def f(student_marks, name):
+    if name in student_marks:
+        value = student_marks.pop(name)
+        return value
+    return 'Name unknown'",sample_69,"{'882afmfp': 56}, '6f53p'",'Name unknown'
+"def f(x):
+    a = 0
+    for i in x.split(' '):
+        a += len(i.zfill(len(i)*2))
+    return a",sample_70,'999893767522480',30
+"def f(d, n):
+    for i in range(n):
+        item = d.popitem()
+        d[item[1]] = item[0]
+    return d",sample_71,"{1: 2, 3: 4, 5: 6, 7: 8, 9: 10}, 1","{1: 2, 3: 4, 5: 6, 7: 8, 10: 9}"
+"def f(text):
+    for c in text:
+        if not c.isnumeric():
+            return False
+    return bool(text)",sample_72,'99',True
+"def f(row):
+    return (row.count('1'), row.count('0'))",sample_73,"""100010010""","(3, 6)"
+"def f(lst, i, n):
+    lst.insert(i, n)
+    return lst",sample_74,"[44, 34, 23, 82, 24, 11, 63, 99], 4, 15","[44, 34, 23, 82, 15, 24, 11, 63, 99]"
+"def f(array, elem):
+    ind = array.index(elem)
+    return ind * 2 + array[-ind - 1] * 3",sample_75,"[-1, 2, 1, -8, 2], 2",-22
+"def f(nums):
+    nums = [y for y in nums if y > 0]
+    if len(nums) <= 3:
+        return nums
+    nums.reverse()
+    half = len(nums)//2
+    return nums[:half] + [0]*5 + nums[half:]",sample_76,"[10, 3, 2, 2, 6, 0]","[6, 2, 0, 0, 0, 0, 0, 2, 3, 10]"
+"def f(text, character):
+    subject = text[text.rfind(character):]
+    return subject*text.count(character)",sample_77,"'h ,lpvvkohh,u', 'i'",''
+"def f(text):
+    if text and text.isupper():
+        cs = str.maketrans(string.ascii_uppercase, string.ascii_lowercase)
+        return text.translate(cs)
+    return text.lower()[:3]",sample_78,'mTYWLMwbLRVOqNEf.oLsYkZORKE[Ko[{n','mty'
+"def f(arr):
+    arr = list(arr)
+    arr.clear()
+    arr.append('1')
+    arr.append('2')
+    arr.append('3')
+    arr.append('4')
+    return ','.join(arr)",sample_79,"[0, 1, 2, 3, 4]","'1,2,3,4'"
+"def f(s):
+    return ''.join(reversed(s.rstrip()))",sample_80,'ab        ','ba'
+"def f(dic, inx):
+    try:
+        dic[list(dic)[list(dic).index(inx)]] = list(dic)[list(dic).index(inx)].lower()
+    except ValueError:
+        pass
+    return list(dic.items())",sample_81,"{""Bulls"": 23, ""White Sox"": 45}, ""Bulls""","[('Bulls', 'bulls'), ('White Sox', 45)]"
+"def f(a, b, c, d):
+    return a and b or c and d",sample_82,"'CJU', 'BFS', 'WBYDZPVES', 'Y'",'BFS'
+"def f(text):
+    l = text.rpartition('0')
+    if l[2] == '':
+        return '-1:-1'
+    return f'{len(l[0])}:{l[2].find(""0"") + 1}'",sample_83,'qq0tt','2:0'
+"def f(text):
+    arr = text.split()
+    result = []
+    for item in arr:
+        if item.endswith('day'):
+            item += 'y'
+        else:
+            item += 'day'
+        result.append(item)
+    return ' '.join(result)",sample_84,"""nwv mef ofme bdryl""",'nwvday mefday ofmeday bdrylday'
+"def f(n):
+    values = {0: 3, 1: 4.5, 2: '-'}
+    res = {}
+    for i, j in values.items():
+        if i % n != 2:
+            res[j] = n // 2
+    return sorted(res)",sample_85,12,"[3, 4.5]"
+"def f(instagram, imgur, wins):
+    photos = [instagram, imgur]
+    if instagram == imgur:
+        return wins
+    if wins == 1:
+        return photos.pop()
+    else:
+        photos.reverse()
+        return photos.pop()",sample_86,"['sdfs', 'drcr', '2e'], ['sdfs', 'dr2c', 'QWERTY'], 0","['sdfs', 'drcr', '2e']"
+"def f(nums):
+    nums.reverse()
+    return ''.join(map(str, nums))",sample_87,"[-1, 9, 3, 1, -2]",'-2139-1'
+"def f(s1, s2):
+    if s2.endswith(s1):
+        s2 = s2[:len(s1) * -1]
+    return s2",sample_88,"""he"", ""hello""",'hello'
+"def f(char):
+    if char not in 'aeiouAEIOU':
+        return None
+    if char in 'AEIOU':
+        return char.lower()
+    return char.upper()",sample_89,'o','O'
+"def f(array):
+    return_arr = []
+    for a in array:
+        return_arr.append(a.copy())
+    return return_arr",sample_90,"[[1, 2, 3], [], [1, 2, 3]]","[[1, 2, 3], [], [1, 2, 3]]"
+"def f(s):
+    d = dict.fromkeys(s, 0)
+    return list(d.keys())",sample_91,"""12ab23xy""","['1', '2', 'a', 'b', '3', 'x', 'y']"
+"def f(text):
+    return text.isascii()",sample_92,'wW의IV]HDJjhgK[dGIUlVO@Ess$coZkBqu[Ct',False
+"def f(n):
+    length = len(n) + 2
+    revn = list(n)
+    result = ''.join(revn)
+    revn.clear()
+    return result + ('!' * length)",sample_93,'iq','iq!!!!'
+"def f(a, b):
+    return {**a, **b}",sample_94,"{'w': 5, 'wi': 10}, {'w': 3}","{'w': 3, 'wi': 10}"
+"def f(zoo):
+    return dict((v, k) for k, v in zoo.items())",sample_95,{'AAA': 'fr'},{'fr': 'AAA'}
+"def f(text):
+    return not any([c.isupper() for c in text])",sample_96,'lunabotics',True
+"def f(lst):
+    lst.clear()
+    for i in lst:
+        if i == 3:
+            return False
+    else:
+        return True",sample_97,"[2, 0]",True
+"def f(s):
+    return sum([s.istitle() for s in s.split()])",sample_98,'SOME OF THIS Is uknowN!',1
+"def f(text, sep, num):
+    return '___'.join(text.rsplit(sep, num))",sample_99,"'aa+++bb', '+', 1",'aa++___bb'
+"def f(d, rm):
+    res = d.copy()
+    for k in rm:
+        if k in res:
+            del res[k]
+    return res",sample_100,"{'1': 'a', 1: 'a', 1: 'b', '1': 'b'}, [1]",{'1': 'b'}
+"def f(array, i_num, elem):
+    array.insert(i_num, elem)
+    return array",sample_101,"[ -4,   1,  0], 1, 4","[-4, 4, 1, 0]"
+"def f(names, winners):
+    ls = [names.index(name) for name in names if name in winners]
+    ls.sort(reverse=True)
+    return ls",sample_102,"['e', 'f', 'j', 'x', 'r', 'k'], ['a', 'v', '2', 'im', 'nb', 'vj', 'z']",[]
+"def f(s):
+    return ''.join((c.casefold() for c in s))",sample_103,'abcDEFGhIJ','abcdefghij'
+"def f(text):
+    dic = dict()
+    for char in text:
+        dic[char] = dic.get(char, 0) + 1
+    for key in dic:
+        if dic[key] > 1:
+            dic[key] = 1
+    return dic",sample_104,"""a""",{'a': 1}
+"def f(text):
+    if not text.istitle():
+        return text.title()
+    return text.lower()",sample_105,"""PermissioN is GRANTed""",'Permission Is Granted'
+"def f(nums):
+    count = len(nums)
+    for i in range(0, count):
+        nums.insert(i, nums[i]*2)
+    return nums",sample_106,"[2, 8, -2, 9, 3, 3]","[4, 4, 4, 4, 4, 4, 2, 8, -2, 9, 3, 3]"
+"def f(text):
+    result = []
+    for i in range(len(text)):
+        if not text[i].isascii():
+            return False
+        elif text[i].isalnum():
+            result.append(text[i].upper())
+        else:
+            result.append(text[i])
+    return ''.join(result)",sample_107,"""ua6hajq""",'UA6HAJQ'
+"def f(var):
+    amount = len(var) if type(var) == list else 0
+    if type(var) == dict:
+        amount = len(var.keys())
+    nonzero = amount if amount > 0 else 0
+    return nonzero",sample_108,1,0
+"def f(nums, spot, idx):
+    nums.insert(spot, idx)
+    return nums",sample_109,"[1, 0, 1, 1], 0, 9","[9, 1, 0, 1, 1]"
+"def f(text):
+    a = ['']
+    b = ''
+    for i in text:
+        if not i.isspace():
+            a.append(b)
+            b = ''
+        else:
+            b += i
+    return len(a)",sample_110,"""       """,1
+"def f(marks):
+    highest = 0
+    lowest = 100
+    for value in marks.values():
+        if value > highest:
+            highest = value
+        if value < lowest:
+            lowest = value
+    return highest, lowest",sample_111,"{'x': 67, 'v': 89, '': 4, 'alij': 11, 'kgfsd': 72, 'yafby': 83}","(89, 4)"
+"def f(sentence):
+    ls = list(sentence)
+    for letter in ls:
+        if not letter.istitle():
+            ls.remove(letter)
+    return ''.join(ls)",sample_112,'XYZ LittleRedRidingHood LiTTleBIGGeXEiT fault','XYZLtRRdnHodLTTBIGGeXET fult'
+"def f(line):
+    count = 0
+    a = []
+    for i in range(len(line)):
+        count += 1
+        if count%2==0:
+            a.append(line[i].swapcase())
+        else:
+            a.append(line[i])
+    return ''.join(a)",sample_113,"""987yhNSHAshd 93275yrgSgbgSshfbsfB""",'987YhnShAShD 93275yRgsgBgssHfBsFB'
+"def f(text, sep):
+    return text.rsplit(sep, maxsplit=2)",sample_114,"""a-.-.b"", ""-.""","['a', '', 'b']"
+"def f(text):
+    res = []
+    for ch in text.encode('utf-8'):
+        if ch == 61:
+            break
+        if ch == 0:
+            pass
+        res.append(f'{ch}; '.encode('utf-8'))
+    return b''.join(res)",sample_115,'os||agx5',b'111; 115; 124; 124; 97; 103; 120; 53; '
+"def f(d, count):
+    for i in range(count):
+        if d == {}:
+            break
+        d.popitem()
+    return d",sample_116,"{}, 200",{}
+"def f(numbers):
+    for i in range(len(numbers)):
+        if numbers.count('3') > 1:
+            return i
+    return -1",sample_117,"""23157""",-1
+"def f(text, chars):
+    num_applies = 2
+    extra_chars = ''
+    for i in range(num_applies):
+        extra_chars += chars
+        text = text.replace(extra_chars, '')
+    return text",sample_118,"'zbzquiuqnmfkx', 'mk'",'zbzquiuqnmfkx'
+"def f(text):
+    result = """"
+    for i in range(len(text)):
+        if i % 2 == 0:
+            result += text[i].swapcase()
+        else:
+            result += text[i]
+    return result",sample_119,"""vsnlygltaw""",'VsNlYgLtAw'
+"def f(countries):
+    language_country = dict()
+    for country, language in countries.items():
+        if language not in language_country:
+            language_country[language] = []
+        language_country[language].append(country)
+    return language_country",sample_120,{},{}
+"def f(s):
+    nums = ''.join(filter(lambda c:c.isdecimal(), s))
+    if nums == '': return 'none'
+    m = max([int(num) for num in nums.split(',')])
+    return str(m)",sample_121,"'01,001'",'1001'
+"def f(string):
+    if string[:4] != 'Nuva':
+        return 'no'
+    else:
+        return string.rstrip()",sample_122,'Nuva?dlfuyjys','Nuva?dlfuyjys'
+"def f(array, elem):
+    for idx, e in enumerate(array):
+        if e > elem and array[idx - 1] < elem:
+            array.insert(idx, elem)
+    return array",sample_123,"[1, 2, 3, 5, 8], 6","[1, 2, 3, 5, 6, 8]"
+"def f(txt, sep, sep_count):
+    o = ''
+    while sep_count > 0 and txt.count(sep) > 0:
+        o += txt.rsplit(sep, 1)[0] + sep
+        txt = txt.rsplit(sep, 1)[1]
+        sep_count -= 1
+    return o + txt",sample_124,"'i like you', ' ', -1",'i like you'
+"def f(text, res):
+    for c in '*\n""':
+        text = text.replace(c, '!' + str(res))
+    if text.startswith('!'):
+        text = text[len(str(res)):]
+    return text",sample_125,"'""Leap and the net will appear', 123",'3Leap and the net will appear'
+"def f(text):
+    s = text.rpartition('o')
+    div, div2 = (s[0] == '' and '-' or s[0]), (s[2] == '' and '-' or s[2])
+    return s[1] + div + s[1] + div2",sample_126,'kkxkxxfck','-kkxkxxfck'
+"def f(text):
+    s = text.splitlines()
+    return len(s)",sample_127,"""145\n\n12fjkjg""",3
+"def f(text):
+    odd = ''
+    even = ''
+    for i, c in enumerate(text):
+        if i % 2 == 0:
+            even += c
+        else:
+            odd += c
+    return even + odd.lower()",sample_128,'Mammoth','Mmohamt'
+"def f(text, search_string):
+    indexes = []
+    while search_string in text:
+        indexes.append(text.rindex(search_string))
+        text = text[:text.rindex(search_string)]
+    return indexes",sample_129,"'ONBPICJOHRHDJOSNCPNJ9ONTHBQCJ', 'J'","[28, 19, 12, 6]"
+"def f(m):
+    items = list(m.items())
+    for i in range(len(items)-2, -1, -1):
+        tmp = items[i]
+        items[i] = items[i+1] 
+        items[i+1] = tmp
+    return ['{}={}', '{1}={0}'][len(items) % 2].format(
+        *m.keys(), **m
+    )",sample_130,"{'l':4, 'h':6, 'o':9}",'h=l'
+"def f(text):
+    a = len(text)
+    count = 0
+    while text:
+        if text.startswith('a'):
+            count += text.find(' ')
+        else:
+            count += text.find('\n')
+        text = text[text.find('\n')+1:text.find('\n')+a+1]
+    return count",sample_131,"""a\nkgf\nasd\n""",1
+"def f(a_str, prefix):
+    if a_str.removeprefix(prefix):
+        return a_str
+    else:
+        return prefix + a_str",sample_132,"'abc', 'abcd'",'abc'
+"def f(nums, elements):
+    result = []
+    for i in range(len(elements)):
+        result.append(nums.pop())
+    return nums",sample_133,"[7, 1, 2, 6, 0, 2], [9, 0, 3]","[7, 1, 2]"
+"def f(n):
+    t = 0
+    b = ''
+    digits = list(map(int, str(n)))
+    for d in digits:
+        if d == 0: t += 1
+        else: break
+    for _ in range(t):
+        b += str(1) + '0' + str(4)
+    b += str(n)
+    return b",sample_134,372359,'372359'
+"def f():
+    d = {
+        'Russia': [('Moscow', 'Russia'), ('Vladivostok', 'Russia')],
+        'Kazakhstan': [('Astana', 'Kazakhstan')],
+    }
+    return list(d.keys())",sample_135,,"['Russia', 'Kazakhstan']"
+"def f(text, width):
+    lines = [line.center(width) for line in text.split('\n')]
+    return '\n'.join(lines)",sample_136,"""a\nbc\n\nd\nef"", 5",'  a  \n  bc \n     \n  d  \n  ef '
+"def f(nums):
+    count = 0
+    for i in range(len(nums)):
+        if len(nums) == 0:
+            break
+        if count % 2 == 0:
+            nums.pop()
+        else:
+            nums.pop(0)
+        count += 1
+    return nums",sample_137,"[3, 2, 0, 0, 2, 3]",[]
+"def f(text, chars):
+    listchars = list(chars)
+    first = listchars.pop()
+    for i in listchars:
+        text = text[0:text.find(i)]+i+text[text.find(i)+1:]
+    return text",sample_138,"'tflb omn rtt', 'm'",'tflb omn rtt'
+"def f(first, second):
+    if len(first) < 10 or len(second) < 10:
+        return 'no'
+    for i in range(5):
+        if first[i] != second[i]:
+            return 'no'
+    first.extend(second)
+    return first",sample_139,"[1, 2, 1], [1, 1, 2]",'no'
+"def f(st):
+    if st.lower().rindex('h', st.lower().rindex('i')) >= st.lower().rindex('i'):
+        return 'Hey'
+    else:
+        return 'Hi'",sample_140,'Hi there','Hey'
+"def f(li):
+    return [li.count(i) for i in li]",sample_141,"['k', 'x', 'c', 'x', 'x', 'b', 'l', 'f', 'r', 'n', 'g']","[1, 3, 1, 3, 3, 1, 1, 1, 1, 1, 1]"
+"def f(x):
+    if x.islower():
+        return x
+    else:
+        return x[::-1]",sample_142,'ykdfhp','ykdfhp'
+"def f(s, n):
+    return s.casefold() == n.casefold()",sample_143,"""daaX"", ""daaX""",True
+"def f(vectors):
+    sorted_vecs = []
+    for vec in vectors:
+        vec.sort()
+        sorted_vecs.append(vec)
+    return sorted_vecs",sample_144,[],[]
+"def f(price, product):
+    inventory = ['olives', 'key', 'orange']
+    if product not in inventory:
+        return price
+    else:
+        price *=.85
+        inventory.remove(product)
+    return price",sample_145,"8.50, 'grapes'",8.5
+"def f(single_digit):
+    result = []
+    for c in range(1, 11):
+        if c != single_digit:
+            result.append(c)
+    return result",sample_146,5,"[1, 2, 3, 4, 6, 7, 8, 9, 10]"
+"def f(nums):
+    middle = len(nums)//2
+    return nums[middle:] + nums[0:middle]",sample_147,"[1, 1, 1]","[1, 1, 1]"
+"def f(forest, animal):
+    index = forest.index(animal)
+    result = list(forest)
+    while index < len(forest)-1:
+        result[index] = forest[index+1]
+        index += 1
+    if index == len(forest)-1:
+        result[index] = '-'
+    return ''.join(result)",sample_148,"'2imo 12 tfiqr.', 'm'",'2io 12 tfiqr.-'
+"def f(tuple_list, joint):
+    string = ''
+    for num in tuple_list:
+        string += dict.fromkeys(str(num), joint * len(str(num))).popitem()[0] + joint
+    return string",sample_149,"(32332, 23543, 132323, 33300), ','","'2,4,2,0,'"
+"def f(numbers, index):
+    for n in numbers[index:]:
+        numbers.insert(index, n)
+        index += 1
+    return numbers[:index]",sample_150,"[-2, 4, -4], 0","[-2, 4, -4]"
+"def f(text):
+    for c in text:
+        if c.isdigit():
+            if c == '0':
+                c = '.'
+            else:
+                c = '0' if c != '1' else '.'
+    return ''.join(list(text)).replace('.', '0')",sample_151,'697 this is the ultimate 7 address to attack','697 this is the ultimate 7 address to attack'
+"def f(text):
+    n = 0
+    for char in text:
+        if char.isupper():
+            n += 1
+    return n",sample_152,''.join(['A'] * 20),20
+"def f(text, suffix, num):
+    str_num = str(num)
+    return text.endswith(suffix + str_num)",sample_153,"'friends and love', 'and', 3",False
+"def f(s, c):
+    s = s.split(' ')
+    return ((c + ""  "") + (""  "".join(s[::-1])))",sample_154,"'Hello There', '*'",'*  There  Hello'
+"def f(ip, n):
+    i = 0
+    out = ''
+    for c in ip:
+        if i == n:
+            out += '\n'
+            i = 0
+        i += 1
+        out += c
+    return out",sample_155,"""dskjs hjcdjnxhjicnn"", 4",'dskj\ns hj\ncdjn\nxhji\ncnn'
+"def f(text, limit, char):
+    if limit < len(text):
+        return text[0:limit]
+    return text.ljust(limit, char)",sample_156,"'tqzym', 5, 'c'",'tqzym'
+"def f(phrase):
+    ans = 0
+    for w in phrase.split():
+        for ch in w:
+            if ch == ""0"":
+                ans += 1
+    return ans",sample_157,"""aboba 212 has 0 digits""",1
+"def f(arr):
+    n = [item for item in arr if item%2 == 0]
+    m = n+arr
+    for i in m:
+        if m.index(i) >= len(n):
+            m.remove(i)
+    return m",sample_158,"[3, 6, 4, -2, 5]","[6, 4, -2, 6, 4, -2]"
+"def f(st):
+    swapped = ''
+    for ch in reversed(st):
+        swapped += ch.swapcase()
+    return swapped",sample_159,'RTiGM','mgItr'
+"def f(dictionary):
+    while not dictionary.get(1, len(dictionary)):
+        dictionary.clear()
+        break
+    return dictionary",sample_160,"{1: 47698, 1: 32849, 1: 38381, 3: 83607}","{1: 38381, 3: 83607}"
+"def f(text, value):
+    left, _, right = text.partition(value)
+    return right + left",sample_161,"'difkj rinpx', 'k'",'j rinpxdif'
+"def f(text):
+    result = ''
+    for char in text:
+        if char.isalnum():
+            result += char.upper()
+    return result",sample_162,'с bishop.Swift','СBISHOPSWIFT'
+"def f(text, space_symbol, size):
+    spaces = ''.join(space_symbol for i in range(size-len(text)))
+    return text + spaces",sample_163,"'w', '))', 7",'w))))))))))))'
+"def f(lst):
+    lst.sort()
+    return lst[0:3]",sample_164,"[5, 8, 1, 3, 0]","[0, 1, 3]"
+"def f(text, lower, upper):
+    return text[lower:upper].isascii()",sample_165,"'=xtanp|sugv?z', 3, 6",True
+"def f(graph):
+    new_graph = {}
+    for key, value in graph.items():
+        new_graph[key] = {}
+        for subkey in value:
+            new_graph[key][subkey] = ''
+    return new_graph",sample_166,{},{}
+"def f(XAAXX, s):
+    count = 0
+    idx = -1
+    while XAAXX.find('XXXX', idx+1) != -1:
+        idx = XAAXX.find('XXXX', idx+1) 
+        count += 1 
+    compound = count * s.title()
+    return XAAXX.replace('XXXX', compound)",sample_167,"'aaXXXXbbXXXXccXXXXde', 'QW'",'aaQwQwQwbbQwQwQwccQwQwQwde'
+"def f(text, new_value, index):
+    key = text.maketrans(text[index], new_value)
+    return text.translate(key)",sample_168,"'spain', 'b', 4",'spaib'
+"def f(text):
+    ls = list(text)
+    total = (len(text) - 1) * 2
+    for i in range(1, total+1):
+        if i % 2:
+            ls.append('+')
+        else:
+            ls.insert(0, '+')
+    return ''.join(ls).rjust(total)",sample_169,'taole','++++taole++++'
+"def f(nums, number):
+    return nums.count(number)",sample_170,"[12, 0, 13, 4, 12], 12",2
+"def f(nums):
+    count = len(nums) // 2
+    for _ in range(count):
+        nums.pop(0)
+    return nums",sample_171,"[3, 4, 1, 2, 3]","[1, 2, 3]"
+"def f(array):
+    for i in range(len(array)):
+        if array[i] < 0:
+            array.pop(i)
+    return array",sample_172,[],[]
+"def f(list_x):
+    item_count = len(list_x)
+    new_list = []
+    for i in range(item_count):
+        new_list.append(list_x.pop())
+    return new_list",sample_173,"[5, 8, 6, 8, 4]","[4, 8, 6, 8, 5]"
+"def f(lst):
+    lst[1:4] = lst[1:4][::-1]
+    return lst",sample_174,"[1, 2, 3]","[1, 3, 2]"
+"def f(s, amount):
+    lines = s.splitlines()
+    w = max(map(lambda l: l.rfind(' '), lines))
+    ls = [[l, (w + 1) * amount - l.rfind(' ')] for l in lines]
+    for i, line in enumerate(ls):
+        ls[i][0] = line[0] + ' ' * line[1]
+    return '\n'.join(map(lambda l: l[0], ls))",sample_175,"'\n', 2",' '
+"def f(text, to_place):
+    after_place = text[:text.find(to_place, 0) + 1]
+    before_place = text[text.find(to_place, 0) + 1:]
+    return after_place + before_place",sample_176,"'some text', 'some'",'some text'
+"def f(text):
+    text = list(text)
+    for i in range(len(text)):
+        if i % 2 == 1:
+            text[i] = text[i].swapcase()
+    return ''.join(text)",sample_177,'Hey DUdE THis $nd^ &*&this@#','HEy Dude tHIs $Nd^ &*&tHiS@#'
+"def f(array, n):
+    return array[n:]",sample_178,"[0, 0, 1, 2, 2, 2, 2], 4","[2, 2, 2]"
+"def f(nums):
+    # Pass in a copy to avoid modifying nums
+    nums = nums[:]
+    count = len(nums)
+    for i in range(-count+1, 0):
+        nums.insert(0, nums[i])
+    return nums",sample_179,"[7, 1, 2, 6, 0, 2]","[2, 0, 6, 2, 1, 7, 1, 2, 6, 0, 2]"
+"def f(nums):
+    a = -1
+    b = nums[1:]
+    while a <= b[0]:
+        nums.remove(b[0])
+        a = 0
+        b = b[1:]
+    return nums",sample_180,"[-1, 5, 3, -2, -6, 8, 8]","[-1, -2, -6, 8, 8]"
+"def f(s):
+    count = 0
+    digits = """"
+    for c in s:
+        if c.isdigit():
+            count += 1
+            digits += c
+    return [digits, count]",sample_181,"""qwfasgahh329kn12a23""","['3291223', 7]"
+"def f(dic):
+    return sorted(dic.items(), key=lambda x: x[0])",sample_182,"{'b': 1, 'a': 2}","[('a', 2), ('b', 1)]"
+"def f(text):
+    ls = text.split()
+    lines = "" "".join(ls[::3]).splitlines()
+    res = []
+    for i in range(2):
+        ln = ls[1::3]
+        if 3 * i + 1 < len(ln):
+            res.append("" "".join(ln[3 * i:3 * (i + 1)]))
+    return lines + res",sample_183,"""echo hello!!! nice!""",['echo']
+"def f(digits):
+    digits.reverse()
+    if len(digits) < 2:
+        return digits
+    for i in range(0, len(digits), 2):
+        digits[i], digits[i+1] = digits[i+1], digits[i]
+    return digits",sample_184,"[1,2]","[1, 2]"
+"def f(L):
+    N = len(L)
+    for k in range(1, N//2 + 1):
+        i = k - 1
+        j = N - k
+        while i < j:
+            # swap elements:
+            L[i], L[j] = L[j], L[i]
+            # update i, j:
+            i += 1
+            j -= 1
+    return L",sample_185,"[16, 14, 12, 7, 9, 11]","[11, 14, 7, 12, 9, 16]"
+"def f(text):
+    return ' '.join(map(str.lstrip, text.split()))",sample_186,'pvtso','pvtso'
+"def f(d, index):
+    length = len(d.items())
+    idx = index % length
+    v = d.popitem()[1]
+    for _ in range(idx):
+        d.popitem()
+    return v",sample_187,"{27:39}, 1",39
+"def f(strings):
+    new_strings = []
+    for string in strings:
+        first_two = string[:2]
+        if first_two.startswith('a') or first_two.startswith('p'):
+            new_strings.append(first_two)
+
+    return new_strings",sample_188,"[""a"", ""b"", ""car"", ""d""]",['a']
+"def f(out, mapping):
+    for key in mapping:
+        out.format_map(mapping)
+        if len(re.findall(r'{\w}', out)) == 0:
+            break
+        mapping[key][1] = mapping[key][1][::-1]
+    return out",sample_189,"""{{{{}}}}"", {}",'{{{{}}}}'
+"def f(text):
+    short = ''
+    for c in text:
+        if(c.islower()):
+            short += c
+    return short",sample_190,'980jio80jic kld094398IIl ','jiojickldl'
+"def f(string):
+    if string.isupper():
+        return True
+    else:
+        return False",sample_191,'Ohno',False
+"def f(text, suffix):
+    output = text
+    while text.endswith(suffix):
+        output = text[:-len(suffix)]
+        text = output
+    return output",sample_192,"'!klcd!ma:ri', '!'",'!klcd!ma:ri'
+"def f(string):
+    count = string.count(':')
+    return string.replace(':', '', count - 1)",sample_193,'1::1','1:1'
+"def f(matr, insert_loc):
+    matr.insert(insert_loc, [])
+    return matr",sample_194,"[[5, 6, 2, 3], [1, 9, 5, 6]], 0","[[], [5, 6, 2, 3], [1, 9, 5, 6]]"
+"def f(text):
+    for p in ['acs', 'asp', 'scn']:
+        text = text.removeprefix(p) + ' '
+    return text.removeprefix(' ')[:-1]",sample_195,'ilfdoirwirmtoibsac','ilfdoirwirmtoibsac  '
+"def f(text):
+    text = text.replace(' x', ' x.')
+    if text.istitle(): return 'correct'
+    text = text.replace(' x.', ' x')
+    return 'mixed'",sample_196,"""398 Is A Poor Year To Sow""",'correct'
+"def f(temp, timeLimit):
+    s = timeLimit // temp
+    e = timeLimit % temp
+    return [f'{e} oC', f'{s} {e}'][s > 1]",sample_197,"1, 1234567890",'1234567890 0'
+"def f(text, strip_chars):
+    return text[::-1].strip(strip_chars)[::-1]",sample_198,"'tcmfsmj', 'cfj'",'tcmfsm'
+"def f(str, char):
+    base = char * (str.count(char) + 1)
+    return str.removesuffix(base)",sample_199,"'mnmnj krupa...##!@#!@#$$@##', '@'",'mnmnj krupa...##!@#!@#$$@##'
+"def f(text, value):
+    length = len(text)
+    index = 0
+    while length > 0:
+        value = text[index] + value
+        length -= 1
+        index += 1
+    return value",sample_200,"'jao mt', 'house'",'tm oajhouse'
+"def f(text):
+    chars = []
+    for c in text:
+        if c.isdigit():
+            chars.append(c)
+    return ''.join(chars[::-1])",sample_201,'--4yrw 251-//4 6p','641524'
+"def f(array, list):
+    array.extend(list)
+    [e for e in array if e % 2 == 0]
+    return [e for e in array if e >= 10]",sample_202,"[2, 15], [15, 1]","[15, 15]"
+"def f(d):
+    d.clear()
+    return d",sample_203,"{'a': 3, 'b': -1, 'c': 'Dum'}",{}
+"def f(name):
+    return [name[0], name[1][::-1][0]]",sample_204,"""master. ""","['m', 'a']"
+"def f(a):
+    for _ in range(10):
+        for j in range(len(a)):
+            if a[j] != '#':
+                a = a[j:]
+                break
+        else:
+            a = """"
+            break
+    while a[-1] == '#':
+        a = a[:-1]
+    return a",sample_205,"""##fiu##nk#he###wumun##""",'fiu##nk#he###wumun'
+"def f(a):
+    return ' '.join(a.split())",sample_206,' h e l l o   w o r l d! ','h e l l o w o r l d!'
+"def f(commands):
+    d = {}
+    for c in commands:
+        d.update(c)
+    return d",sample_207,"[{""brown"": 2}, {""blue"": 5}, {""bright"": 4}]","{'brown': 2, 'blue': 5, 'bright': 4}"
+"def f(items):
+    result = []
+    for item in items:
+        for d in item:
+            if not d.isdigit():
+                result.append(d)
+    return result",sample_208,"['123', 'cat', 'd dee']","['c', 'a', 't', 'd', ' ', 'd', 'e', 'e']"
+"def f(prefix, s):
+    return str.removeprefix(prefix, s)",sample_209,"'hymi', 'hymifulhxhzpnyihyf'",'hymi'
+"def f(n, m, num):
+    x_list = list(range(n, m+1))
+    j = 0
+    while True:
+        j = (j + num) % len(x_list)
+        if x_list[j] % 2 == 0:
+            return x_list[j]",sample_210,"46, 48, 21",46
+"def f(s):
+    count = 0
+    for c in s:
+        if s.rindex(c) != s.index(c):
+            count+=1
+    return count",sample_211,"""abca dea ead""",10
+"def f(nums):
+    for _ in range(len(nums) - 1):
+        nums.reverse()
+    return nums",sample_212,"[1, -9, 7, 2, 6, -3, 3]","[1, -9, 7, 2, 6, -3, 3]"
+"def f(s):
+    return s.replace('(', '[').replace(')', ']')",sample_213,"""(ac)""",'[ac]'
+"def f(sample):
+    i = -1
+    while sample.find('/', i+1) != -1:
+        i = sample.find('/', i+1)
+    return sample.rindex('/', 0, i)",sample_214,'present/here/car%2Fwe',7
+"def f(text):
+    new_text = text
+    while len(text) > 1 and text[0] == text[-1]:
+        new_text = text = text[1:-1]
+    return new_text",sample_215,')',')'
+"def f(letters):
+    count = 0
+    for l in letters:
+        if l.isdigit():
+            count += 1
+    return count",sample_216,"""dp ef1 gh2""",2
+"def f(string):
+    if string.isalnum():
+        return ""ascii encoded is allowed for this language""
+    return ""more than ASCII""",sample_217,'Str zahrnuje anglo-ameriæske vasi piscina and kuca!','more than ASCII'
+"def f(string, sep):
+    cnt = string.count(sep)
+    return((string+sep) * cnt)[::-1]",sample_218,"'caabcfcabfc', 'ab'",'bacfbacfcbaacbacfbacfcbaac'
+"def f(s1, s2):
+    for k in range(0, len(s2)+len(s1)):
+        s1 += s1[0]
+        if s1.find(s2) >= 0:
+            return True
+    return False",sample_219,"""Hello"", "")""",False
+"def f(text, m, n):
+    text = ""{}{}{}"".format(text, text[:m], text[n:])
+    result = """"
+    for i in range(n, len(text)-m):
+        result = text[i] + result
+    return result",sample_220,"""abcdefgabc"", 1, 2",'bagfedcacbagfedc'
+"def f(text, delim):
+    first, second = text.split(delim)
+    return second + delim + first",sample_221,"'bpxa24fc5.', '.'",'.bpxa24fc5'
+"def f(mess, char):
+    while mess.find(char, mess.rindex(char) + 1) != -1:
+        mess = mess[:mess.rindex(char) + 1] + mess[mess.rindex(char) + 2:]
+    return mess",sample_222,"'0aabbaa0b', 'a'",'0aabbaa0b'
+"def f(array, target):
+    count, i = 0, 1
+    for j in range(1, len(array)):
+        if ((array[j] > array[j-1]) and (array[j] <= target)): count += i
+        elif array[j] <= array[j-1]: i = 1
+        else: i += 1
+    return count",sample_223,"[1, 2, -1, 4], 2",1
+"def f(array, value):
+    array.reverse()
+    array.pop()
+    odd = []
+    while len(array) > 0:
+        tmp = {}
+        tmp[array.pop()] = value
+        odd.append(tmp)
+    result = {}
+    while len(odd) > 0:
+        result.update(odd.pop())
+    return result",sample_224,"['23'], 123",{}
+"def f(text):
+    if text.islower():
+        return True
+    return False",sample_225,"""54882""",False
+"def f(nums):
+    for i in range(len(nums)):
+        if nums[i] % 3 == 0:
+            nums.append(nums[i])
+    return nums",sample_226,"[1, 3]","[1, 3, 3]"
+"def f(text):
+    text = text.lower()
+    head, tail = text[0], text[1:]
+    return head.upper() + tail",sample_227,'Manolo','Manolo'
+"def f(text, splitter):
+    return splitter.join(text.lower().split())",sample_228,"'LlTHH sAfLAPkPhtsWP', '#'",'llthh#saflapkphtswp'
+"def f(dic, value):
+    result = []
+    for e in dic:
+        result.append(e[0])
+        if e[1] == value:
+            result.reverse()
+        else:
+            result.append(e[1])
+    return result",sample_229,"{'9m':2, 'mA':1, '10K':2, 'Lk':2}, 1","['9', 'm', 'm', 'A', '1', '0', 'L', 'k']"
+"def f(text):
+    result = ''
+    i = len(text)-1
+    while i >= 0:
+        c = text[i]
+        if c.isalpha():
+            result += c
+        i -= 1
+    return result",sample_230,'102x0zoq','qozx'
+"def f(years):
+    a10 = sum(1 for x in years if x <= 1900)
+    a90 = sum(1 for x in years if x > 1910)
+    if a10 > 3:
+        return 3
+    elif a90 > 3:
+        return 1
+    else:
+        return 2",sample_231,"[1872, 1995, 1945]",2
+"def f(text, changes):
+    result = ''
+    count = 0
+    changes = list(changes)
+    for char in text:
+        result += char if char in 'e' else changes[count % len(changes)]
+        count += (1 if char not in 'e' else 0)
+    return result",sample_232,"'fssnvd', 'yes'",'yesyes'
+"def f(xs):
+    for idx in reversed(range(-len(xs)-1, -1)):
+        xs.insert(idx, xs.pop(0))
+    return xs",sample_233,"[1, 2, 3]","[1, 2, 3]"
+"def f(text, char):
+    position = len(text)
+    if char in text:
+        position = text.index(char)
+        if position > 1:
+            position = (position + 1) % len(text)
+    return position",sample_234,"'wduhzxlfk', 'w'",0
+"def f(array, arr):
+    result = []
+    for s in arr:
+        result += list(filter(lambda l: l != '', s.split(arr[array.index(s)])))
+    return result",sample_235,"[], []",[]
+"def f(array):
+    if len(array) == 1:
+        return ''.join(array)
+    result = list(array)
+    i = 0
+    while i < len(array)-1:
+        for j in range(2):
+            result[i*2] = array[i]
+            i += 1
+    return ''.join(result)",sample_236,"['ac8', 'qk6', '9wg']",'ac8qk6qk6'
+"def f(text, char):
+    if char in text:
+        suff, char, pref = text.partition(char)
+        pref = suff[:-len(char)] + suff[len(char):] + char + pref
+        return suff + char + pref
+    return text",sample_237,"'uzlwaqiaj', 'u'",'uuzlwaqiaj'
+"def f(ls, n):
+    answer = 0
+    for i in ls:
+        if i[0] == n:
+            answer = i
+    return answer",sample_238,"[[1, 9, 4], [83, 0, 5], [9, 6, 100]], 1","[1, 9, 4]"
+"def f(text, froms):
+    text = text.lstrip(froms)
+    text = text.rstrip(froms)
+    return text",sample_239,"'0 t 1cos ', 'st ' + '0\t\n  '",'1co'
+"def f(float_number):
+    number = str(float_number)
+    dot = number.find('.')
+    if dot != -1:
+        return number[:dot] + '.' + number[dot+1:].ljust(2, '0')
+    return number + '.00'",sample_240,3.121,'3.121'
+"def f(postcode):
+    return postcode[postcode.index('C'):]",sample_241,'ED20 CW','CW'
+"def f(book):
+    a = book.rsplit(':', 1)
+    if a[0].split(' ')[-1] == a[1].split(' ')[0]:
+        return f(' '.join(a[0].split(' ')[:-1]) + ' ' + a[1])
+    return book",sample_242,"""udhv zcvi nhtnfyd :erwuyawa pun""",'udhv zcvi nhtnfyd :erwuyawa pun'
+"def f(text, char):
+    return char.islower() and text.islower()",sample_243,"'abc', 'e'",True
+"def f(text, symbols):
+    count = 0
+    if symbols:
+        for i in symbols:
+            count += 1
+        text = text * count
+    return text.rjust(len(text) + count*2)[:-2]",sample_244,"'', 'BC1ty'",'        '
+"def f(alphabet, s):
+    a = [x for x in alphabet if x.upper() in s]
+    if s.upper() == s:
+        a.append('all_uppercased')
+    return a",sample_245,"'abcdefghijklmnopqrstuvwxyz', ""uppercased # % ^ @ ! vz.""",[]
+"def f(haystack, needle):
+    for i in range(haystack.find(needle), -1, -1):
+        if haystack[i:] == needle:
+            return i
+    return -1",sample_246,"""345gerghjehg"", ""345""",-1
+"def f(s):
+    if s.isalpha():
+        return ""yes""
+    if s == """":
+        return ""str is empty""
+    return ""no""",sample_247,'Boolean','yes'
+"def f(a, b):
+    a.sort()
+    b.sort(reverse=True)
+    return a + b",sample_248,"[666], []",[666]
+"def f(s):
+    count = {}
+    for i in s:
+        if i.islower():
+            count[i.lower()] = s.count(i.lower()) + count.get(i.lower(), 0)
+        else:
+            count[i.lower()] = s.count(i.upper()) + count.get(i.lower(), 0)
+    return count",sample_249,"""FSA""","{'f': 1, 's': 1, 'a': 1}"
+"def f(text):
+    count = len(text)
+    for i in range(-count+1, 0):
+        text = text + text[i]
+    return text",sample_250,'wlace A','wlace Alc l  '
+"def f(messages):
+    phone_code = ""+353""
+    result = []
+    for message in messages:
+        message.extend(phone_code)
+        result.append("";"".join(message))
+    return "". "".join(result)",sample_251,"[['Marie','Nelson','Oscar']]",'Marie;Nelson;Oscar;+;3;5;3'
+"def f(text, char):
+    if char in text:
+        if not text.startswith(char):
+            text = text.replace(char,'')
+    return text",sample_252,"'\\foo', '\\'",'\\foo'
+"def f(text, pref):
+    length = len(pref)
+    if pref == text[:length]:
+        return text[length:]
+    return text",sample_253,"'kumwwfv', 'k'",'umwwfv'
+"def f(text, repl):
+    trans = str.maketrans(text.lower(), repl.lower())
+    return text.translate(trans)",sample_254,"'upper case', 'lower case'",'lwwer case'
+"def f(text, fill, size):
+    if size < 0:
+        size = -size
+    if len(text) > size:
+        return text[len(text) - size:]
+    return text.rjust(size, fill)",sample_255,"'no asw', 'j', 1",'w'
+"def f(text, sub):
+    a = 0
+    b = len(text) - 1
+
+    while a <= b:
+        c = (a + b) // 2
+        if text.rfind(sub) >= c:
+            a = c + 1
+        else:
+            b = c - 1
+
+    return a",sample_256,"'dorfunctions', '2'",0
+"def f(text):
+    ls = []
+    for x in text:
+        ls.append(x.splitlines())
+    return ls",sample_257,"['Hello World\n""I am String""']","[['Hello World', '""I am String""']]"
+"thigh_o_one = [1, 2, 7, 8, 9]
+thigh_o_two = [1, 2, 7, 9]
+def f(L, m, start, step):
+    L.insert(start, m)
+    for x in range(start-1, 0, -step):
+        start -= 1
+        L.insert(start, L.pop(L.index(m)-1))
+    return L",sample_258,"thigh_o_two[:], 3, 3, 2","[1, 2, 7, 3, 9]"
+"def f(text):
+    new_text = []
+    for character in text:
+        if character.isupper():
+            new_text.insert(len(new_text) // 2, character)
+    if len(new_text) == 0:
+        new_text = ['-']
+    return ''.join(new_text)",sample_259,'String matching is a big part of RexEx library.','RES'
+"def f(nums, start, k):
+    nums[start:start+k] = nums[start:start + k][::-1]
+    return nums",sample_260,"[1, 2, 3, 4, 5, 6], 4, 2","[1, 2, 3, 4, 6, 5]"
+"def f(nums, target):
+    lows, higgs = [], []
+    for i in nums:
+        if i < target:
+            lows.append(i)
+        else:
+            higgs.append(i)
+    lows.clear()
+    return lows, higgs",sample_261,"[12, 516, 5, 2, 3, 214, 51], 5","([], [12, 516, 5, 214, 51])"
+"def f(nums):
+    count = len(nums)
+    score = {0: ""F"", 1: ""E"", 2: ""D"", 3: ""C"", 4: ""B"", 5: ""A"", 6: """"}
+    result = []
+    for i in range(count):
+        result.append(score.get(nums[i]))
+    return ''.join(result)",sample_262,"[4, 5]",'BA'
+"def f(base, delta):
+    for j in range(len(delta)):
+        for i in range(len(base)):
+            if base[i] == delta[j][0]:
+                assert delta[j][1] != base[i]
+                base[i] = delta[j][1]
+    return base",sample_263,"[""gloss"", ""banana"", ""barn"", ""lawn""], []","['gloss', 'banana', 'barn', 'lawn']"
+"def f(test_str):
+    s = test_str.replace('a', 'A')
+    return s.replace('e', 'A')",sample_264,"""papera""",'pApArA'
+"def f(d, k):
+    new_d = {}
+    for key, val in d.items():
+        if key < k:
+            new_d[key] = val
+    return new_d",sample_265,"{1: 2, 2: 4, 3: 3}, 3","{1: 2, 2: 4}"
+"def f(nums):
+    for i in range(len(nums)-1, -1, -1):
+        if nums[i] % 2 == 1:
+            nums.insert(i+1, nums[i])
+    return nums",sample_266,"[2, 3, 4, 6, -2]","[2, 3, 3, 4, 6, -2]"
+"def f(text, space):
+    if space < 0:
+        return text
+    return text.ljust(len(text) // 2 + space)",sample_267,"'sowpf', -7",'sowpf'
+"def f(s, separator):
+    for i in range(len(s)):
+        if s[i] == separator:
+            new_s = list(s)
+            new_s[i] = '/'
+            return ' '.join(new_s)",sample_268,"'h grateful k', ' '",'h / g r a t e f u l   k'
+"def f(array):
+    zero_len = (len(array) - 1) % 3
+    for i in range(zero_len):
+        array[i] = '0'
+    for i in range(zero_len + 1, len(array), 3):
+        array[i - 1:i + 2] = ['0', '0', '0']
+    return array",sample_269,"[9, 2]","['0', 2]"
+"def f(dic):
+    d = {}
+    for key in dic:
+        d[key] = dic.popitem(last = False)[1]
+    return d",sample_270,{},{}
+"def f(text, c):
+    ls = list(text)
+    if c not in text:
+        raise ValueError('Text has no {c}')
+    ls.pop(text.rindex(c))
+    return ''.join(ls)",sample_271,"'uufhl', 'l'",'uufh'
+"def f(base_list, nums):
+    base_list.extend(nums)
+    res = base_list.copy()
+    for i in range(-len(nums), 0):
+        res.append(res[i])
+    return res",sample_272,"[9, 7, 5, 3, 1], [2, 4, 6, 8, 0]","[9, 7, 5, 3, 1, 2, 4, 6, 8, 0, 2, 6, 0, 6, 6]"
+"def f(name):
+    new_name =''
+    name = name[::-1]
+    for i in range(len(name)):
+        n = name[i]
+        if n !='.' and  new_name.count('.')<2:
+            new_name=n+new_name
+        else:
+            break
+    return new_name",sample_273,'.NET','NET'
+"def f(nums, target):
+    count = 0
+    for n1 in nums:
+        for n2 in nums:
+            count += (n1+n2==target)
+    return count",sample_274,"[1, 2, 3], 4",3
+"def f(dic):
+    dic2 = dict(zip(dic.values(), dic.keys()))
+    return dic2",sample_275,"{-1: ""a"", 0: ""b"", 1: ""c""}","{'a': -1, 'b': 0, 'c': 1}"
+"def f(a):
+    if len(a) >= 2 and a[0] > 0 and a[1] > 0:
+        a.reverse()
+        return a
+    a.append(0)
+    return a",sample_276,[],[0]
+"def f(lst, mode):
+    result = [el for el in lst]
+    if mode:
+        result.reverse()
+    return result",sample_277,"[1, 2, 3, 4], 1","[4, 3, 2, 1]"
+"def f(array1, array2):
+    result = dict.fromkeys(array1)
+    for key in result:
+        result[key] = [el for el in array2 if key * 2 > el]
+    return result",sample_278,"[0, 132], [5, 991, 32, 997]","{0: [], 132: [5, 32]}"
+"def f(text):
+    ans = ''
+    while text != '':
+        x, sep, text = text.partition('(')
+        ans = x + sep.replace('(', '|') + ans
+        ans = ans + text[0] + ans
+        text = text[1:]
+    return ans",sample_279,"""""",''
+"field = 0
+
+def f(text):
+    global g, field
+    field = text.replace(' ', '')
+    g = text.replace('0', ' ')
+    text = text.replace('1', 'i')
+
+    return text",sample_280,'00000000 00000000 01101100 01100101 01101110','00000000 00000000 0ii0ii00 0ii00i0i 0ii0iii0'
+"def f(c, index, value):
+    c[index] = value
+    if value >= 3:
+        c.update({'message' : 'xcrWt'})
+    else: 
+        del c['message']
+    return c",sample_281,"{1: 2, 3: 4, 5: 6, 'message': 'qrTHo'}, 8, 2","{1: 2, 3: 4, 5: 6, 8: 2}"
+"def f(s1, s2):
+    position = 1
+    count = 0
+    while position > 0:
+        position = s1.find(s2, position)
+        count += 1
+        position += 1
+    return count",sample_282,"'xinyyexyxx', 'xx'",2
+"def f(dictionary, key):
+    del dictionary[key]
+    if min(dictionary) == key:
+        key = list(dictionary)[0]
+    return key",sample_283,"{'Iron Man': 4, 'Captain America': 3, 'Black Panther': 0,'Thor': 1, 'Ant-Man': 6}, 'Iron Man'",'Iron Man'
+"def f(text, prefix):
+    idx = 0
+    for letter in prefix:
+        if text[idx] != letter:
+            return None
+        idx += 1
+    return text[idx:]",sample_284,"'bestest', 'bestest'",''
+"def f(text, ch):
+    """"""Counting vowels in Pirates' Curse""""""
+    return text.count(ch)",sample_285,"""This be Pirate's Speak for 'help'!"", ' '",5
+"def f(array, x, i):
+    if i < -len(array) or i > len(array) - 1:
+        return 'no'
+    temp = array[i]
+    array[i] = x
+    return array",sample_286,"[1,2,3,4,5,6,7,8,9,10], 11, 4","[1, 2, 3, 4, 11, 6, 7, 8, 9, 10]"
+"def f(name):
+    if name.islower():
+        name = name.upper()
+    else:
+        name = name.lower()
+    return name",sample_287,'Pinneaple','pinneaple'
+"def f(d):
+    sorted_pairs = sorted(list(d.items()), key=lambda x: len(str(str(x[0])+str(x[1]))))
+    return [(k, v) for k, v in sorted_pairs if k < v]
+    return ret",sample_288,"{55: 4, 4: 555, 1: 3, 99: 21, 499: 4, 71: 7, 12: 6}","[(1, 3), (4, 555)]"
+"def f(code):
+    return ""{}: {}"".format(code, code.encode())",sample_289,'148',"""148: b'148'"""
+"def f(text, prefix):
+    if text.startswith(prefix):
+        return text.removeprefix(prefix)
+    if prefix in text:
+        return text.replace(prefix, '').strip()
+    return text.upper()",sample_290,"'abixaaaily', 'al'",'ABIXAAAILY'
+"def f(dictionary, arr):
+    dictionary.update({arr[0]: [arr[1]]})
+    if len(dictionary[arr[0]]) == arr[1]:
+        dictionary[arr[0]] = arr[0]
+    return dictionary",sample_291,"{}, ['a', 2]",{'a': [2]}
+"def f(text):
+    new_text = [c if c.isdigit() else '*' for c in text]
+    return ''.join(new_text)",sample_292,'5f83u23saa','5*83*23***'
+"def f(text):
+    s = text.lower()
+    for i in range(len(s)):
+        if s[i] == 'x':
+            return 'no'
+    return text.isupper()",sample_293,'dEXE','no'
+"def f(n, m, text):
+    if text.strip() == '':
+        return text
+    head, mid, tail = text[0], text[1:-1], text[-1]
+    joined = head.replace(n, m) + mid.replace(n, m) + tail.replace(n, m)
+    return joined",sample_294,"""x"", ""$"", ""2xz&5H3*1a@#a*1hris""",'2$z&5H3*1a@#a*1hris'
+"def f(fruits):
+    if fruits[-1] == fruits[0]:
+        return 'no'
+    else:
+        fruits.pop(0)
+        fruits.pop()
+        fruits.pop(0)
+        fruits.pop()
+        return fruits",sample_295,"['apple', 'apple', 'pear', 'banana', 'pear', 'orange', 'orange']","['pear', 'banana', 'pear']"
+"def f(url):
+    return url.removeprefix('http://www.')",sample_296,"""https://www.www.ekapusta.com/image/url""",'https://www.www.ekapusta.com/image/url'
+"def f(num):
+    if 0 < num < 1000 and num != 6174:
+        return 'Half Life'
+    return 'Not found'",sample_297,6173,'Not found'
+"def f(text):
+    new_text = list(text)
+    for i in range(len(new_text)):
+        character = new_text[i]
+        new_character = character.swapcase()
+        new_text[i] = new_character
+    return ''.join(new_text)",sample_298,'dst vavf n dmv dfvm gamcu dgcvb.','DST VAVF N DMV DFVM GAMCU DGCVB.'
+"def f(text, char):
+    if not text.endswith(char):
+        return f(char + text, char)
+    return text",sample_299,"'staovk', 'k'",'staovk'
+"def f(nums):
+    count = 1
+    for i in range(count, len(nums) - 1, 2):
+        nums[i] = max(nums[i], nums[count-1])
+        count += 1
+    return nums",sample_300,"[1, 2, 3]","[1, 2, 3]"
+"def f(nums):
+    count = len(nums)
+    for i in range(-count+1, 0):
+        nums.extend([nums[i], nums[i]])
+    return nums",sample_301,"[0, 6, 2, -1, -2]","[0, 6, 2, -1, -2, 6, 6, -2, -2, -2, -2, -2, -2]"
+"def f(string):
+    return string.replace('needles', 'haystacks')",sample_302,'wdeejjjzsjsjjsxjjneddaddddddefsfd','wdeejjjzsjsjjsxjjneddaddddddefsfd'
+"def f(text):
+    i = (len(text) + 1) // 2
+    result = list(text)
+    while i < len(text):
+        t = result[i].lower()
+        if t == result[i]:
+            i += 1
+        else:
+            result[i] = t
+        i += 2
+    return ''.join(result)",sample_303,'mJkLbn','mJklbn'
+"def f(d):
+    key1 = sorted(d.items(), key=lambda x: x[0], reverse=True)[0][0]
+    val1 = d.pop(key1)
+    key2 = sorted(d.items(), key=lambda x: x[0], reverse=True)[0][0]
+    val2 = d.pop(key2)
+    return dict({key1: val1, key2: val2})",sample_304,"{2: 3, 17: 3, 16: 6, 18: 6, 87: 7}","{87: 7, 18: 6}"
+"def f(text, char):
+    length = len(text)
+    index = -1
+    for i in range(length):
+        if text[i] == char:
+            index = i
+    if index == -1:
+        index = length // 2
+    new_text = list(text)
+    new_text.pop(index)
+    return ''.join(new_text)",sample_305,"'o horseto', 'r'",'o hoseto'
+"def f(nums):
+    digits = []
+    for num in nums:
+        if (isinstance(num, str) and num.isnumeric()) or isinstance(num, int):
+            digits.append(num)
+    digits = list(map(int, digits))
+    return digits",sample_306,"[0, 6, '1', '2', 0]","[0, 6, 1, 2, 0]"
+"def f(text):
+    rtext = list(text)
+    for i in range(1, len(rtext) - 1):
+        rtext.insert(i + 1, '|')
+    return ''.join(rtext)",sample_307,'pxcznyf','px|||||cznyf'
+"def f(strings):
+    occurances = {}
+    for string in strings:
+        if string not in occurances:
+            occurances[string] = strings.count(string)
+    return occurances",sample_308,"[""La"", ""Q"", ""9"", ""La"", ""La""]","{'La': 3, 'Q': 1, '9': 1}"
+"def f(text, suffix):
+    text += suffix
+    while text[-len(suffix):] == suffix:
+        text = text[:-1]
+    return text",sample_309,"'faqo osax f', 'f'",'faqo osax '
+"def f(strands):
+    subs = strands
+    for i, j in enumerate(subs):
+        for _ in range(len(j) // 2):
+            subs[i] = subs[i][-1:] + subs[i][1:-1] + subs[i][0]
+    return ''.join(subs)",sample_310,"['__', '1', '.', '0', 'r0', '__', 'a_j', '6', '__', '6']",'__1.00r__j_a6__6'
+"def f(text):
+    text = text.replace('#', '1').replace('$', '5')
+    return 'yes' if text.isnumeric() else 'no'",sample_311,'A','no'
+"def f(str):
+    if str.isalnum():
+        return ""True""
+    return ""False""",sample_312,'777','True'
+"def f(s, l):
+    return s.ljust(l, '=').rpartition('=')[0]",sample_313,"'urecord', 8",'urecord'
+"def f(text):
+    if ',' in text:
+        before, _, after = text.partition(',')
+        return after + ' ' + before
+    return ',' + text.partition(' ')[-1] + ' 0'",sample_314,"'244, 105, -90'","' 105, -90 244'"
+"def f(challenge):
+    return challenge.casefold().replace('l', ',')",sample_315,'czywZ','czywz'
+"def f(name):
+    return '| ' + ' '.join(name.split(' ')) + ' |'",sample_316,'i am your father','| i am your father |'
+"def f(text, a, b):
+    text = text.replace(a, b)
+    return text.replace(b, a)",sample_317,"' vup a zwwo oihee amuwuuw! ', 'a', 'u'",' vap a zwwo oihee amawaaw! '
+"def f(value, char):
+    total = 0
+    for c in value:
+        if c == char or c == char.lower():
+            total += 1
+    return total",sample_318,"'234rtccde', 'e'",1
+"def f(needle, haystack):
+    count = 0
+    while needle in haystack:
+        haystack = haystack.replace(needle, '', 1)
+        count += 1
+    return count",sample_319,"'a', 'xxxaaxaaxx'",4
+"def f(text):
+    index = 1
+    while index < len(text):
+        if text[index] != text[index - 1]:
+            index += 1
+        else:
+            text1 = text[:index]
+            text2 = text[index:].swapcase()
+            return text1 + text2
+    return text.swapcase()",sample_320,'USaR','usAr'
+"def f(update, starting):
+    d = starting.copy()
+    for k in update:
+        if k in d:
+            d[k] += update[k]
+        else:
+            d[k] = update[k]
+    return d",sample_321,"{}, {'desciduous': 2}",{'desciduous': 2}
+"def f(chemicals, num):
+    fish = chemicals[1:]
+    chemicals.reverse()
+    for i in range(num):
+        fish.append(chemicals.pop(1))
+    chemicals.reverse()
+    return chemicals",sample_322,"['lsi', 's', 't', 't', 'd'], 0","['lsi', 's', 't', 't', 'd']"
+"def f(text):
+    return len(text.splitlines())",sample_323,'ncdsdfdaaa0a1cdscsk*XFd',1
+"def f(nums):
+    asc, desc = nums.copy(), []
+    asc.reverse()
+    desc = asc[:len(asc)//2]
+    return desc + asc + desc",sample_324,[],[]
+"def f(s):
+    l = list(s)
+    for i in range(len(l)):
+        l[i] = l[i].lower()
+        if not l[i].isdigit():
+            return False
+    return True",sample_325,"""""",True
+"def f(text):
+    number = 0
+    for t in text:
+        if t.isnumeric():
+            number += 1
+    return number",sample_326,'Thisisastring',0
+"def f(lst):
+    new = list()
+    i = len(lst)-1
+    for _ in range(len(lst)):
+        if i%2 == 0:
+            new.append(-lst[i])
+        else:
+            new.append(lst[i])
+        i -= 1
+    return new",sample_327,"[1, 7, -1, -3]","[-3, 1, 7, -1]"
+"def f(array, L):
+    if L <= 0:
+        return array
+    if len(array) < L:
+        array.extend(f(array, L - len(array)))
+    return array",sample_328,"[1, 2, 3], 4","[1, 2, 3, 1, 2, 3]"
+"def f(text):
+    for i in range(len(text)):
+        if text[i] == text[i].upper() and text[i-1].islower():
+            return True
+    return False",sample_329,'jh54kkk6',True
+"def f(text):
+    ans = []
+    for char in text:
+        if char.isdigit():
+            ans.append(char)
+        else:
+            ans.append(' ')
+    return ''.join(ans)",sample_330,'m4n2o',' 4 2 '
+"def f(strand, zmnc):
+    poz = strand.find(zmnc)
+    while poz != -1:
+        strand = strand[poz + 1:]
+        poz = strand.find(zmnc)
+    return strand.rfind(zmnc)",sample_331,"'', 'abc'",-1
+"def f(nums):
+    count = len(nums)
+    if count == 0:
+        nums = [0] * int(nums.pop())
+    elif count % 2 == 0:
+        nums.clear()
+    else:
+        del nums[:count//2:]
+    return nums",sample_332,"[-6, -2, 1, -3, 0, 1]",[]
+"def f(places, lazy):
+    places.sort()
+    for lazy in lazy:
+        places.remove(lazy)
+    if len(places) == 1:
+        return 1
+    for i, place in enumerate(places):
+        if places.count(place+1) == 0:
+            return i+1
+    return i+1",sample_333,"[375, 564, 857, 90, 728, 92], [728]",1
+"def f(a, b):
+    return a.join(b)",sample_334,"'00', ['nU', ' 9 rCSAz', 'w', ' lpA5BO', 'sizL', 'i7rlVr']",'nU00 9 rCSAz00w00 lpA5BO00sizL00i7rlVr'
+"def f(text, to_remove):
+    new_text = list(text)
+    if to_remove in new_text:
+        index = new_text.index(to_remove)
+        new_text.remove(to_remove)
+        new_text.insert(index, '?')
+        new_text.remove('?')
+    return ''.join(new_text)",sample_335,"'sjbrlfqmw', 'l'",'sjbrfqmw'
+"def f(s, sep):
+    s += sep
+    return s.rpartition(sep)[0]",sample_336,"'234dsfssdfs333324314', 's'",'234dsfssdfs333324314'
+"def f(txt):
+    d = []
+    for c in txt:
+        if c.isdigit():
+            continue
+        if c.islower():
+            d.append(c.upper())
+        elif c.isupper():
+            d.append(c.lower())
+    return ''.join(d)",sample_337,"""5ll6""",'LL'
+"def f(my_dict):
+    result = {v: k for k, v in my_dict.items()}
+    return result",sample_338,"{'a': 1, 'b': 2, 'c': 3, 'd': 2}","{1: 'a', 2: 'd', 3: 'c'}"
+"def f(array, elem):
+    elem = str(elem)
+    d = 0
+    for i in array:
+        if str(i) == elem:
+            d += 1
+    return d",sample_339,"[-1, 2, 1, -8, -8, 2], 2",2
+"def f(text):
+    uppercase_index = text.find('A')
+    if uppercase_index >= 0:
+        return text[:uppercase_index] + text[text.find('a') + 1 :]
+    else:
+        return ''.join(sorted(text))",sample_340,'E jIkx HtDpV G','   DEGHIVjkptx'
+"def f(cart):
+    while len(cart) > 5:
+        cart.popitem()
+    return cart",sample_341,{},{}
+"def f(text):
+    return text.count('-') == len(text)",sample_342,"""---123-4""",False
+"def f(array, elem):
+    array.extend(elem)
+    return array",sample_343,"[[1, 2, 3], [1, 2], 1], [[1, 2, 3], 3, [2, 1]]","[[1, 2, 3], [1, 2], 1, [1, 2, 3], 3, [2, 1]]"
+"def f(list, operation):
+    new_list = list[:]
+    new_list.sort()
+    operation(new_list)
+    return list",sample_344,"[6, 4, 2, 8, 15], (lambda x: x.reverse())","[6, 4, 2, 8, 15]"
+"def f(a, b):
+    if a < b:
+        return (b, a)
+    return (a, b)",sample_345,"'ml', 'mv'","('mv', 'ml')"
+"def f(filename):
+    suffix = filename.split('.')[-1]
+    f2 = filename + suffix[::-1]
+    return f2.endswith(suffix)",sample_346,'docs.doc',False
+"def f(text):
+    ls = list(text)
+    length = len(ls)
+    for i in range(length):
+        ls.insert(i, ls[i])
+    return ''.join(ls).ljust(length * 2)",sample_347,'hzcw','hhhhhzcw'
+"def f(dictionary):
+    return dictionary.copy()",sample_348,"{563: 555, 133: None}","{563: 555, 133: None}"
+"def f(dictionary):
+    dictionary[1049] = 55
+    key, value = dictionary.popitem()
+    dictionary[key] = value
+    return dictionary",sample_349,{'noeohqhk': 623},"{'noeohqhk': 623, 1049: 55}"
+"def f(d):
+    size = len(d)
+    v = [0] * size
+    if size == 0:
+        return v
+    for i, e in enumerate(d.values()):
+        v[i] = e
+    return v",sample_350,"{'a': 1, 'b': 2, 'c': 3}","[1, 2, 3]"
+"def f(text):    
+    try:
+        while 'nnet lloP' in text:
+            text = text.replace('nnet lloP', 'nnet loLp')
+    finally:
+        return text",sample_351,'a_A_b_B3 ','a_A_b_B3 '
+"def f(nums):
+    return nums[len(nums)//2]",sample_352,"[-1, -3, -5, -7, 0]",-5
+"def f(x):
+    if x == []:
+        return -1
+    else:
+        cache = {}
+        for item in x:
+            if item in cache:
+                cache[item] += 1
+            else:
+                cache[item] = 1
+        return max(cache.values())",sample_353,"[1, 0, 2, 2, 0, 0, 0, 1]",4
+"def f(description, values):
+    if values[1] is None:
+        values = values[0:1]
+    else:
+        values = values[1:]
+    return description.format(*values)",sample_354,"'{0}, {0}!!!', ['R', None]","'R, R!!!'"
+"def f(text, prefix):
+    return text[len(prefix):]",sample_355,"'123x John z', 'z'",'23x John z'
+"def f(array, num):
+    reverse = False
+    if num < 0:
+        reverse = True
+        num *= -1
+    array = array[::-1] * num
+    l = len(array)
+    
+    if reverse:
+        array = array[::-1]
+    return array",sample_356,"[1, 2], 1","[2, 1]"
+"def f(s):
+    r = []
+    for i in range(len(s) - 1, 0 - 1, -1):
+        r += s[i]
+    return ''.join(r)",sample_357,'crew','werc'
+"def f(text, value):
+    indexes = []
+    for i in range(len(text)):
+        if text[i] == value and (i == 0 or text[i-1] != value):
+            indexes.append(i) 
+    if len(indexes) % 2 == 1:
+        return text
+    return text[indexes[0]+1:indexes[-1]]",sample_358,"'btrburger', 'b'",'tr'
+"def f(lines):
+    for i in range(len(lines)):
+        lines[i] = lines[i].center(len(lines[-1]))
+    return lines",sample_359,"['dZwbSR', 'wijHeq', 'qluVok', 'dxjxbF']","['dZwbSR', 'wijHeq', 'qluVok', 'dxjxbF']"
+"def f(text, n):
+    if len(text) <= 2:
+        return text
+    leading_chars = text[0] * (n - len(text) + 1)
+    return leading_chars + text[1:-1] + text[-1]",sample_360,"'g', 15",'g'
+"def f(text):
+    return text.split(':')[0].count('#')",sample_361,"""#! : #!""",1
+"def f(text):
+    for i in range(len(text)-1):
+        if text[i:].islower():
+            return text[i + 1:]
+    return ''",sample_362,'wrazugizoernmgzu','razugizoernmgzu'
+"def f(nums):
+    nums.sort()
+    n = len(nums)
+    new_nums = [nums[n//2]]
+    
+    if n % 2 == 0:
+        new_nums = [nums[n//2 - 1], nums[n//2]]
+    
+    for i in range(0, n//2):
+        new_nums.insert(0, nums[n-i-1])
+        new_nums.append(nums[i])
+    return new_nums",sample_363,[1],[1]
+"def f(nums, verdict):
+    res = [x for x in nums if x != 0]
+    result = [[x, verdict(x)] for x in res]
+    if result:
+        return result
+    return 'error - no numbers or all zeros!'",sample_364,"[0, 3, 0, 1], lambda x: x < 2","[[3, False], [1, True]]"
+"def f(n, s):
+    if s.startswith(n):
+        pre, _ = s.split(n, 1)
+        return pre + n + s[len(n):]
+    return s",sample_365,"'xqc', 'mRcwVqXsRDRb'",'mRcwVqXsRDRb'
+"def f(string):
+    tmp = string.lower()
+    for char in string.lower():
+        if char in tmp:
+            tmp = tmp.replace(char, '', 1)
+    return tmp",sample_366,"'[ Hello ]+ Hello, World!!_ Hi'",''
+"def f(nums, rmvalue):
+    res = nums[:]
+    while rmvalue in res:
+        popped = res.pop(res.index(rmvalue))
+        if popped != rmvalue:
+            res.append(popped)
+    return res",sample_367,"[6, 2, 1, 1, 4, 1], 5","[6, 2, 1, 1, 4, 1]"
+"def f(string, numbers):
+    arr = []
+    for num in numbers:
+        arr.append(string.zfill(num))
+    return ' '.join(arr)",sample_368,"'4327', [2, 8, 9, 2, 7, 1]",'4327 00004327 000004327 4327 0004327 4327'
+"def f(var):
+    if var.isdigit():
+        return ""int""
+    elif var.replace('.', '', 1).isdigit():
+        return ""float""
+    elif var.count(' ') == len(var) - 1:
+        return ""str""
+    elif len(var) == 1:
+        return ""char""
+    else:
+        return ""tuple""",sample_369,""" 99 777""",'tuple'
+"def f(text):
+    for char in text:
+        if not char.isspace():
+            return False
+    return True",sample_370,'     i',False
+"def f(nums):
+    for odd in nums[:]:
+        if odd % 2 != 0:
+            nums.remove(odd)
+    sum_ = 0
+    for num in nums:
+        sum_ += num
+    return sum_",sample_371,"[11, 21, 0, 11]",0
+"def f(list_, num):
+    temp = []
+    for i in list_:
+        i = num // 2 * ('%s,' % i)
+        temp.append(i)
+    return temp",sample_372,"['v'], 1",['']
+"def f(orig):
+    copy = orig
+    copy.append(100)
+    orig.pop()
+    return copy",sample_373,"[1, 2, 3]","[1, 2, 3]"
+"def f(seq, v):
+    a = []
+    for i in seq:
+        if i.endswith(v):
+            a.append(i*2)
+    return a",sample_374,"[ 'oH', 'ee', 'mb', 'deft', 'n', 'zz', 'f', 'abA' ], 'zz'",['zzzz']
+"def f(a, b):
+    if b in a:
+        return b.join(a.partition(a[a.index(b) + 1]))
+    else:
+        return a",sample_375,"'sierizam', 'iz'",'sieriizzizam'
+"def f(text):
+    for i in range(len(text)):
+        if text[0:i].startswith(""two""):
+            return text[i:]
+    return 'no'",sample_376,"""2two programmers""",'no'
+"def f(text):
+    return ', '.join(text.splitlines())",sample_377,"""BYE\nNO\nWAY""","'BYE, NO, WAY'"
+"def f(dic, key):
+    dic = dict(dic)
+    v = dic.pop(key, 0)
+    if v == 0:
+        return 'No such key!'
+    while len(dic) > 0:
+        dic[dic.popitem()[1]] = dic.popitem()[0]
+    return int(dic.popitem()[0])",sample_378,"dict(did=0), 'u'",'No such key!'
+"def f(nums):
+    for i in range(len(nums) - 1, -1, -3):
+        if nums[i] == 0:
+            nums.clear()
+            return False
+    return nums",sample_379,"[0, 0, 1, 2, 1]",False
+"def f(text, delimiter):
+    text = text.rpartition(delimiter)
+    return text[0] + text[-1]",sample_380,"'xxjarczx', 'x'",'xxjarcz'
+"def f(text, num_digits):
+    width = max(1, num_digits)
+    return text.zfill(width)",sample_381,"'19', 5",'00019'
+"def f(a):
+    s = dict(list(a.items())
+    [::-1])
+    return "" "".join([str(i) for i in s.items()])",sample_382,"{15: ""Qltuf"", 12: ""Rwrepny""}","""(12, 'Rwrepny') (15, 'Qltuf')"""
+"def f(text, chars):
+    result = list(text)
+    while chars in result[-3::-2]:
+        result.remove(result[-3])
+        result.remove(result[-3])
+    return ''.join(result).strip('.')",sample_383,"'ellod!p.nkyp.exa.bi.y.hain', '.n.in.ha.y'",'ellod!p.nkyp.exa.bi.y.hain'
+"def f(text, chars):
+    chars = list(chars)
+    text = list(text)
+    new_text = text
+    while len(new_text) > 0 and text:
+        if new_text[0] in chars:
+            new_text = new_text[1:]
+        else:
+            break 
+    return ''.join(new_text)",sample_384,"'asfdellos', 'Ta'",'sfdellos'
+"def f(lst):
+    i = 0
+    new_list = []
+    while i < len(lst):
+        if lst[i] in lst[i+1:]:
+            new_list.append(lst[i])
+            if len(new_list) == 3:
+                return new_list
+        i += 1
+    return new_list",sample_385,"[0, 2, 1, 2, 6, 2, 6, 3, 0]","[0, 2, 2]"
+"def f(concat, di):
+    count = len(di)
+    for i in range(count):
+        if di[str(i)] in concat:
+            di.pop(str(i))
+    return ""Done!""",sample_386,"'mid', {'0':'q','1':'f','2':'w','3':'i'}",'Done!'
+"def f(nums, pos, value):
+    nums.insert(pos, value)
+    return nums",sample_387,"[3, 1, 2], 2, 0","[3, 1, 0, 2]"
+"def f(text, characters):
+    character_list = list(characters) + [' ', '_']
+
+    i = 0
+    while i < len(text) and text[i] in character_list:
+        i += 1
+
+    return text[i:]",sample_388,"""2nm_28in"", ""nm""",'2nm_28in'
+"def f(total, arg):
+    if type(arg) is list:
+        for e in arg:
+            total.extend(e)
+    else:
+        total.extend(arg)
+    return total",sample_389,"[1, 2, 3], 'nammo'","[1, 2, 3, 'n', 'a', 'm', 'm', 'o']"
+"def f(text):
+    if not text.strip():
+        return len(text.strip())
+    return None",sample_390,""" \t """,0
+"def f(students):
+    seatlist = students
+    seatlist.reverse()
+    cnt = 0
+    for cnt in range(len(seatlist)):
+        cnt += 2
+        seatlist[cnt - 1:cnt] = ['+']
+    seatlist.append('+')
+    return seatlist",sample_391,"['r', '9']","['9', '+', '+', '+']"
+"def f(text):
+    if text.upper() == text:
+        return 'ALL UPPERCASE'
+    return text",sample_392,'Hello Is It MyClass','Hello Is It MyClass'
+"def f(text):
+    ls = text[::-1]
+    text2 = ''
+    for i in range(len(ls) - 3, 0, -3):
+        text2 += '---'.join(ls[i:i + 3]) + '---'
+    return text2[:-3]",sample_393,'scala','a---c---s'
+"def f(text):
+    k = text.splitlines()
+    i = 0
+    for j in k:
+        if len(j) == 0:
+            return i
+        i+=1
+    return -1",sample_394,"""2 m2 \n\nbike""",1
+"def f(s):
+    for i in range(len(s)):
+        if s[i].isdecimal():
+            return i + (s[i] == '0')
+        elif s[i] == '0':
+            return -1
+    return -1",sample_395,"""11""",0
+"def f(ets):
+    while ets:
+        k, v = ets.popitem()
+        ets[k] = v**2
+    return ets",sample_396,{},{}
+"def f(ls):
+    return dict.fromkeys(ls, 0)",sample_397,"['x', 'u', 'w', 'j', 3, 6]","{'x': 0, 'u': 0, 'w': 0, 'j': 0, 3: 0, 6: 0}"
+"def f(counts):
+    dict = {}
+    for k, v in counts.items():
+        count = counts[k]
+        if count not in dict:
+            dict[count] = []
+        dict[count].append(k)
+    counts.update(dict)
+    return counts",sample_398,"{'2': 2, '0': 1, '1': 2}","{'2': 2, '0': 1, '1': 2, 2: ['2', '1'], 1: ['0']}"
+"def f(text, old, new):
+    if len(old) > 3:
+        return text
+    if old in text and ' ' not in text:
+        return text.replace(old, new*len(old))
+    while old in text:
+        text = text.replace(old, new)
+    return text",sample_399,"'avacado', 'va', '-'",'a--cado'
+"def f(multi_string):
+    cond_string = map(str.isascii, multi_string.split())
+    if True in cond_string:
+        return ', '.join(x for x in multi_string.split() if x.isascii())
+    return ''",sample_400,'I am hungry! eat food.',"'I, am, hungry!, eat, food.'"
+"def f(text, suffix):
+    if suffix and text.endswith(suffix):
+        return text[:- len(suffix)]
+    return text",sample_401,"'mathematics', 'example'",'mathematics'
+"def f(n, l):
+    archive = {}
+    for _ in range(n):
+        archive.clear()
+        archive.update({x + 10: x * 10 for x in l})
+    return archive",sample_402,"0, ['aaa', 'bbb']",{}
+"def f(full, part):
+    length = len(part)
+    index = full.find(part)
+    count = 0
+    while index >= 0:
+        full = full[index + length:]
+        index = full.find(part)
+        count += 1
+    return count",sample_403,"'hrsiajiajieihruejfhbrisvlmmy', 'hr'",2
+"def f(no):
+    d = dict.fromkeys(no, False) 
+    return sum([1 for i in d.keys()])",sample_404,"['l', 'f', 'h', 'g', 's', 'b']",6
+"def f(xs):
+    new_x = xs[0] - 1
+    xs.pop(0)
+    while(new_x <= xs[0]):
+        xs.pop(0)
+        new_x -= 1
+    xs.insert(0, new_x)
+    return xs",sample_405,"[6, 3, 4, 1, 2, 3, 5]","[5, 3, 4, 1, 2, 3, 5]"
+"def f(text):
+    ls = list(text)
+    ls[0], ls[-1] = ls[-1].upper(), ls[0].upper()
+    return ''.join(ls).istitle()",sample_406,'Josh',False
+"def f(s):
+    while len(s) > 1:
+        s.clear()
+        s.append(len(s))
+    return s.pop()",sample_407,"[6, 1, 2, 3]",0
+"def f(m):
+    m.reverse()
+    return m",sample_408,"[-4, 6, 0, 4, -7, 2, -1]","[-1, 2, -7, 4, 0, 6, -4]"
+"def f(text, char):
+    if text:
+        text = text.removeprefix(char)
+        text = text.removeprefix(text[-1])
+        text = text[:-1] + text[-1].capitalize()
+    return text",sample_409,"'querist', 'u'",'querisT'
+"def f(nums):
+    a = 0
+    for i in range(len(nums)):
+        nums.insert(i, nums[a])
+        a += 1
+    return nums",sample_410,"[1, 3, -1, 1, -2, 6]","[1, 1, 1, 1, 1, 1, 1, 3, -1, 1, -2, 6]"
+"def f(text, pref):
+    if isinstance(pref, list):
+        return ', '.join(text.startswith(x) for x in pref)
+    else:
+        return text.startswith(pref)",sample_411,"'Hello World', 'W'",False
+"def f(start, end, interval):
+    steps = list(range(start, end + 1, interval))
+    if 1 in steps:
+        steps[-1] = end + 1
+    return len(steps)",sample_412,"3, 10, 1",8
+"def f(s):
+    return '{}{}{}'.format(s[3:], s[2], s[5:8])",sample_413,'jbucwc','cwcuc'
+"def f(d):
+    dCopy = d.copy()
+    for key, value in dCopy.items():
+        for i in range(len(value)):
+            value[i] = value[i].upper()
+    return dCopy",sample_414,"{'X': ['x', 'y']}","{'X': ['X', 'Y']}"
+"def f(array):
+    d = dict(array)
+    for key, value in d.items():
+        if value < 0 or value > 9:
+            return None
+    return d",sample_415,"((8, 5), (8, 2), (5, 3))","{8: 2, 5: 3}"
+"def f(text, old, new):
+    index = text.rfind(old, 0, text.find(old))
+    result = list(text)
+    while index > 0:
+        result[index:index+len(old)] = new
+        index = text.rfind(old, 0, index)
+    return ''.join(result)",sample_416,"'jysrhfm ojwesf xgwwdyr dlrul ymba bpq', 'j', '1'",'jysrhfm ojwesf xgwwdyr dlrul ymba bpq'
+"def f(lst):
+    lst.reverse()
+    lst.pop()
+    lst.reverse()
+    return lst",sample_417,"[7, 8, 2, 8]","[8, 2, 8]"
+"def f(s, p):
+    arr = s.partition(p)
+    part_one, part_two, part_three = len(arr[0]), len(arr[1]), len(arr[2])
+    if part_one >= 2 and part_two <= 2 and part_three >= 2:
+        return (arr[0][::-1] + arr[1] + arr[2][::-1] + '#')
+    return (arr[0] + arr[1] + arr[2])",sample_418,"""qqqqq"", ""qqq""",'qqqqq'
+"def f(text, value):
+    if not value in text:
+        return ''
+    return text.rpartition(value)[0]",sample_419,"'mmfbifen', 'i'",'mmfb'
+"def f(text):
+    try:
+        return text.isalpha()
+    except:
+        return False",sample_420,"""x""",True
+"def f(str, n):
+    if len(str) < n:
+        return str
+    else:
+        return str.removeprefix(str[:n])",sample_421,"""try."", 5",'try.'
+"def f(array):
+    new_array = array.copy()
+    new_array = reversed(new_array)
+    return [x*x for x in new_array]",sample_422,"[1, 2, 1]","[1, 4, 1]"
+"def f(selfie):
+    lo = len(selfie)
+    for i in range(lo-1, -1, -1):
+        if selfie[i] == selfie[0]:
+            selfie.remove(selfie[lo-1])
+    return selfie",sample_423,"[4, 2, 5, 1, 3, 2, 6]","[4, 2, 5, 1, 3, 2]"
+"def f(s):
+    s = s.replace('""', '')
+    lst = list(s)
+    col = 0
+    count = 1
+    while col < len(lst) and lst[col] in "".:,"":
+        if lst[col] == ""."":
+            count = ls[col] + 1
+        col += 1
+    return s[col+count:]",sample_424,"'""Makers of a Statement""'",'akers of a Statement'
+"def f(a):
+    a = a.replace('/', ':')
+    z = a.rpartition(':')
+    return [z[0], z[1], z[2]]",sample_425,'/CL44     ',"['', ':', 'CL44     ']"
+"def f(numbers, elem, idx):
+    numbers.insert(idx, elem)
+    return numbers",sample_426,"[1, 2, 3], 8, 5","[1, 2, 3, 8]"
+"def f(s):
+    count = len(s) - 1
+    reverse_s = s[::-1]
+    while count > 0 and reverse_s[::2].rfind('sea') == -1:
+        count -= 1
+        reverse_s = reverse_s[:count]
+    return reverse_s[count:]",sample_427,'s a a b s d s a a s a a',''
+"def f(nums):
+    for i in range(len(nums)):
+        if not i % 2:
+            nums.append(nums[i] * nums[i + 1])
+    return nums",sample_428,[],[]
+"def f(d):
+    result = []
+    while len(d.keys()) > 0:
+        result.append(d.popitem())
+    return result",sample_429,"{5: 1, 'abc': 2, 'defghi': 2, 87.29: 3}","[(87.29, 3), ('defghi', 2), ('abc', 2), (5, 1)]"
+"def f(arr1, arr2):
+    new_arr = arr1.copy()
+    new_arr.extend(arr2)
+    return new_arr",sample_430,"[5, 1, 3, 7, 8], ['', 0, -1, []]","[5, 1, 3, 7, 8, '', 0, -1, []]"
+"def f(n, m):
+    arr = list(range(1, n+1))
+    for i in range(m):
+        arr.clear()
+    return arr",sample_431,"1, 3",[]
+"def f(length, text):
+    if len(text) == length:
+        return text[::-1]
+    return False",sample_432,"-5, 'G5ogb6f,c7e.EMm'",False
+"def f(text):
+    text = text.split(',')
+    text.pop(0)
+    text.insert(0, text.pop(text.index('T')))
+    return 'T' + ',' + ','.join(text)",sample_433,"""Dmreh,Sspp,T,G ,.tB,Vxk,Cct""","'T,T,Sspp,G ,.tB,Vxk,Cct'"
+"def f(string):
+    try:
+       return string.rfind('e')
+    except AttributeError:
+        return ""Nuk""",sample_434,'eeuseeeoehasa',8
+"def f(numbers, num, val):
+    while len(numbers) < num:
+        numbers.insert(len(numbers) // 2, val)
+    for _ in range(len(numbers) // (num - 1) - 4):
+        numbers.insert(len(numbers) // 2, val)
+    return ' '.join(numbers)",sample_435,"[], 0, 1",''
+"def f(s, characters):
+    return [s[i:i+1] for i in characters]",sample_436,"'s7 6s 1ss', [1, 3, 6, 1, 2]","['7', '6', '1', '7', ' ']"
+"def f(tap_hierarchy):
+    hierarchy = {}
+    for gift in tap_hierarchy:
+        hierarchy = hierarchy.fromkeys(gift, None)
+    return hierarchy",sample_437,"['john', 'doe', 'the', 'john', 'doe']","{'d': None, 'o': None, 'e': None}"
+"def f(string):
+    bigTab = 100
+    for i in range(10, 30):
+        if 0 < string.count('\t') < 20:
+            bigTab = i
+            break
+    return string.expandtabs(bigTab)",sample_438,'1  \t\t\t3','1                             3'
+"def f(value):
+    parts = value.partition(' ')[::2]
+    return ''.join(parts)",sample_439,'coscifysu','coscifysu'
+"def f(text):
+    if text.isdecimal():
+        return 'yes'
+    else:
+        return 'no'",sample_440,"""abc""",'no'
+"def f(base, k, v):
+    base[k] = v
+    return base",sample_441,"{37: 'forty-five'}, '23', 'what?'","{37: 'forty-five', '23': 'what?'}"
+"def f(lst):
+    res = []
+    for i in range(len(lst)):
+        if lst[i] % 2 == 0:
+            res.append(lst[i])
+
+    return lst.copy()",sample_442,"[1, 2, 3, 4]","[1, 2, 3, 4]"
+"def f(text):
+    for space in text:
+        if space == ' ':
+            text = text.lstrip()
+        else:
+            text = text.replace('cd', space)
+    return text",sample_443,"""lorem ipsum""",'lorem ipsum'
+"def f(nums):
+    count = len(nums)
+    for i in range(count-1, 0, -2):
+        nums.insert(i, nums.pop(0) + nums.pop(0))
+    return nums",sample_444,"[-5, 3, -2, -3, -1, 3, 5]","[5, -2, 2, -5]"
+"def f(names):
+    parts = names.split(',')
+    for i, part in enumerate(parts):
+        parts[i] = part.replace(' and', '+').title().replace('+', ' and')
+    return ', '.join(parts)",sample_445,"""carrot, banana, and strawberry""","'Carrot,  Banana,  and Strawberry'"
+"def f(array):
+    l = len(array)
+    if l % 2 == 0:
+        array.clear()
+    else:
+        array.reverse()
+    return array",sample_446,[],[]
+"def f(text, tab_size):
+    res = ''
+    text = text.replace('\t', ' '*(tab_size-1))
+    for i in range(len(text)):
+        if text[i] == ' ':
+            res += '|'
+        else:
+            res += text[i]
+    return res",sample_447,"""\ta"", 3",'||a'
+"def f(text, suffix):
+    if suffix == '':
+        suffix = None
+    return text.endswith(suffix)",sample_448,"'uMeGndkGh', 'kG'",False
+"def f(x):
+    n = len(x)
+    i = 0
+    while i < n and x[i].isdigit():
+        i += 1
+    return i == n",sample_449,'1',True
+"def f(strs):
+    strs = strs.split()
+    for i in range(1, len(strs), 2):
+        strs[i] = ''.join(reversed(strs[i]))
+    return ' '.join(strs)",sample_450,'K zBK','K KBz'
+"def f(text, char):
+    text = list(text)
+    for count, item in enumerate(text):
+        if item == char:
+            text.remove(item)
+            return ''.join(text)
+    return text",sample_451,"'pn', 'p'",'n'
+"def f(text):
+    counter = 0
+    for char in text:
+        if char.isalpha():
+            counter += 1
+    return counter",sample_452,"'l000*',",1
+"def f(string, c):
+    return string.endswith(c)",sample_453,"'wrsch)xjmb8', 'c'",False
+"def f(d, count):
+    new_dict = {}
+    for _ in range(count):
+        d = d.copy()
+        new_dict = {**d, **new_dict}
+    return new_dict",sample_454,"{'a': 2, 'b': [], 'c': {}}, 0",{}
+"def f(text):
+    uppers = 0
+    for c in text:
+        if c.isupper():
+            uppers += 1
+    return text.upper() if uppers >= 10 else text",sample_455,'?XyZ','?XyZ'
+"def f(s, tab):
+    return s.expandtabs(tab)",sample_456,"""Join us in Hungary"", 4",'Join us in Hungary'
+"def f(nums):
+    count = list(range(len(nums)))
+    for i in range(len(nums)):
+        nums.pop()
+        if len(count) > 0:
+            count.pop(0)
+    return nums",sample_457,"[3, 1, 7, 5, 6]",[]
+"def f(text, search_chars, replace_chars):
+    trans_table = str.maketrans(search_chars, replace_chars)
+    return text.translate(trans_table)",sample_458,"'mmm34mIm', 'mm3', ',po'",'pppo4pIp'
+"def f(arr, d):
+    for i in range(1, len(arr), 2):
+        d.update({arr[i]: arr[i-1]})
+
+    return d",sample_459,"['b', 'vzjmc', 'f', 'ae', '0'], dict()","{'vzjmc': 'b', 'ae': 'f'}"
+"def f(text, amount):
+    length = len(text)
+    pre_text = '|'
+    if amount >= length:
+        extra_space = amount - length
+        pre_text += ' ' * (extra_space // 2)
+        return pre_text + text + pre_text
+    return text",sample_460,"'GENERAL NAGOOR', 5",'GENERAL NAGOOR'
+"def f(text, search):
+    return search.startswith(text) or False",sample_461,"'123', '123eenhas0'",True
+"def f(text, value):
+    length = len(text)
+    letters = list(text)
+    if value not in letters:
+        value = letters[0]
+    return value * length",sample_462,"'ldebgp o', 'o'",'oooooooo'
+"def f(dict):
+    result = dict.copy()
+    remove_keys = []
+    for k, v in dict.items():
+        if v in dict:
+            del result[k]
+    return result",sample_463,"{-1: -1, 5: 5, 3: 6, -4: -4}",{3: 6}
+"def f(ans):
+    if ans.isdecimal():
+        total = int(ans) * 4 - 50
+        total -= len([c for c in list(ans) if c not in '02468']) * 100
+        return total
+    return 'NAN'",sample_464,'0',-50
+"def f(seq, value):
+    roles = dict.fromkeys(seq, 'north')
+    if value:
+        roles.update(key.strip() for key in value.split(', '))
+    return roles",sample_465,"['wise king', 'young king'], ''","{'wise king': 'north', 'young king': 'north'}"
+"def f(text):
+    length = len(text)
+    index = 0
+    while index < length and text[index].isspace():
+        index += 1
+    return text[index:index+5]",sample_466,'-----\t\n\tth\n-----','-----'
+"def f(nums):
+    copy = nums.copy()
+    newDict = dict()
+    for k in copy:
+        newDict[k] = len(copy[k])
+    return newDict",sample_467,{},{}
+"def f(a, b, n):
+    result = m = b
+    for _ in range(n):
+        if m:
+            a, m = a.replace(m, '', 1), None
+            result = m = b
+    return result.join(a.split(b))",sample_468,"'unrndqafi', 'c', 2",'unrndqafi'
+"def f(text, position, value):
+   length = len(text)
+   index = position % (length)
+   if position < 0:
+       index = length // 2
+   new_text = list(text)
+   new_text.insert(index, value)
+   new_text.pop(length-1)
+   return ''.join(new_text)",sample_469,"'sduyai', 1, 'y'",'syduyi'
+"def f(number):
+    transl = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5}
+    result = []
+    for key, value in transl.items():
+        if value % number == 0:
+            result.append(key)
+    return result",sample_470,2,"['B', 'D']"
+"def f(val, text):
+    indices = [index for index in range(len(text)) if text[index] == val]
+    if len(indices) == 0:
+        return -1
+    else:
+        return indices[0]",sample_471,"'o', 'fnmart'",-1
+"def f(text):
+    d = {}
+    for char in text.replace('-', '').lower():
+        d[char] = d[char] + 1 if char in d else 1
+    d = sorted(d.items(), key=lambda x: x[1])
+    return [val for i, val in d]",sample_472,"""x--y-z-5-C""","[1, 1, 1, 1, 1]"
+"def f(text, value):
+    indexes = list()
+    for i in range(len(text)):
+        if text[i] == value:
+            indexes.append(i)
+    new_text = list(text)
+    for i in indexes:
+        new_text.remove(value)
+    return ''.join(new_text)",sample_473,"'scedvtvotkwqfoqn', 'o'",'scedvtvtkwqfqn'
+"def f(txt, marker):
+    a = []
+    lines = txt.split('\n')
+    for line in lines:
+        a.append(line.center(marker))
+    return '\n'.join(a)",sample_474,"'#[)[]>[^e>\n 8', -5",'#[)[]>[^e>\n 8'
+"def f(array, index):
+    if index < 0:
+        index = len(array) + index
+    return array[index]",sample_475,"[1], 0",1
+"def f(a, split_on):
+    t = a.split()
+    a = []
+    for i in t:
+        for j in i:
+            a.append(j)
+    if split_on in a:
+        return True
+    else:
+        return False",sample_476,"""booty boot-boot bootclass"", 'k'",False
+"def f(text):
+    topic, sep, problem = text.rpartition('|')
+    if problem == 'r':
+        problem = topic.replace('u', 'p')
+    return topic, problem",sample_477,'|xduaisf',"('', 'xduaisf')"
+"def f(sb):
+    d = {}
+    for s in sb:
+        d[s] = d.get(s, 0) + 1
+    return d",sample_478,'meow meow',"{'m': 2, 'e': 2, 'o': 2, 'w': 2, ' ': 1}"
+"def f(nums, pop1, pop2):
+    nums.pop(pop1 - 1)
+    nums.pop(pop2 - 1)
+    return nums",sample_479,"[1, 5, 2, 3, 6], 2, 4","[1, 2, 3]"
+"def f(s, c1, c2):
+    if s == '':
+        return s
+    ls = s.split(c1)
+    for index, item in enumerate(ls):
+        if c1 in item:
+            ls[index] = item.replace(c1, c2, 1)
+    return c1.join(ls)",sample_480,"'', 'mi', 'siast'",''
+"def f(values, item1, item2):
+    if values[-1] == item2:
+        if values[0] not in values[1:]:
+            values.append(values[0])
+    elif values[-1] == item1:
+        if values[0] == item2:
+            values.append(values[0])
+    return values",sample_481,"[1, 1], 2, 3","[1, 1]"
+"def f(text):
+    return text.replace('\\""', '""')",sample_482,'Because it intrigues them','Because it intrigues them'
+"def f(text, char):
+    return ' '.join(text.split(char, len(text)))",sample_483,"'a', 'a'",' '
+"def f(arr):
+    result = []
+    for item in arr:
+        try:
+            if item.isnumeric():
+                result.append(int(item)*2)
+        except ValueError:
+            result.append(item[::-1])
+    return result",sample_484,"['91', '16', '6r', '5r', 'egr', '', 'f', 'q1f', '-2']","[182, 32]"
+"def f(tokens):
+    tokens = tokens.split()
+    if len(tokens) == 2:
+        tokens = list(reversed(tokens))
+    result = ' '.join([tokens[0].ljust(5), tokens[1].ljust(5)])
+    return result",sample_485,'gsd avdropj','avdropj gsd  '
+"def f(dic):
+    dic_op = dic.copy()
+    for key, val in dic.items():
+        dic_op[key] = val * val
+    return dic_op",sample_486,"{1:1, 2:2, 3:3}","{1: 1, 2: 4, 3: 9}"
+"def f(dict):
+    even_keys = []
+    for key in dict.keys():
+        if key % 2 == 0:
+            even_keys.append(key)
+    return even_keys",sample_487,{ 4: 'a' },[4]
+"def f(text, char):
+    count = text.count(char)
+    chars = list(text)
+    if count > 0:
+        index = chars.index(char) + 1
+        chars[:index:index+1] = [c for c in chars[index:index+count:1]]
+    return ''.join(chars)",sample_488,"'tezmgvn 651h', '6'",'5ezmgvn 651h'
+"def f(text, value):
+    return text.removeprefix(value.lower())",sample_489,"'coscifysu', 'cos'",'cifysu'
+"def f(s):
+    return ''.join([c for c in s if c.isspace()])",sample_490, '\ngiyixjkvu\n\r\r \frgjuo','\n\n\r\r \x0c'
+"def f(xs):
+    for i in range(-1, -len(xs)-1, -1):
+        xs.extend([xs[i], xs[i]])
+    return xs",sample_491,"[4, 8, 8, 5]","[4, 8, 8, 5, 5, 5, 5, 5, 5, 5, 5, 5]"
+"def f(text, value):
+    ls = list(text)
+    if (ls.count(value)) % 2 == 0:
+        while value in ls:
+            ls.remove(value)
+    else:
+        ls.clear()
+    return ''.join(ls)",sample_492,"'abbkebaniuwurzvr', 'm'",'abbkebaniuwurzvr'
+"def f(d):
+    keys = []
+    for k in d:
+        keys.append('%s => %s' % (k, d[k]))
+    return keys",sample_493,"{'-4':'4','1':'2','-':'-3'}","['-4 => 4', '1 => 2', '- => -3']"
+"def f(num, l):
+    t = """"
+    while l > len(num):
+        t += '0'
+        l -= 1
+    return t + num",sample_494,"""1"", 3",'001'
+"def f(s):
+    if str.isascii(s[-5:]):
+        return s[-5:], s[0:][:3]
+    elif str.isascii(s[:5]):
+        return s[:5], s[-5:][3:]
+    else:
+        return s",sample_495,'a1234år',"('a1234', 'år')"
+"def f(text, value):
+    if isinstance(value, str):
+        return text.count(value) + text.count(value.lower())
+    return text.count(value)",sample_496,"'eftw{ьТсk_1', '\\'",0
+"def f(n):
+    b = list(str(n))
+    for i in range(2,len(b)): b[i] += '+'
+    return b",sample_497,44,"['4', '4']"
+"def f(nums, idx, added):
+    nums[idx:idx] = (added,)
+    return nums",sample_498,"[2, 2, 2, 3, 3], 2, 3","[2, 2, 3, 2, 3, 3]"
+"def f(text, length, fillchar):
+    size = len(text)
+    return text.center(length, fillchar)",sample_499,"'magazine', 25, '.'",'.........magazine........'
+"def f(text, delim):
+    return text[:text[::-1].find(delim)][::-1]",sample_500,"'dsj osq wi w', ' '",'d'
+"def f(text, char):
+    index = text.rindex(char)
+    result = list(text)
+    while index > 0:
+        result[index] = result[index-1]
+        result[index-1] = char
+        index -= 2
+    return ''.join(result)",sample_501,"'qpfi jzm', 'j'",'jqjfj zm'
+"def f(name):
+    return '*'.join(name.split(' '))",sample_502,'Fred Smith','Fred*Smith'
+"def f(d):
+    result = [None] * len(d)
+    a = b = 0
+    while d:
+        result[a] = d.popitem(a == b)
+        a, b = b, (b+1) % len(result)
+    return result",sample_503,{},[]
+"def f(values):
+    values.sort()
+    return values",sample_504,"[1, 1, 1, 1]","[1, 1, 1, 1]"
+"def f(string):
+    while string:
+        if string[-1].isalpha():
+            return string
+        string = string[:-1]
+    return string",sample_505,'--4/0-209',''
+"def f(n):
+    p = ''
+    if n%2 == 1:
+        p+='sn'
+    else:
+        return n*n
+    for x in range(1, n+1):
+        if x%2 == 0:
+            p+='to'
+        else:
+            p+='ts'
+    return p",sample_506,1,'snts'
+"def f(text, search):
+    result = text.lower()
+    return result.find(search.lower())",sample_507,"'car hat', 'car'",0
+"def f(text, sep, maxsplit):
+    splitted = text.rsplit(sep, maxsplit)
+    length = len(splitted)
+    new_splitted = splitted[:length // 2]
+    new_splitted.reverse()
+    new_splitted += splitted[length // 2:]
+    return sep.join(new_splitted)",sample_508,"'ertubwi', 'p', 5",'ertubwi'
+"def f(value, width):
+    if value >= 0:
+        return str(value).zfill(width)
+
+    if value < 0:
+        return '-' + str(-value).zfill(width)
+    return ''",sample_509,"5, 1",'5'
+"def f(a, b, c, d, e):
+    key = d
+    if key in a:
+        num = a.pop(key)
+    if b > 3:
+        return ''.join(c)
+    else:
+        return num",sample_510,"{7: 'ii5p', 1: 'o3Jwus', 3: 'lot9L', 2: '04g', 9: 'Wjf', 8: '5b', 0: 'te6', 5: 'flLO', 6: 'jq', 4: 'vfa0tW'}, 4, 'Wy', 'Wy', 1.0",'Wy'
+"def f(fields, update_dict):
+    di = dict((x, '') for x in fields)
+    di.update(update_dict)
+    return di",sample_511,"('ct', 'c', 'ca'), {'ca': 'cx'}","{'ct': '', 'c': '', 'ca': 'cx'}"
+"def f(s):
+    return len(s) == s.count('0') + s.count('1')",sample_512,'102',False
+"def f(array):
+    while -1 in array:
+        array.pop(-3)
+    while 0 in array:
+        array.pop()
+    while 1 in array:
+        array.pop(0)
+    return array",sample_513,"[0, 2]",[]
+"def f(text):
+    for item in text.split():
+        text = text.replace('-{}'.format(item), ' ').replace('{}-'.format(item), ' ')
+    return text.strip('-')",sample_514,'-stew---corn-and-beans-in soup-.-','stew---corn-and-beans-in soup-.'
+"def f(array):
+    result = array.copy()
+    result.reverse()
+    result[:] = [item * 2 for item in result]
+    return result",sample_515,"[1, 2, 3, 4, 5]","[10, 8, 6, 4, 2]"
+"def f(strings, substr):
+    list = [s for s in strings if s.startswith(substr)]
+    return sorted(list, key=len)",sample_516,"['condor', 'eyes', 'gay', 'isa' ], 'd'",[]
+"def f(text):
+    for i in range(len(text)-1, 0, -1):
+        if not text[i].isupper():
+            return text[0:i]
+    return ''",sample_517,'SzHjifnzog','SzHjifnzo'
+"def f(text):
+    return not text.isdecimal()",sample_518,'the speed is -36 miles per hour',True
+"def f(d):
+    d['luck'] = 42
+    d.clear()
+    return {1: False, 2 :0}",sample_519,{},"{1: False, 2: 0}"
+"def f(album_sales):
+    while len(album_sales) != 1:
+        album_sales.append(album_sales.pop(0))
+    return album_sales[0]",sample_520,[6],6
+"def f(nums):
+    m = max(nums)
+    for i in range(m):
+        nums.reverse()
+    return nums",sample_521,"[43, 0, 4, 77, 5, 2, 0, 9, 77]","[77, 9, 0, 2, 5, 77, 4, 0, 43]"
+"def f(numbers):
+    floats = [n % 1 for n in numbers]
+    return floats if 1 in floats else []",sample_522,"range(100, 120)",[]
+"def f(text):
+    text = list(text)
+    for i in range(len(text)-1, -1, -1):
+        if text[i].isspace():
+            text[i] = '&nbsp;'
+    return ''.join(text)",sample_523,'   ','&nbsp;&nbsp;&nbsp;'
+"def f(dict0):
+    new = dict0.copy()
+    for i in range(len(new)-1):
+        dict0[sorted(new)[i]] = i
+    return dict0",sample_524,"{2: 5, 4: 1, 3: 5, 1: 3, 5: 1}","{2: 1, 4: 3, 3: 2, 1: 0, 5: 1}"
+"def f(c, st, ed):
+    d = {}
+    a, b = 0, 0
+    for x, y in c.items():
+        d[y] = x
+        if y == st:
+            a = x
+        if y == ed:
+            b = x
+    w = d[st]
+    return (w, b) if a > b else (b, w)",sample_525,"{'TEXT': 7, 'CODE': 3}, 7, 3","('TEXT', 'CODE')"
+"def f(label1, char, label2, index):
+    m = label1.rindex(char)
+    if m >= index:
+        return label2[:m - index + 1]
+    return label1 + label2[index - m - 1:]",sample_526,"'ekwies', 's', 'rpg', 1",'rpg'
+"def f(text, value):
+    return text.ljust(len(value), ""?"")",sample_527,"""!?"", """"",'!?'
+"def f(s):
+    b = ''
+    c = ''
+    for i in s:
+        c = c + i
+        if s.rfind(c) > -1:
+            return s.rfind(c)
+    return 0",sample_528,'papeluchis',2
+"def f(array):
+    prev = array[0]
+    newArray = array[:]
+    for i in range(1, len(array)):
+        if prev != array[i]:
+            newArray[i] = array[i]
+        else:
+            del newArray[i]
+        prev = array[i]
+    return newArray",sample_529,"[1, 2, 3]","[1, 2, 3]"
+"def f(s, ch):
+    sl = s
+    if ch in s:
+        sl = s.lstrip(ch)
+        if len(sl) == 0:
+            sl = sl + '!?'
+    else:
+        return 'no'
+    return sl",sample_530,"""@@@ff"", '@'",'ff'
+"def f(text, x):
+    if text.removeprefix(x) == text:
+        return f(text[1:], x)
+    else:
+        return text",sample_531,"""Ibaskdjgblw asdl "", ""djgblw""",'djgblw asdl '
+"def f(n, array):
+    final = [array.copy()] 
+    for i in range(n):
+        arr = array.copy()
+        arr.extend(final[-1])
+        final.append(arr)
+    return final",sample_532,"1, [1, 2, 3]","[[1, 2, 3], [1, 2, 3, 1, 2, 3]]"
+"def f(query, base):
+    net_sum = 0
+    for (key, val) in base.items():
+        if key[0] == query and len(key) == 3:
+            net_sum -= val
+        elif key[-1] == query and len(key) == 3:
+            net_sum += val
+    return net_sum",sample_533,"'a', {}",0
+"def f(sequence, value):
+    i = max(sequence.index(value) - len(sequence) // 3, 0)
+    result = ''
+    for j, v in enumerate(sequence[i:]):
+        if v == '+':
+            result += value
+        else:
+            result += sequence[i + j]
+    return result",sample_534,"'hosu', 'o'",'hosu'
+"def f(n):
+    for n in str(n):
+        if n not in ""012"" and n not in list(range(5, 10)):
+            return False
+    return True",sample_535,1341240312,False
+"def f(cat):
+    digits = 0
+    for char in cat:
+        if char.isdigit():
+            digits += 1
+    return digits",sample_536,'C24Bxxx982ab',5
+"def f(text, value):
+    new_text = list(text)
+    try:
+        new_text.append(value)
+        length = len(new_text)
+    except IndexError:
+        length = 0
+    return '[' + str(length) + ']'",sample_537,"'abv', 'a'",'[4]'
+"def f(text, width):
+    return text[:width].center(width, 'z')",sample_538,"'0574', 9",'zzz0574zz'
+"def f(array):
+    c = array
+    array_copy = array
+
+    while True:
+        c.append('_')
+        if c == array_copy:
+            array_copy[c.index('_')] = ''
+            break
+        
+    return array_copy",sample_539,[],['']
+"def f(a):
+    b = a.copy()
+    for k in range(0, len(a) - 1, 2):
+        b.insert(k + 1, b[k])
+    b.append(b[0])
+    return b",sample_540,"[5, 5, 5, 6, 4, 9]","[5, 5, 5, 5, 5, 5, 6, 4, 9, 5]"
+"def f(text):
+    return ''.join(list(text)).isspace()",sample_541,' \t  \u3000',True
+"def f(test, sep, maxsplit):
+    try:
+        return test.rsplit(sep, maxsplit)
+    except:
+        return test.rsplit()",sample_542,"'ab cd', 'x', 2",['ab cd']
+"def f(item):
+    modified = item.replace('. ', ' , ').replace('&#33; ', '! ').replace('. ', '? ').replace('. ', '. ')
+    return modified[0].upper() + modified[1:]",sample_543,"'.,,,,,. منبت'","'.,,,,, , منبت'"
+"def f(text):
+    a = text.split('\n')
+    b = []
+    for i in range(len(a)):
+        c = a[i].replace('\t', '    ')
+        b.append(c)
+    return '\n'.join(b)",sample_544,"""\t\t\ttab tab tabulates""",'            tab tab tabulates'
+"def f(array):
+    result = []
+    index = 0
+    while index < len(array):
+        result.append(array.pop())
+        index += 2
+    return result",sample_545,"[8, 8, -4, -9, 2, 8, -1, 8]","[8, -1, 8]"
+"def f(text, speaker):
+    while text.startswith(speaker):
+        text = text[len(speaker):]
+    return text",sample_546,"'[CHARRUNNERS]Do you know who the other was? [NEGMENDS]', '[CHARRUNNERS]'",'Do you know who the other was? [NEGMENDS]'
+"def f(letters):
+    letters_only = letters.strip(""., !?*"")
+    return ""...."".join(letters_only.split("" ""))",sample_547,"""h,e,l,l,o,wo,r,ld,""","'h,e,l,l,o,wo,r,ld'"
+"def f(text, suffix):
+    if suffix and text and text.endswith(suffix):
+        return text.removesuffix(suffix)
+    else:
+        return text",sample_548,"'spider', 'ed'",'spider'
+"def f(matrix):
+    matrix.reverse()
+    result = []
+    for primary in matrix:
+        max(primary)
+        primary.sort(reverse = True)
+        result.append(primary)
+    return result",sample_549,"[[1, 1, 1, 1]]","[[1, 1, 1, 1]]"
+"def f(nums):
+    for i in range(len(nums)):
+        nums.insert(i, nums[i]**2)
+    return nums",sample_550,"[1, 2, 4]","[1, 1, 1, 1, 2, 4]"
+"def f(data):
+    members = []
+    for item in data:
+        for member in data[item]:
+            if member not in members:
+                members.append(member)
+    return sorted(members)",sample_551,"{'inf': ['a', 'b'], 'a': [""inf"", ""c""], 'd': [""inf""]}","['a', 'b', 'c', 'inf']"
+"def f(d):
+    result = {}
+    for k, v in d.items():
+        if isinstance(k, float):
+            for i in v:
+                result[i] = k
+        else:
+            result[k] = v
+    return result",sample_552,"{2: 0.76, 5: [3, 6, 9, 12]}","{2: 0.76, 5: [3, 6, 9, 12]}"
+"def f(text, count):
+    for i in range(count):
+        text = text[::-1]
+    return text",sample_553,"'439m2670hlsw', 3",'wslh0762m934'
+"def f(arr):
+    return list(reversed(arr))",sample_554,"[2, 0, 1, 9999, 3, -5]","[-5, 3, 9999, 1, 0, 2]"
+"def f(text, tabstop):
+    text = text.replace('\n', '_____')
+    text = text.replace('\t', tabstop * ' ')
+    text = text.replace('_____', '\n')
+    return text",sample_555,"""odes\tcode\twell"", 2",'odes  code  well'
+"def f(text):
+    for i in range(len(text)):
+        if text[i] == ' ':
+            text = text.replace(' ', '\t', 1)
+    return text.expandtabs(4)",sample_556,'\n\n\t\tz\td\ng\n\t\t\te','\n\n        z   d\ng\n            e'
+"def f(str):
+    d = str.rpartition('ar')
+    return ' '.join((d[0], d[1], d[2]))",sample_557,'xxxarmmarxx','xxxarmm ar xx'
+"def f(nums, mos):
+    for num in mos:
+        nums.pop(nums.index(num))
+    nums.sort()
+    for num in mos:
+        nums += [num]
+    for i in range(len(nums)-1):
+        if nums[i] > nums[i+1]:
+            return False
+    return True",sample_558,"[3, 1, 2, 1, 4, 1], [1]",False
+"def f(n):
+    n = str(n)
+    return n[0] + '.'+n[1:].replace('-', '_')",sample_559,"""first-second-third""",'f.irst_second_third'
+"def f(text):
+    x = 0
+    if text.islower():
+        for c in text:
+            if int(c) in list(range(90)):
+                x+=1
+    return x",sample_560,"""591237865""",0
+"def f(text, digit):
+    #different than previous? Just count instances digit
+    count = text.count(digit)
+    return int(digit) * count",sample_561,"'7Ljnw4Lj', '7'",7
+"def f(text):
+    return text.upper() == str(text)",sample_562,'VTBAEPJSLGAHINS',True
+"def f(text1, text2):
+    nums = []
+    for i in range(len(text2)):
+        nums.append(text1.count(text2[i]))
+    return sum(nums)",sample_563,"'jivespdcxc', 'sx'",2
+"def f(lists):
+    lists[1].clear()
+    lists[2] += lists[1]
+    return lists[0]",sample_564,"[[395, 666, 7, 4], [], [4223, 111]]","[395, 666, 7, 4]"
+"def f(text):
+    return max(text.find(ch) for ch in 'aeiou')",sample_565,"""qsqgijwmmhbchoj""",13
+"def f(string, code):
+    t = ''
+    try:
+        t = string.encode(code)
+        if t.endswith(b'\n'):
+            t = t[:-1]
+        t = t.decode('UTF-8')
+        return t
+    except:
+        return t",sample_566,"""towaru"", ""UTF-8""",'towaru'
+"def f(s, n):
+    ls = s.rsplit()
+    out = []
+    while len(ls) >= n:
+        out += ls[-n:]
+        ls = ls[:-n]
+    return ls + ['_'.join(out)]",sample_567,"'one two three four five', 3","['one', 'two', 'three_four_five']"
+"def f(num):
+    letter = 1
+    for i in '1234567890':
+        num = num.replace(i,'')
+        if len(num) == 0: break
+        num = num[letter:] + num[:letter]
+        letter += 1
+    return num",sample_568,'bwmm7h','mhbwm'
+"def f(txt):
+    coincidences = {}
+    for c in txt:
+        if c in coincidences:
+            coincidences[c] += 1
+        else:
+            coincidences[c] = 1
+    return sum(coincidences.values())",sample_569,"""11 1 1""",6
+"def f(array, index, value):
+    array.insert(0, index + 1)
+    if value >= 1:
+        array.insert(index, value)
+    return array",sample_570,"[2], 0, 2","[2, 1, 2]"
+"def f(input_string, spaces):
+    return input_string.expandtabs(spaces)",sample_571,"r'a\tb', 4",'a\\tb'
+"def f(data, num):
+    new_dict = {}
+    temp = list(data.items())
+    for i in range(len(temp) - 1, num - 1, -1):
+        new_dict[temp[i]] = None
+    return temp[num:] + list(new_dict.items())",sample_572,"{1: 9, 2: 10, 3: 1}, 1","[(2, 10), (3, 1), ((3, 1), None), ((2, 10), None)]"
+"def f(string, prefix):
+    if string.startswith(prefix):
+        return string.removeprefix(prefix)
+    return string",sample_573,"""Vipra"", ""via""",'Vipra'
+"def f(simpons):
+    while simpons:
+        pop = simpons.pop()
+        if pop == pop.title():
+            return pop
+    return pop",sample_574,"['George', 'Michael', 'George', 'Costanza']",'Costanza'
+"def f(nums, val):
+    new_list = []
+    [new_list.extend([i] * val) for i in nums]
+    return sum(new_list)",sample_575,"[10, 4], 3",42
+"def f(array, const):
+    output = ['x']
+    for i in range(1, len(array) + 1):
+        if i % 2 != 0:
+            output.append(array[i - 1] * -2)
+        else:
+            output.append(const)
+    return output",sample_576,"[1, 2, 3], -1","['x', -2, -1, -6]"
+"def f(items):
+    result = []
+    for number in items:
+        d = dict(items).copy()
+        d.popitem()
+        result.append(d)
+        items = d
+    return result",sample_577,"[(1, 'pos')]",[{}]
+"def f(obj):
+    for k, v in obj.items():
+        if v >= 0:
+            obj[k] = -v
+    return obj",sample_578,"{'R': 0, 'T': 3, 'F': -6, 'K': 0}","{'R': 0, 'T': -3, 'F': -6, 'K': 0}"
+"def f(text):
+    if text.istitle():
+        if len(text) > 1 and text.lower() != text:
+            return text[0].lower() + text[1:]
+    elif text.isalpha():
+        return text.capitalize()
+    return text",sample_579,'',''
+"def f(text, char):
+    new_text = text
+    a = []
+    while char in new_text:
+        a.append(new_text.index(char))
+        new_text = new_text.replace(char,"""",1)
+    return a",sample_580,"'rvr', 'r'","[0, 1]"
+"def f(text, sign):
+    length = len(text)
+    new_text = list(text)
+    sign = list(sign)
+    for i in range(len(sign)):
+        new_text.insert((i * length - 1) // 2 + (i + 1) // 2, sign[i])
+    return ''.join(new_text)",sample_581,"'akoon', 'sXo'",'akoXoosn'
+"def f(k, j):
+    arr = []
+    for i in range(k):
+        arr.append(j)
+    return arr",sample_582,"7, 5","[5, 5, 5, 5, 5, 5, 5]"
+"def f(text, ch):
+    result = []
+    for line in text.splitlines():
+        if len(line) > 0 and line[0] == ch:
+            result.append(line.lower())
+        else:
+            result.append(line.upper())
+    return ""\n"".join(result)",sample_583,"""t\nza\na"", ""t""",'t\nZA\nA'
+"def f(txt):
+    return txt.format(*('0'*20,))",sample_584,"""5123807309875480094949830""",'5123807309875480094949830'
+"def f(text):
+    count = text.count(text[0])
+    ls = list(text)
+    for _ in range(count):
+        ls.remove(ls[0])
+    return ''.join(ls)",sample_585,"';,,,?'","',,,?'"
+"def f(text, char):
+    return text.rindex(char)",sample_586,"""breakfast"", ""e""",2
+"def f(nums, fill):
+    ans = dict.fromkeys(nums, fill)
+    return ans",sample_587,"[0, 1, 1, 2], 'abcca'","{0: 'abcca', 1: 'abcca', 2: 'abcca'}"
+"def f(items, target):
+    if target in items:
+        return items.index(target)
+    return -1",sample_588,"['''1''', '+', '-', '**', '//', '*', '+'], '**'",3
+"def f(num):
+    num.append(num[-1])
+    return num",sample_589,"[-70, 20, 9, 1]","[-70, 20, 9, 1, 1]"
+"def f(text):
+    for i in range(10, 0, -1):
+        text = text.lstrip(str(i))
+    return text",sample_590,"""25000   $""",'5000   $'
+"def f(arr): 
+    counts = [0] * 9 
+    ans = [] 
+    for ele in arr: counts[ele - 1] += 1 
+    for i in range(len(counts)): 
+        while counts[i] > 0: 
+            counts[i] -= 1 
+            ans.append(i + 1)
+    return counts, ans",sample_591,"[6, 3, 0, 7, 4, 8]","([0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 4, 6, 7, 8, 9])"
+"def f(numbers):
+    new_numbers = []
+    for i, _ in enumerate(numbers):
+        new_numbers.append(numbers[len(numbers)-1-i])
+    return new_numbers",sample_592,"[11, 3]","[3, 11]"
+"def f(nums, n):
+    pos = len(nums) - 1
+    for i in range(-len(nums), 0):
+        nums.insert(pos, nums[i])
+    return nums",sample_593,"[], 14",[]
+"def f(file):
+    return file.index('\n')",sample_594,"""n wez szize lnson tilebi it 504n.\n""",33
+"def f(text, prefix):
+    if text.startswith(prefix):
+        text = text.removeprefix(prefix)
+    text = text.capitalize()
+    return text",sample_595,"'qdhstudentamxupuihbuztn', 'jdm'",'Qdhstudentamxupuihbuztn'
+"def f(txt, alpha):
+    txt = sorted(txt)
+    if txt.index(alpha) % 2 == 0:
+        return txt[::-1]
+    return txt",sample_596,"['8', '9', '7', '4', '3', '2'], '9'","['2', '3', '4', '7', '8', '9']"
+"def f(s):
+    return s.upper()",sample_597,"""Jaafodsfa SOdofj AoaFjIs  JAFasIdfSa1""",'JAAFODSFA SODOFJ AOAFJIS  JAFASIDFSA1'
+"def f(text, n):
+    length = len(text)
+    return text[length*(n%4):length ]",sample_598,"'abc', 1",''
+"def f(a, b):
+    a = b.join(a)
+    lst = []
+    for i in range(1, len(a)+1, 2):
+        lst.append(a[i-1:][:i])
+        lst.append(a[i-1:][i:])
+    return lst",sample_599,"[""a"", ""b"", ""c""], "" ""","['a', ' b c', 'b c', '', 'c', '']"
+"def f(array):
+    just_ns = list(map(lambda num: 'n'*num, array))
+    final_output = []
+    for wipe in just_ns:
+        final_output.append(wipe)
+    return final_output",sample_600,[],[]
+"def f(text):
+    t = 5
+    tab = []
+    for i in text:
+        if i.lower() in 'aeiouy':
+            tab.append(i.upper() * t)
+        else:
+            tab.append(i * t)
+    return ' '.join(tab)",sample_601,'csharp','ccccc sssss hhhhh AAAAA rrrrr ppppp'
+"def f(nums, target):
+    cnt = nums.count(target)
+    return cnt * 2",sample_602,"[1, 1], 1",4
+"def f(sentences):
+    if all([sentence.isdecimal() for sentence in sentences.split('.')]):
+        return 'oscillating' 
+    else:
+        return 'not oscillating'",sample_603,'not numbers','not oscillating'
+"def f(text, start):
+    return text.startswith(start)",sample_604,"""Hello world"", ""Hello""",True
+"def f(nums):
+    nums.clear()
+    return ""quack""",sample_605,"[2, 5, 1, 7, 9, 3]",'quack'
+"def f(value):
+    ls = list(value)
+    ls.append('NHIB')
+    return ''.join(ls)",sample_606,'ruam','ruamNHIB'
+"def f(text):
+    for i in ['.', '!', '?']:
+        if text.endswith(i):
+            return True
+    return False",sample_607,'. C.',True
+"def f(aDict):
+    # transpose the keys and values into a new dict
+    return dict([v for v in aDict.items()])",sample_608,"{1:1, 2:2, 3:3}","{1: 1, 2: 2, 3: 3}"
+"def f(array, elem):
+    result = array.copy()
+    while result:
+        key, value = result.popitem()
+        if elem == key or elem == value:
+            result.update(array)
+        del result[key]
+    return result",sample_609,"{}, 1",{}
+"def f(keys, value):
+    d = dict.fromkeys(keys, value)
+    for i, k in enumerate(d.copy(), 1):
+        if d[k] == d[i]:
+            del d[i]
+    return d",sample_610,"[1, 2, 1, 1], 3",{}
+"def f(nums):
+    nums[:] = nums[::-1]
+    return nums",sample_611,"[-6, -2, 1, -3, 0, 1]","[1, 0, -3, 1, -2, -6]"
+"def f(d):
+    return dict(d.items())",sample_612,"{'a': 42, 'b': 1337, 'c': -1, 'd': 5}","{'a': 42, 'b': 1337, 'c': -1, 'd': 5}"
+"def f(text):
+    result = ''
+    mid = (len(text) - 1) // 2
+    for i in range(mid):
+        result += text[i]
+    for i in range(mid, len(text)-1):
+        result += text[mid + len(text) - 1 - i]
+    return result.ljust(len(text), text[-1])",sample_613,'eat!','e!t!'
+"def f(text, substr, occ):
+    n = 0
+    while True:
+        i = text.rfind(substr)
+        if i == -1:
+            break
+        elif n == occ:
+            return i
+        else:
+            n += 1
+            text = text[:i]
+    return -1",sample_614,"'zjegiymjc', 'j', 2",-1
+"def f(in_list, num):
+    in_list.append(num)
+    return in_list.index(max(in_list[:-1]))",sample_615,"[-1, 12, -6, -2], -1",1
+"def f(body):
+    ls = list(body)
+    dist = 0
+    for i in range(0, len(ls) - 1):
+        if ls[i - 2 if i - 2 >= 0 else 0] == '\t':
+            dist += (1 + ls[i - 1].count('\t')) * 3
+        ls[i] = '[' + ls[i] + ']'
+    return ''.join(ls).expandtabs(4 + dist)",sample_616,'\n\ny\n','[\n][\n][y]\n'
+"def f(text):
+    if text.isascii():
+        return 'ascii'
+    else:
+        return 'non ascii'",sample_617,"""<<<<""",'ascii'
+"def f(match, fill, n):
+    return fill[:n] + match",sample_618,"'9', '8', 2",'89'
+"def f(title):
+    return title.lower()",sample_619,'   Rock   Paper   SCISSORS  ','   rock   paper   scissors  '
+"def f(x):
+    return "" "".join(list(x)[::-1])",sample_620,"""lert dna ndqmxohi3""",'3 i h o x m q d n   a n d   t r e l'
+"def f(text, encoding):
+    try:
+        return text.encode(encoding)
+    except LookupError:
+        return str(LookupError)",sample_621,"'13:45:56', 'shift_jis'",b'13:45:56'
+"def f(s):
+    left, sep, right = s.rpartition('.')
+    new = sep.join([right, left])
+    _, sep, _ = new.rpartition('.')
+    return new.replace(sep, ', ')",sample_622,'galgu',"', g, a, l, g, u, '"
+"def f(text, rules):
+    for rule in rules:
+        if rule == '@':
+            text = text[::-1]
+        elif rule == '~':
+            text = text.upper()
+        elif text and text[len(text)-1] == rule:
+            text = text[0:len(text)-1]
+    return text",sample_623,"'hi~!', ['~', '`', '!', '&']",'HI~'
+"def f(text, char):
+    char_index = text.find(char)
+    result = []
+    if char_index > 0:
+        result = list(text[:char_index])
+    result.extend(list(char)+list(text[char_index+len(char):]))
+    return ''.join(result)",sample_624,"'llomnrpc', 'x'",'xllomnrpc'
+"def f(text):
+    count = 0
+    for i in text:
+        if i in '.?!.,':
+            count += 1
+    return count",sample_625,"""bwiajegrwjd??djoda,?""",4
+"def f(line, equalityMap):
+    rs = {
+        k[0]: k[1] for k in equalityMap
+    }
+    return line.translate(str.maketrans(rs))",sample_626,"'abab', [('a', 'b'), ('b', 'a')]",'baba'
+"def f(parts):
+    return list(dict(parts).values())",sample_627,"[('u', 1), ('s', 7), ('u', -5)]","[-5, 7]"
+"def f(nums, delete):
+    nums.remove(delete)
+    return nums",sample_628,"[4, 5, 3, 6, 1], 5","[4, 3, 6, 1]"
+"def f(text, dng):
+    if dng not in text:
+        return text
+    if text[-len(dng):] == dng:
+        return text[:-len(dng)]
+    return text[:-1] + f(text[:-2], dng)",sample_629,"'catNG', 'NG'",'cat'
+"def f(original, string):
+    temp = dict(original)
+    for a, b in string.items():
+        temp[b] = a
+    return temp",sample_630,"{1: -9, 0: -7}, {1: 2, 0: 3}","{1: -9, 0: -7, 2: 1, 3: 0}"
+"def f(text, num):
+    req = num - len(text)
+    text = text.center(num, '*')
+    return text[:req // 2: -req // 2]",sample_631,"'a', 19",'*'
+"def f(list):
+    for i in range(len(list) - 1, 0, -1):
+        for j in range(i):
+            if list[j] > list[j + 1]:
+                list[j], list[j + 1] = list[j + 1], list[j]
+                list.sort()
+    return list",sample_632,"[63, 0, 1, 5, 9, 87, 0, 7, 25, 4]","[0, 0, 1, 4, 5, 7, 9, 25, 63, 87]"
+"def f(array, elem):
+    array.reverse()
+    try:
+        found = array.index(elem)
+    finally:
+        array.reverse()
+    return found",sample_633,"[5, -3, 3, 2], 2",0
+"def f(input_string):
+    table = str.maketrans('aioe', 'ioua')
+    while 'a' in input_string or 'A' in input_string:
+        input_string = input_string.translate(table)
+    return input_string",sample_634,'biec','biec'
+"def f(text):
+    valid_chars = ['-', '_', '+', '.', '/', ' ']
+    text = text.upper()
+    for char in text:
+        if char.isalnum() == False and char not in valid_chars:
+            return False
+    return True",sample_635,"""9.twCpTf.H7 HPeaQ^ C7I6U,C:YtW""",False
+"def f(d):
+    r = {}
+    while len(d) > 0:
+        r = {**r, **d}
+        del d[max(d.keys())]
+    return r",sample_636,"{ 3: 'A3', 1: 'A1', 2: 'A2' }","{3: 'A3', 1: 'A1', 2: 'A2'}"
+"def f(text):
+    text = text.split(' ')
+    for t in text:
+        if not t.isnumeric():
+            return 'no'
+    return 'yes'",sample_637,'03625163633 d','no'
+"def f(s, suffix):
+    if not suffix:
+        return s
+    while s.endswith(suffix):
+        s = s[:-len(suffix)]
+    return s",sample_638,"'ababa', 'ab'",'ababa'
+"def f(perc, full):
+    reply = """"
+    i = 0
+    while perc[i] == full[i] and i < len(full) and i < len(perc):
+        if perc[i] == full[i]:
+            reply += ""yes ""
+        else:
+            reply += ""no ""
+        i += 1
+    return reply",sample_639,"""xabxfiwoexahxaxbxs"", ""xbabcabccb""",'yes '
+"def f(text):
+    a = 0
+    if text[0] in text[1:]:
+        a += 1
+    for i in range(0, len(text)-1):
+        if text[i] in text[i+1:]:
+            a += 1
+    return a",sample_640,"""3eeeeeeoopppppppw14film3oee3""",18
+"def f(number):
+    return True if number.isdecimal() else False",sample_641,'dummy33;d',False
+"def f(text):
+    i = 0
+    while i < len(text) and text[i].isspace():
+        i+=1
+    if i == len(text):
+        return 'space'
+    return 'no'",sample_642,"""     """,'space'
+"def f(text, suffix):
+    if text.endswith(suffix):
+        text = text[:-1] + text[-1:].swapcase()
+    return text",sample_643,"'damdrodm', 'm'",'damdrodM'
+"def f(nums, pos):
+    s = slice(None)
+    if pos % 2:
+        s = slice(None, -1)
+    nums[s].reverse()
+    return nums",sample_644,"[6, 1], 3","[6, 1]"
+"def f(nums, target):
+    if nums.count(0):
+        return 0
+    elif nums.count(target) < 3:
+        return 1
+    else:
+        return nums.index(target)",sample_645,"[1, 1, 1, 2], 3",1
+"def f(text, count):
+    for i in range(count):
+        text = ''.join(reversed(text))
+    return text",sample_646,"'aBc, ,SzY', 2","'aBc, ,SzY'"
+"def f(text, chunks):
+    return text.splitlines(chunks)",sample_647,"'/alcm@ an)t//eprw)/e!/d\nujv', 0","['/alcm@ an)t//eprw)/e!/d', 'ujv']"
+"def f(list1, list2):
+    l = list1[:]
+    while len(l) > 0:
+        if l[-1] in list2:
+            l.pop()
+        else:
+            return l[-1]
+    return 'missing'",sample_648,"[0, 4, 5, 6], [13, 23, -5, 0]",6
+"def f(text, tabsize):
+    return '\n'.join([
+    	t.expandtabs(tabsize)
+        for t in text.split('\n')
+    ])",sample_649,"""\tf9\n\tldf9\n\tadf9!\n\tf9?"", 1",' f9\n ldf9\n adf9!\n f9?'
+"def f(string, substring):
+    while string.startswith(substring):
+        string = string[len(substring):len(string)]
+    return string",sample_650,"'', 'A'",''
+"def f(text, letter):
+    if letter.islower(): letter = letter.upper()
+    text = ''.join([letter if char == letter.lower() else char for char in text])
+    return text.capitalize()",sample_651,"'E wrestled evil until upperfeat', 'e'",'E wrestled evil until upperfeat'
+"def f(string):
+    if not string or not string[0].isnumeric:
+        return 'INVALID'
+    cur = 0
+    for i in range(len(string)):
+        cur = cur * 10 + int(string[i])
+    return str(cur)",sample_652,'3','3'
+"def f(text, letter):
+    t = text
+    for alph in text:
+        t = t.replace(alph, """")
+    return len(t.split(letter))",sample_653,"""c, c, c ,c, c"", ""c""",1
+"def f(s, from_c, to_c):
+    table = s.maketrans(from_c, to_c)
+    return s.translate(table)",sample_654,"'aphid', 'i', '?'",'aph?d'
+"def f(s):
+    return s.replace('a', '').replace('r', '')",sample_655,'rpaar','p'
+"def f(letters):
+    a = [] 
+    for i in range(len(letters)):
+        if letters[i] in a:
+            return 'no'
+        a.append(letters[i]) 
+    return 'yes'",sample_656,"['b', 'i', 'r', 'o', 's', 'j', 'v', 'p']",'yes'
+"def f(text):
+    for punct in '!.?,:;':
+        if text.count(punct) > 1:
+            return 'no'
+        if text.endswith(punct):
+            return 'no'
+    return text.title()",sample_657,"""djhasghasgdha""",'Djhasghasgdha'
+"def f(d, get_ary):
+    result = []
+    for key in get_ary:
+        result.append(d.get(key))
+    return result",sample_658,"{3: ""swims like a bull""}, [3, 2, 'c', True, 5]","['swims like a bull', None, None, None, None]"
+"def f(bots):
+    clean = []
+    for username in bots:
+        if not username.isupper():
+            clean.append(username[:2] + username[-3:])
+    return len(clean)",sample_659,"['yR?TAJhIW?n', 'o11BgEFDfoe', 'KnHdn2vdEd', 'wvwruuqfhXbGis']",4
+"def f(num):
+    initial = [1]
+    total = initial
+    for _ in range(num):
+        total = [1] + [x+y for x, y in zip(total, total[1:])]
+        initial.append(total[-1])
+    return sum(initial)",sample_660,3,4
+"def f(letters, maxsplit):
+    return ''.join(letters.split()[-maxsplit:])",sample_661,"'elrts,SS ee', 6","'elrts,SSee'"
+"def f(values):
+    names = ['Pete', 'Linda', 'Angela']
+    names.extend(values)
+    names.sort()
+    return names",sample_662,"['Dan', 'Joe', 'Dusty']","['Angela', 'Dan', 'Dusty', 'Joe', 'Linda', 'Pete']"
+"def f(container, cron):
+    if not cron in container:
+        return container
+    pref = container[:container.index(cron)].copy()
+    suff = container[container.index(cron) + 1:].copy()
+    return pref + suff",sample_663,"[], 2",[]
+"def f(tags):
+    resp = """"
+    for key in tags:
+        resp += key + "" ""
+    return resp",sample_664,"{""3"":""3"",""4"":""5""}",'3 4 '
+"def f(chars):
+    s = """"
+    for ch in chars:
+        if chars.count(ch) % 2 == 0:
+            s += ch.upper()
+        else:
+            s += ch
+    return s",sample_665,"""acbced""",'aCbCed'
+"def f(d1, d2):
+    mmax = 0
+    for k1 in d1:
+        if p := len(d1[k1])+len(d2.get(k1, [])):
+            if p > mmax:
+                mmax = p
+    return mmax",sample_666,"{ 0: [], 1: [] }, { 0: [0, 0, 0, 0], 2: [2, 2, 2] }",4
+"def f(text):
+    new_text = []
+    for i in range(len(text) // 3):
+        new_text.append(f""< {text[i * 3: i * 3 + 3]} level={i} >"")
+    last_item = text[len(text) // 3 * 3:]
+    new_text.append(f""< {last_item} level={len(text) // 3} >"")
+    return new_text",sample_667,'C7',['< C7 level=0 >']
+"def f(text):
+    return text[-1] + text[:-1]",sample_668,'hellomyfriendear','rhellomyfriendea'
+"def f(t):
+    a, sep, b = t.rpartition('-')
+    if len(b) == len(a):
+        return 'imbalanced'
+    return a + b.replace(sep, '')",sample_669,"""fubarbaz""",'fubarbaz'
+"def f(a, b):
+    d = dict(zip(a, b))
+    a.sort(key=d.get, reverse=True)
+    return [d.pop(x) for x in a]",sample_670,"['12','ab'], [2,2]","[2, 2]"
+"def f(text, char1, char2):
+    t1a = []
+    t2a = []
+    for i in range(len(char1)):
+        t1a.append(char1[i])
+        t2a.append(char2[i])
+    t1 = text.maketrans(dict(zip(t1a, t2a)))
+    return text.translate(t1)",sample_671,"""ewriyat emf rwto segya"", ""tey"", ""dgo""",'gwrioad gmf rwdo sggoa'
+"def f(text, position, value):
+    length = len(text)
+    index = (position % (length + 2)) - 1
+    if index >= length or index < 0:
+        return text
+    text[index] = value
+    return ''.join(text)",sample_672,"""1zd"", 0, 'm'",'1zd'
+"def f(string):
+    if string.isupper():
+        return string.lower()
+    elif string.islower():
+        return string.upper()
+    return string",sample_673,"""cA""",'cA'
+"def f(text):
+    ls = list(text)
+    for x in range(len(ls)-1, -1, -1):
+        if len(ls) <= 1: break
+        if ls[x] not in 'zyxwvutsrqponmlkjihgfedcba': ls.pop(ls[x])
+    return ''.join(ls)",sample_674,'qq','qq'
+"def f(nums, sort_count):
+    nums.sort()
+    return nums[:sort_count]",sample_675,"[1, 2, 2, 3, 4, 5], 1",[1]
+"def f(text, tab_size):
+    return text.replace('\t', ' '*tab_size)",sample_676,"'a', 100",'a'
+"def f(text, length):
+    length = -length if length < 0 else length
+    output = ''
+    for idx in range(length):
+        if text[idx % len(text)] != ' ':
+            output += text[idx % len(text)]
+        else:
+            break
+    return output",sample_677,"'I got 1 and 0.', 5",'I'
+"def f(text):
+    freq = dict()
+    for c in text.lower():
+        if c in freq:
+            freq[c] += 1
+        else:
+            freq[c] = 1
+    return freq",sample_678,"""HI""","{'h': 1, 'i': 1}"
+"def f(text):
+    if text == '':
+        return False
+    first_char = text[0]
+    if text[0].isdigit():
+        return False
+    for last_char in text:
+        if (last_char != '_') and not last_char.isidentifier():
+            return False
+    return True",sample_679,'meet',True
+"def f(text):
+    letters = ''
+    for i in range(len(text)):
+        if text[i].isalnum():
+            letters += text[i]
+    return letters",sample_680,"""we@32r71g72ug94=(823658*!@324""",'we32r71g72ug94823658324'
+"def f(array, ind, elem):
+    array.insert(-5 if ind < 0 else len(array) if ind > len(array) else ind + 1, elem)
+    return array",sample_681,"[1, 5, 8, 2, 0, 3], 2, 7","[1, 5, 8, 7, 2, 0, 3]"
+"def f(text, length, index):
+    ls = text.rsplit(None, index)
+    return '_'.join([l[:length] for l in ls])",sample_682,"'hypernimovichyp', 2, 2",'hy'
+"def f(dict1, dict2):
+    result = dict1.copy()
+    result.update([(__, dict2[__]) for __ in dict2])
+    return result",sample_683,"{'disface': 9, 'cam': 7}, {'mforce': 5}","{'disface': 9, 'cam': 7, 'mforce': 5}"
+"def f(text):
+    trans = str.maketrans('""\'><', '9833')
+    return text.translate(trans)",sample_684,"""Transform quotations\""\nnot into numbers.""",'Transform quotations9\nnot into numbers.'
+"def f(array, elem):
+    return array.count(elem) + elem",sample_685,"[1, 1, 1], -2",-2
+"def f(d, l):
+	new_d = {}
+
+	for k in l:
+		if d.get(k) is not None:
+			new_d[k] = d[k]
+
+	return new_d.copy()",sample_686,"{""lorem ipsum"" : 12, ""dolor"" : 23}, [""lorem ipsum"", ""dolor""]","{'lorem ipsum': 12, 'dolor': 23}"
+"def f(text):
+    t = list(text)
+    t.pop(len(t) // 2)
+    t.append(text.lower())
+    return ':'.join([c for c in t])",sample_687,'Rjug nzufE','R:j:u:g: :z:u:f:E:rjug nzufe'
+"def f(nums):
+    l = []
+    for i in nums:
+        if i not in l:
+            l.append(i)
+    return l",sample_688,"[3, 1, 9, 0, 2, 0, 8]","[3, 1, 9, 0, 2, 8]"
+"def f(arr):
+    count = len(arr)
+    sub = arr.copy()
+    for i in range(0, count, 2):
+        sub[i] *= 5
+    return sub",sample_689,"[-3, -6, 2, 7]","[-15, -6, 10, 7]"
+"def f(n):
+    if str(n).find('.') != -1:
+        return str(int(n)+2.5)
+    return str(n)",sample_690,'800','800'
+"def f(text, suffix):
+    if suffix and suffix[-1] in text:
+        return f(text.rstrip(suffix[-1]), suffix[:-1])
+    else:
+        return text",sample_691,"'rpyttc', 'cyt'",'rpytt'
+"def f(array):
+    a = []
+    array.reverse()
+    for i in range(len(array)):
+        if array[i] != 0:
+            a.append(array[i])
+    a.reverse()
+    return a",sample_692,[],[]
+"def f(text):
+    n = int(text.find('8'))
+    return 'x0'*n",sample_693,"""sa832d83r xd 8g 26a81xdf""",'x0x0'
+"def f(d):
+    i = len(d) - 1
+    key = list(d.keys())[i]
+    d.pop(key, None)
+    return key, d",sample_694,"dict(e=1, d=2, c=3)","('c', {'e': 1, 'd': 2})"
+"def f(d):
+    result = {}
+    for ki, li in d.items():
+        result.update({ki: []})
+        for kj, dj in enumerate(li):
+            result[ki].append({})
+            for kk, l in dj.items():
+                result[ki][kj][kk] = l.copy()
+    return result",sample_695,{},{}
+"def f(text):
+    s = 0
+    for i in range(1, len(text)):
+        s += len(text.rpartition(text[i])[0])
+    return s",sample_696,'wdj',3
+"def f(s, sep):
+    sep_index = s.find(sep)
+    prefix = s[:sep_index]
+    middle = s[sep_index:sep_index + len(sep)]
+    right_str = s[sep_index + len(sep):]
+    return prefix, middle, right_str",sample_697,"""not it"", """"","('', '', 'not it')"
+"def f(text):
+    return ''.join(x for x in text if x != ')')",sample_698,('(((((((((((d))))))))).))))((((('),'(((((((((((d.((((('
+"def f(text, elem):
+    if elem != '':
+        while text.startswith(elem):
+            text = text.replace(elem, '')
+        while elem.startswith(text):
+            elem = elem.replace(text, '')
+    return [elem, text]",sample_699,"""some"", ""1""","['1', 'some']"
+"def f(text):
+    return len(text) - text.count('bot')",sample_700,"""Where is the bot in this world?""",30
+"def f(stg, tabs):
+    for tab in tabs:
+        stg = stg.rstrip(tab)
+    return stg",sample_701,"'31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')",'31849 let it!31849 pass!'
+"def f(nums):
+    count = len(nums)
+    for i in range(len(nums) - 1, -1, -1):
+        nums.insert(i, nums.pop(0))
+    return nums",sample_702,"[0, -5, -4]","[-4, -5, 0]"
+"def f(text, char):
+    count = text.count(char*2)
+    return text[count:]",sample_703,"'vzzv2sg', 'z'",'zzv2sg'
+"def f(s, n, c):
+    width = len(c)*n
+    for _ in range(width - len(s)):
+        s = c + s
+    return s",sample_704,"'.', 0, '99'",'.'
+"def f(cities, name):
+    if not name:
+        return cities
+    if name and name != 'cities':
+        return []
+    return [name + city for city in cities]",sample_705,"['Sydney', 'Hong Kong', 'Melbourne', 'Sao Paolo', 'Istanbul', 'Boston'], 'Somewhere '",[]
+"def f(r, w):
+    a = []
+    if r[0] == w[0] and w[-1] == r[-1]:
+        a.append(r)
+        a.append(w)
+    else:
+        a.append(w)
+        a.append(r)
+    return a",sample_706,"""ab"", ""xy""","['xy', 'ab']"
+"def f(text, position):
+    length = len(text)
+    index = position % (length + 1)
+    if position < 0 or index < 0:
+        index = -1
+    new_text = list(text)
+    new_text.pop(index)
+    return ''.join(new_text)",sample_707,"'undbs l', 1",'udbs l'
+"def f(string):
+    l = list(string)
+    for i in reversed(range(len(l))):
+        if l[i] != ' ':
+            break
+        l.pop(i)
+    return ''.join(l)",sample_708,'    jcmfxv     ','    jcmfxv'
+"def f(text):
+    my_list = text.split()
+    my_list.sort(reverse=True)
+    return ' '.join(my_list)",sample_709,'a loved','loved a'
+"def f(playlist, liker_name, song_index):
+    playlist[liker_name] = playlist.get(liker_name, [])
+    playlist[liker_name].append(song_index)
+    return playlist",sample_710,"{'aki': ['1', '5']}, 'aki', '2'","{'aki': ['1', '5', '2']}"
+"def f(text):
+    return text.replace('\n', '\t')",sample_711,'apples\n\t\npears\n\t\nbananas','apples\t\t\tpears\t\t\tbananas'
+"def f(text):
+    created = []
+    for line in text.splitlines():
+        if line == '':
+            break
+        created.append(list(list(line.rstrip())[::-1][flush]))
+    return created[::-1]
+
+flush = 0",sample_712,'A(hiccup)A',[['A']]
+"def f(text, char):
+    if char in text:
+        text = [t.strip() for t in text.split(char) if t]
+        if len(text) > 1:
+            return True
+    return False",sample_713,"'only one line', ' '",True
+"def f(array):
+    array.reverse()
+    array.clear()
+    array.extend('x'*len(array))
+    array.reverse()
+    return array",sample_714,"[3, -2, 0]",[]
+"def f(text, char):
+    return text.count(char) % 2 != 0",sample_715,"'abababac', 'a'",False
+"def f(nums):
+    count = len(nums)
+    while len(nums) > (count//2):
+        nums.clear()
+    return nums",sample_716,"[2, 1, 2, 3, 1, 6, 3, 8]",[]
+"def f(text):
+    (k, l) = (0, len(text) - 1)
+    while not text[l].isalpha():
+        l -= 1
+    while not text[k].isalpha():
+        k += 1
+    if k != 0 or l != len(text) - 1:
+        return text[k: l+1]
+    else:
+        return text[0]",sample_717,"""timetable, 2mil""",'t'
+"def f(text):
+    t = text
+    for i in text:
+        text = text.replace(i, '')
+    return str(len(text)) + t",sample_718,'ThisIsSoAtrocious','0ThisIsSoAtrocious'
+"def f(code):
+    lines = code.split(']')
+    result = []
+    level = 0
+    for line in lines:
+        result.append(line[0] + ' ' + '  ' * level + line[1:])
+        level += line.count('{') - line.count('}')
+    return '\n'.join(result)",sample_719,"""if (x) {y = 1;} else {z = 1;}""",'i f (x) {y = 1;} else {z = 1;}'
+"def f(items, item):
+    while items[-1] == item:
+        items.pop()
+    items.append(item)
+    return len(items)",sample_720,"'bfreratrrbdbzagbretaredtroefcoiqrrneaosf'.split('-'), 'n'",2
+"def f(nums):
+    count = len(nums)
+    for num in range(2, count):
+        nums.sort()
+    return nums",sample_721,"[-6, -5, -7, -8, 2]","[-8, -7, -6, -5, 2]"
+"def f(text):
+    out = """"
+    for i in range(len(text)):
+        if text[i].isupper():
+            out += text[i].lower()
+        else:
+            out += text[i].upper()
+    return out",sample_722,"',wPzPppdl/'","',WpZpPPDL/'"
+"def f(text, separator):
+    splitted = text.splitlines()
+    if separator:
+        return [' '.join(s) for s in splitted]
+    else:
+        return splitted",sample_723,"'dga nqdk\rull qcha kl', 1","['d g a   n q d k', 'u l l   q c h a   k l']"
+"def f(text, function):
+    cites = [len(text[text.index(function) + len(function):])]
+    for char in text:
+        if char == function:
+            cites.append(len(text[text.index(function) + len(function):]))
+    return cites",sample_724,"""010100"", ""010""",[3]
+"def f(text):
+    result_list = ['3', '3', '3', '3']
+    if result_list:
+        result_list.clear()
+    return len(text)",sample_725,"""mrq7y""",5
+"def f(text):
+    ws = 0
+    for s in text:
+        if s.isspace():
+            ws += 1
+    return ws, len(text)",sample_726,"""jcle oq wsnibktxpiozyxmopqkfnrfjds""","(2, 34)"
+"def f(numbers, prefix):
+    return sorted(n[len(prefix):] if (len(n) > len(prefix) and n.startswith(prefix)) else n
+                  for n in numbers)",sample_727,"['ix', 'dxh', 'snegi', 'wiubvu'], ''","['dxh', 'ix', 'snegi', 'wiubvu']"
+"def f(text):
+    result = []
+    for i, ch in enumerate(text):
+        if ch == ch.lower():
+            continue
+        if len(text) - 1 - i < text.rindex(ch.lower()):
+            result.append(ch)
+    return ''.join(result)",sample_728,'ru',''
+"def f(s1,s2):
+    res = []
+    i = s1.rfind(s2)
+    while i != -1:
+        res.append(i+len(s2)-1)
+        i = s1.rfind(s2, 0, i)
+    return res",sample_729,"'abcdefghabc', 'abc'","[10, 2]"
+"def f(text):
+    m = 0
+    cnt = 0
+    for i in text.split():
+        if len(i) > m:
+            cnt += 1
+            m = len(i)
+    return cnt",sample_730,"""wys silak v5 e4fi rotbi fwj 78 wigf t8s lcl""",2
+"def f(text, use):
+    return text.replace(use, '')",sample_731,"'Chris requires a ride to the airport on Friday.', 'a'",'Chris requires  ride to the irport on Fridy.'
+"def f(char_freq):
+    result = {}
+    for k, v in char_freq.copy().items():
+        result[k] = v // 2
+    return result",sample_732,"{'u': 20, 'v': 5, 'b': 7, 'w': 3, 'x': 3}","{'u': 10, 'v': 2, 'b': 3, 'w': 1, 'x': 1}"
+"def f(text):
+    length = len(text) // 2
+    left_half = text[:length]
+    right_half = text[length:][::-1]
+    return left_half + right_half",sample_733,'n','n'
+"def f(nums):
+    for i in range(len(nums) - 2, -1, -1):
+        if nums[i] % 2 == 0:
+            nums.remove(nums[i])
+    return nums",sample_734,"[5, 3, 3, 7]","[5, 3, 3, 7]"
+"def f(sentence):
+    if sentence == '':
+        return ''
+    sentence = sentence.replace('(', '')
+    sentence = sentence.replace(')', '')
+    return sentence.capitalize().replace(' ', '')",sample_735,'(A (b B))','Abb'
+"def f(text, insert):
+    whitespaces = {'\t', '\r', '\v', ' ', '\f', '\n'}
+    clean = ''
+    for char in text:
+        if char in whitespaces:
+            clean += insert
+        else:
+            clean += char
+    return clean",sample_736,"'pi wa', 'chi'",'pichiwa'
+"def f(nums):
+    counts = 0
+    for i in nums:
+        if str(i).isdecimal():
+            if counts == 0:
+                counts += 1
+    return counts",sample_737,"[0, 6, 2, -1, -2]",1
+"def f(text, characters):
+    for i in range(len(characters)):
+        text = text.rstrip(characters[i::len(characters)])
+    return text",sample_738,"""r;r;r;r;r;r;r;r;r"", ""x.r""",'r;r;r;r;r;r;r;r;'
+"def f(st, pattern):
+    for p in pattern:
+        if not st.startswith(p): return False
+        st = st[len(p):]
+    return True",sample_739,"'qwbnjrxs', ['jr', 'b', 'r', 'qw']",False
+"def f(plot, delin):
+    if delin in plot:
+        split = plot.index(delin)
+        first = plot[:split]
+        second = plot[split + 1:]
+        return first + second
+    else:
+        return plot",sample_740,"[1, 2, 3, 4], 3","[1, 2, 4]"
+"def f(nums, p):
+    prev_p = p - 1
+    if prev_p < 0: prev_p = len(nums) - 1
+    return nums[prev_p]",sample_741,"[6, 8, 2, 5, 3, 1, 9, 7], 6",1
+"def f(text):
+    b = True
+    for x in text:
+        if x.isdigit():
+            b = True
+        else:
+            b = False
+            break
+    return b",sample_742,"""-1-3""",False
+"def f(text):
+    string_a, string_b = text.split(',')
+    return -(len(string_a) + (len(string_b)))",sample_743,"'dog,cat'",-6
+"def f(text, new_ending):
+    result = list(text)
+    result.extend(new_ending)
+    return ''.join(result)",sample_744,"'jro', 'wdlp'",'jrowdlp'
+"def f(address):
+    suffix_start = address.index('@') + 1
+    if address[suffix_start:].count('.') > 1:
+        address = address.removesuffix('.'.join(address.split('@')[1].split('.')[:2]))
+    return address",sample_745,'minimc@minimc.io','minimc@minimc.io'
+"def f(dct):
+    values = dct.values()
+    result = {}
+    for value in values:
+        item = value.split('.')[0]+'@pinc.uk'
+        result[value] = item
+    return result",sample_746,{},{}
+"def f(text):
+    if text == '42.42':
+        return True
+    for i in range(3, len(text) - 3):
+        if text[i] == '.' and text[i - 3:].isdigit() and text[:i].isdigit():
+            return True
+    return False",sample_747,"""123E-10""",False
+"def f(d):
+    i = iter(d.items())
+    return next(i), next(i)",sample_748,"{'a': 123, 'b': 456, 'c': 789}","(('a', 123), ('b', 456))"
+"def f(text, width):
+    result = """"
+    lines = text.split('\n')
+    for l in lines:
+        result += l.center(width)
+        result += '\n'
+
+    # Remove the very last empty line
+    result = result[:-1]
+    return result",sample_749,"'l\nl', 2",'l \nl '
+"def f(char_map, text):
+    new_text = ''
+    for ch in text:
+        val = char_map.get(ch)
+        if val is None:
+            new_text += ch
+        else:
+            new_text += val
+    return new_text",sample_750,"{}, 'hbd'",'hbd'
+"def f(text, char, min_count):
+    count = text.count(char)
+    if count < min_count:
+        return text.swapcase()
+    return text",sample_751,"""wwwwhhhtttpp"", 'w', 3",'wwwwhhhtttpp'
+"def f(s, amount):
+    return (amount - len(s)) * 'z' + s",sample_752,"'abc', 8",'zzzzzabc'
+"def f(bag):
+    values = list(bag.values())
+    tbl = {}
+    for v in range(100):
+        if v in values:
+            tbl[v] = values.count(v)
+    return tbl",sample_753,"{0: 0, 1: 0, 2: 0, 3: 0, 4: 0}",{0: 5}
+"def f(nums):
+    nums = ['{0:{fill}>{width}}'.format(val, **{'fill': '0', 'width': nums[0]}) for val in nums[1:]]
+    return [str(val) for val in nums]",sample_754,"['1', '2', '2', '44', '0', '7', '20257']","['2', '2', '44', '0', '7', '20257']"
+"def f(replace, text, hide):
+    while hide in text:
+        replace += 'ax'
+        text = text.replace(hide, replace, 1)
+    return text",sample_755,"'###', ""ph>t#A#BiEcDefW#ON#iiNCU"", '.'",'ph>t#A#BiEcDefW#ON#iiNCU'
+"def f(text):
+    if text.isalnum() and all(i.isdigit() for i in text):
+        return 'integer'
+    return 'string'",sample_756,'','string'
+"def f(text, char, replace):
+    return text.replace(char, replace)",sample_757,"'a1a8', '1', 'n2'",'an2a8'
+"def f(nums):
+    if nums[::-1] == nums:
+        return True
+    return False",sample_758,"[0, 3, 6, 2]",False
+"def f(text, sub):
+    index = []
+    starting = 0
+    while starting != -1:
+        starting = text.find(sub, starting)
+        if starting != -1:
+            index.append(starting)
+            starting += len(sub)
+    return index",sample_759,"'egmdartoa', 'good'",[]
+"def f(d):
+    l = []
+    while len(d) > 0:
+        key = d.popitem()[0]
+        l.append(key)
+    return l;",sample_760,"dict(f = 1, h = 2, j = 3, k = 4)","['k', 'j', 'h', 'f']"
+"def f(array):
+    output = array.copy()
+    output[0::2] = output[-1::-2]
+    output.reverse()
+    return output",sample_761,[],[]
+"def f(text):
+    text = text.lower()
+    capitalize = text.capitalize()
+    return text[:1] + capitalize[1:]",sample_762,'this And cPanel','this and cpanel'
+"def f(values, text, markers):
+    return text.rstrip(values).rstrip(markers)",sample_763,"'2Pn', 'yCxpg2C2Pny2', ''",'yCxpg2C2Pny'
+"def f(text, old, new):
+    text2 = text.replace(old, new)
+    old2 = old[::-1]
+    while old2 in text2:
+        text2 = text2.replace(old2, new)
+    return text2",sample_764,"""some test string"", ""some"", ""any""",'any test string'
+"def f(text):
+    return sum(1 for c in text if c.isdigit())",sample_765,'so456',3
+"def f(values, value):
+    length = len(values)
+    new_dict = dict.fromkeys(values, value)
+    new_dict[''.join(sorted(values))] = value * 3
+    return new_dict",sample_766,"['0','3'], 117","{'0': 117, '3': 117, '03': 351}"
+"def f(text):
+    a = text.strip().split(' ')
+    for i in range(len(a)):
+        if a[i].isdigit() is False:
+            return '-'
+    return "" "".join(a)",sample_767,"""d khqw whi fwi bbn 41""",'-'
+"def f(s, o):
+    if s.startswith(o):
+        return s
+    return o + f(s, o[-2::-1])",sample_768,"'abba', 'bab'",'bababba'
+"def f(text):
+    text_list = [char for char in text]
+    for i, char in enumerate(text_list):
+        text_list[i] = char.swapcase()
+    return ''.join(text_list)",sample_769,'akA?riu','AKa?RIU'
+"def f(line, char):
+    count = line.count(char)
+    for i in range(count+1, 0, -1):
+        line = line.center(len(line)+i // len(char), char)
+    return line",sample_770,"'$78'.upper(), '$'",'$$78$$'
+"def f(items):
+    items = list(items)
+    odd_positioned = []
+    while len(items) > 0:
+        position = items.index(min(items))
+        items.pop(position)
+        item = items.pop(position)
+        odd_positioned.append(item)
+    return odd_positioned",sample_771,"(1, 2, 3, 4, 5, 6, 7, 8)","[2, 4, 6, 8]"
+"def f(phrase):
+    result = ''
+    for i in phrase:
+        if not i.islower():
+            result += i
+    return result",sample_772,'serjgpoDFdbcA.','DFA.'
+"def f(nums, n):
+    return nums.pop(n)",sample_773,"[-7, 3, 1, -1, -1, 0, 4], 6",4
+"def f(num, name):
+    f_str = 'quiz leader = {}, count = {}'
+    return f_str.format(name, num)",sample_774,"23, 'Cornareti'","'quiz leader = Cornareti, count = 23'"
+"def f(nums):
+    count = len(nums)
+    for i in range(0, count // 2):
+        nums[i], nums[count-i-1] = nums[count-i-1], nums[i]
+    return nums",sample_775,"[2, 6, 1, 3, 1]","[1, 3, 1, 6, 2]"
+"def f(dictionary):
+    a = dictionary.copy()
+    for key in a:
+        if key%2 != 0:
+            del a[key]
+            a['$'+str(key)] = a[key]
+    return a",sample_776,{},{}
+"def f(names, excluded):
+    excluded = excluded
+    for i in range(len(names)):
+        if excluded in names[i]:
+            names[i] = names[i].replace(excluded, """")
+    return names",sample_777,"[""avc  a .d e""], """"",['avc  a .d e']
+"def f(prefix, text):
+    if text.startswith(prefix):
+        return text
+    else:
+        return prefix + text",sample_778,"'mjs', 'mjqwmjsqjwisojqwiso'",'mjsmjqwmjsqjwisojqwiso'
+"def f(text):
+    values = text.split()
+    return '${first}y, ${second}x, ${third}r, ${fourth}p' % dict({
+        'first': values[0],
+        'second': values[1],
+        'third': values[2],
+        'fourth': values[3]
+    })",sample_779,'python ruby c javascript',"'${first}y, ${second}x, ${third}r, ${fourth}p'"
+"def f(ints):
+    counts = [0] * 301
+
+    for i in ints:
+        counts[i] += 1
+
+    r = []
+    for i in range(len(counts)):
+        if counts[i] >= 3:
+            r.append(str(i))
+    counts.clear()
+    return ' '.join(r)",sample_780,"[2, 3, 5, 2, 4, 5, 2, 89]",'2'
+"def f(s, ch):
+    if ch not in s:
+        return ''
+    s = s.partition(ch)[2][::-1]
+    for i in range(len(s)):
+        s = s.partition(ch)[2][::-1]
+    return s",sample_781,"'shivajimonto6', '6'",''
+"def f(input):
+    for char in input:
+        if char.isupper():
+            return False
+    return True",sample_782,"""a j c n x X k""",False
+"def f(text, comparison):
+    length = len(comparison)
+    if length <= len(text):
+        for i in range(length):
+            if comparison[length - i - 1] != text[len(text) - i - 1]:
+                return i
+    return length",sample_783,"""managed"", """"",0
+"def f(key, value):
+    dict_ = {key: value}
+    return dict.popitem(dict_)",sample_784,"'read', 'Is'","('read', 'Is')"
+"def f(n):
+    streak = ''
+    for c in str(n):
+        streak += c.ljust(int(c) * 2)
+    return streak",sample_785,1,'1 '
+"def f(text, letter):
+    if letter in text:
+        start = text.index(letter)
+        return text[start + 1:] + text[:start + 1]
+    return text",sample_786,"'19kefp7', '9'",'kefp719'
+"def f(text):
+    if len(text) == 0:
+        return ''
+    text = text.lower()
+    return text[0].upper() + text[1:]",sample_787,'xzd','Xzd'
+"def f(text, suffix):
+    if suffix.startswith(""/""):
+        return text + suffix[1:]
+    return text",sample_788,"'hello.txt', '/'",'hello.txt'
+"def f(text, n):
+    if n < 0 or len(text) <= n:
+        return text
+    result = text[0 : n]
+    i = len(result) - 1
+    while i >= 0:
+        if result[i] != text[i]:
+            break
+        i -= 1
+    return text[0 : i + 1]",sample_789,"'bR', -1",'bR'
+"def f(d):
+    r = {
+        'c': d.copy(),
+        'd': d.copy()
+    }
+    return (r['c'] is r['d'], r['c'] == r['d'])",sample_790,"{'i': 1, 'love': 'parakeets'}","(False, True)"
+"def f(integer, n):
+    i = 1
+    text = str(integer)
+    while (i+len(text) < n):
+        i += len(text)
+    return text.zfill(i+len(text))",sample_791,"8999,2",'08999'
+"def f(l1, l2):
+    if len(l1) != len(l2):
+        return {}
+    return dict.fromkeys(l1, l2)",sample_792,"['a', 'b'], ['car', 'dog']","{'a': ['car', 'dog'], 'b': ['car', 'dog']}"
+"def f(list, start, end):
+    count = 0
+    for i in range(start, end):
+        for j in range(i, end):
+            if list[i] != list[j]:
+                count += 1
+    return count",sample_793,"[1, 2, 4, 3, 2, 1], 0, 3",3
+"def f(line):
+    a = []
+    for c in line:
+        if c.isalnum():
+            a.append(c)
+    return ''.join(a)",sample_794,"""\""\\%$ normal chars $%~ qwet42'""",'normalcharsqwet42'
+"def f(text):
+    return text.title().replace('Io', 'io')",sample_795,"'Fu,ux zfujijabji pfu.'","'Fu,Ux Zfujijabji Pfu.'"
+"def f(str,toget):
+    if str.startswith(toget): return str[len(toget):]
+    else: return str",sample_796,"'fnuiyh', 'ni'",'fnuiyh'
+"def f(dct):
+    lst = []
+    for key in sorted(dct):
+        lst.append((key, dct[key]))
+    return lst",sample_797,"{'a': 1, 'b': 2, 'c': 3}","[('a', 1), ('b', 2), ('c', 3)]"
+"def f(text, pre):
+    if not text.startswith(pre):
+        return text
+    return text.removeprefix(pre)",sample_798,"'@hihu@!', '@hihu'",'@!'
+"def f(st):
+    if st[0] == '~':
+        e = st.rjust(10, 's')
+        return f(e)
+    else:
+        return st.rjust(10, 'n')",sample_799,'eqe-;ew22','neqe-;ew22'
