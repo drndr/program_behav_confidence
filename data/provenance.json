@@ -1,12 +1,19 @@
 [
   {
-    "archive_source": "archive/2026-09-10_pre-rebuild/snapshot/data/raw/cruxeval/cruxeval.csv",
     "path": "data/raw/cruxeval/cruxeval.csv",
+    "source_path": "data/raw/cruxeval/test.jsonl",
+    "dataset": "cruxeval-org/cruxeval",
+    "requested_revision": "main",
+    "revision": "b96af0450242eb4da433032b90998f25588a5d0f",
+    "source_url": "https://huggingface.co/datasets/cruxeval-org/cruxeval/resolve/b96af0450242eb4da433032b90998f25588a5d0f/test.jsonl",
+    "downloaded_at": "2026-09-10T14:06:01.915132+00:00",
+    "source_sha256": "8368b81047dc5014e4caf5a2f97604eff7644e0ecd7415e3ceeb184bbc2e0c96",
     "sha256": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
     "bytes": 150298,
-    "restored_at": "2026-09-10T15:16:52.6397890+02:00",
-    "validation": "byte-identical archive copy; benchmark validity not established",
-    "record_count": 800
+    "record_count": 800,
+    "transformation": "JSONL to UTF-8 CSV; fields code,id,input,output; text values unchanged",
+    "validation": "schema and unique IDs checked; reference correctness not checked",
+    "previous_csv_sha256": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de"
   },
   {
     "archive_source": "archive/2026-09-10_pre-rebuild/snapshot/_local/re2/re2_bench_lite_output_prediction_prompts.jsonl",
