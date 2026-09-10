@@ -1,0 +1,26 @@
+[
+  {
+    "archive_source": "archive/2026-09-10_pre-rebuild/snapshot/data/raw/cruxeval/cruxeval.csv",
+    "path": "data/raw/cruxeval/cruxeval.csv",
+    "sha256": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
+    "bytes": 150298,
+    "restored_at": "2026-09-10T15:16:52.6397890+02:00",
+    "validation": "byte-identical archive copy; benchmark validity not established",
+    "record_count": 800
+  },
+  {
+    "archive_source": "archive/2026-09-10_pre-rebuild/snapshot/_local/re2/re2_bench_lite_output_prediction_prompts.jsonl",
+    "path": "data/raw/re2/re2_bench_lite_output_prediction_prompts.jsonl",
+    "sha256": "5dd091f2c4b7d7c27245752c0a40161f993a27d3ee1a4f41f8670ded47c1b8ab",
+    "bytes": 9116635,
+    "restored_at": "2026-09-10T15:16:53.0788562+02:00",
+    "validation": "byte-identical archive copy; benchmark validity not established",
+    "record_count": 500,
+    "recorded_upstream_commits": [
+      "57b971f18567c879a7180bb6bd5b8e544dd9a47e"
+    ],
+    "recorded_upstream_urls": [
+      "https://github.com/AnonyRepo2025/RE2-Bench"
+    ]
+  }
+]

@@ -1,53 +1,43 @@
-# Program-Behavior Prediction Reliability
+# Program behaviour prediction: accuracy, confidence, and program properties
 
-Research repository for an FSE 2027 study of confidence, calibration, selective
-prediction, and calibration transport in LLM program-behavior prediction.
+Research project targeting an FSE 2027 submission. Rebuild started on 10 September 2026.
 
-## Paper identity
+## Research question
 
-Program-behavior benchmark accuracy does not determine whether individual
-predictions can be trusted. This project separates four questions:
+Which program and input properties are associated with output-prediction mistakes, and does post-hoc verifier confidence reflect those difficulties?
 
-1. Can a post-hoc estimator distinguish correct from incorrect predictions?
-2. Is its confidence calibrated?
-3. Can abstention reduce operational risk?
-4. Does the reliability mapping transport across evaluation environments?
+## Current state
 
-The primary benchmarks are CRUXEval and RE2-Bench. The primary completed model
-is GPT-5.4 Nano. One open-weight cross-family replication is planned.
+The previous project is preserved in the local [pre-rebuild archive](archive/2026-09-10_pre-rebuild/README.md). Git history remains intact. The archive includes uncommitted and ignored files and is intentionally excluded from Git; it will not accompany a fresh clone.
 
-## Repository layout
+The rebuild starts with dataset loading and inspection. No old runner, evaluation policy, dependency environment, or experiment configuration is automatically adopted.
 
-- `scripts/analysis/`: deterministic scoring, calibration, and transport analyses
-- `scripts/inference/`: controlled OpenRouter runner and frozen configurations
-- `scripts/prompt_generation/`: confidence and benchmark prompt builders
-- `tests/`: focused unit tests for the submission-critical pipeline
-- `research_design/`: frozen protocols, manifests, aggregate results, and the submission contract
-- `literature/`: literature tables and coding notes
-- `paper/`: manuscript outline and bibliography
-- `_local/`: ignored raw predictions, prompts, and source PDFs
+## Layout
 
-The `_local/` directory is intentionally excluded from Git. It contains raw or
-licensing-sensitive working artifacts copied from the earlier research
-repository. Aggregate results, hashes, protocols, and analysis code are kept in
-version control.
+| Directory | Purpose |
+|---|---|
+| `src/behavior_prediction/` | Reusable Python code, beginning with dataset loaders |
+| `notebook/` | Jupyter notebooks for interactive inspection and exploration |
+| `scripts/` | Thin research entry points that use the package |
+| `tests/` | Unit tests for reusable code |
+| `data/` | Dataset documentation, provenance, and local raw/processed datasets |
 
-## Setup
+Reusable logic belongs in `src`, not duplicated in notebooks or scripts. Raw data is preserved unchanged; processed versions must have their own provenance. Model predictions will not be stored as raw datasets.
 
-```powershell
-py -3.10 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python -m pytest -q
-```
+## Dataset inspection
 
-Set `OPENROUTER_API_KEY` in the local environment before running inference. Do
-not store the key in this repository.
+Create a new Python environment and install this project with `python -m pip install -e ".[notebook]"`. Then run `python scripts/inspect_datasets.py` or open `notebook/01_datasets.ipynb` in Jupyter. Run unit tests with `python -m unittest discover -s tests`.
 
-## Scope boundary
+See [data/README.md](data/README.md) for the local dataset inventory and limitations. No dataset code is executed by the loaders.
 
-The earlier synthetic datasets, red-black-tree experiments, R vignette probe,
-parameter-scaling study, and broad benchmark-claim audit are not part of this
-repository. They remain preserved in the previous repository as research
-provenance.
+## Decisions carried forward
 
+- Focus on relationships between correctness, confidence, and program/input properties.
+- Use existing benchmarks: CRUXEval and RE2, subject to explicit validity and scoring checks.
+- Primary property families: control flow, operations, and input structure, with size controls and a small classical-metric comparison.
+- GPT-5.4 nano results are pilot evidence only.
+- Main-study model candidates: DeepSeek V4 Flash, a specified Qwen3.8 variant, Claude Sonnet or Haiku, and GPT-5.6 Terra or Luna. Exact models, endpoints, reasoning settings, and budgets remain to be selected.
+- Separate answer generation from assessment of fixed answers. Provider reasoning settings are not assumed equivalent.
+- Calibration generalisation remains an appendix-or-omit extension.
+
+See [REBUILD.md](REBUILD.md) for the step-by-step sequence. The historical detailed plan is retained in the archive as a reference; it is not the frozen protocol for the rebuilt project.

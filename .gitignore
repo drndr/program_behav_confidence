@@ -1,29 +1,22 @@
+# Historical snapshot includes private data and local dependencies.
+/archive/
+
+# Private inputs, credentials, and generated artifacts.
+/_local/
+.env
+.env.*
+!.env.example
+*.key
+.venv/
+venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
-.venv/
-venv/
-.idea/
-.vscode/
-
-# Generated or licensing-sensitive artifacts.
-tmp/
-_local/
-results/private/
-
-# Generated manuscript and analysis products.
-paper/build/
-figures/generated/
-*.aux
-*.bbl
-*.blg
-*.fdb_latexmk
-*.fls
-*.log
-*.out
-*.synctex.gz
-
-# Secrets must never enter the repository.
-.env
-*.key
-
+/tmp/
+/results/private/
+/data/raw/
+/data/processed/
+.ipynb_checkpoints/
+*.egg-info/
+/build/
+/dist/
