@@ -81,13 +81,3 @@ def sha256_file(path: str | Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
-
-
-def write_re2_csv(rows, path):
-    """Write already-cleaned id/code/input/output records."""
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=["id", "code", "input", "output"])
-        writer.writeheader()
-        writer.writerows(rows)

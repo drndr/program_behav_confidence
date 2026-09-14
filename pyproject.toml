@@ -14,4 +14,4 @@ notebook = ["jupyterlab>=4,<5", "ipykernel>=6,<8"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = ["datasets", "re2_inspection", "re2_filter", "re2_selection"]
+py-modules = ["datasets", "re2_inspection"]
