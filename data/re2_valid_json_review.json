@@ -1,0 +1,107 @@
+{
+  "scope": "Three manually verified contradictions; not an exhaustive valid-JSON audit",
+  "source_sha256": "5dd091f2c4b7d7c27245752c0a40161f993a27d3ee1a4f41f8670ded47c1b8ab",
+  "cases": [
+    {
+      "id": "ClassEval_49@JobMarketplace.withdraw_resume",
+      "recommendation": "exclude_as_presented",
+      "observed": "ValueError",
+      "reference": null,
+      "evidence": "Supplied resumes is empty. list.remove(resume) raises ValueError, whereas reference is null. Possible post-call state capture is a hypothesis, not established.",
+      "upstream_inputs_equal_prompt": true,
+      "upstream_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Classeval/JobMarketplace@withdraw_resume.jsonl",
+      "upstream_io_index": 5,
+      "inputs": {
+        "self": {
+          "job_listings": [
+            {
+              "job_title": "Software Engineer",
+              "company": "ABC Company",
+              "requirements": [
+                "skill1",
+                "skill2"
+              ]
+            }
+          ],
+          "resumes": []
+        },
+        "args": {
+          "resume": {
+            "name": "Tom",
+            "skills": [
+              "skill1",
+              "skill2"
+            ],
+            "experience": "experience"
+          }
+        },
+        "kwargs": {}
+      }
+    },
+    {
+      "id": "ClassEval_95@Warehouse.change_order_status",
+      "recommendation": "exclude_as_presented",
+      "observed": false,
+      "reference": null,
+      "evidence": "JSON orders key is string 1; order_id is integer 1. Membership fails and returns False, whereas reference is null. Integer-key restoration would require an explicit reconstruction assumption.",
+      "upstream_inputs_equal_prompt": true,
+      "upstream_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Classeval/Warehouse@change_order_status.jsonl",
+      "upstream_io_index": 0,
+      "inputs": {
+        "self": {
+          "inventory": {
+            "1": {
+              "name": "product 1",
+              "quantity": 5
+            }
+          },
+          "orders": {
+            "1": {
+              "product_id": 1,
+              "quantity": 5,
+              "status": "Delivered"
+            }
+          }
+        },
+        "args": {
+          "order_id": 1,
+          "status": "Delivered"
+        },
+        "kwargs": {}
+      }
+    },
+    {
+      "id": "ClassEval_95@Warehouse.create_order",
+      "recommendation": "exclude_as_presented",
+      "observed": false,
+      "reference": null,
+      "evidence": "JSON inventory key is string 1; product_id is integer 1. get_product_quantity returns False; False >= 10 is false; create_order returns False, whereas reference is null.",
+      "upstream_inputs_equal_prompt": true,
+      "upstream_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Classeval/Warehouse@create_order.jsonl",
+      "upstream_io_index": 8,
+      "inputs": {
+        "self": {
+          "inventory": {
+            "1": {
+              "name": "product 5",
+              "quantity": 90
+            }
+          },
+          "orders": {
+            "1": {
+              "product_id": 1,
+              "quantity": 10,
+              "status": "Shipped"
+            }
+          }
+        },
+        "args": {
+          "order_id": 1,
+          "product_id": 1,
+          "quantity": 10
+        },
+        "kwargs": {}
+      }
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "date": "2026-09-14",
+  "scope": "All 10 invalid-JSON inputs in pinned RE2-Bench-lite export",
+  "export_sha256": "5dd091f2c4b7d7c27245752c0a40161f993a27d3ee1a4f41f8670ded47c1b8ab",
+  "revision": "57b971f18567c879a7180bb6bd5b8e544dd9a47e",
+  "review_method": "Prompt and upstream input comparison plus code reasoning; bounded independent numerical checks. No full historical dependency replay. One assistant reviewer.",
+  "counts": {
+    "repair_candidates": 7,
+    "recommended_exclusions": 3
+  },
+  "selection_status": "Recommendations only; raw data unchanged. The other 442 cases are not certified by this review.",
+  "cases": [
+    {
+      "id": "matplotlib@@matplotlib_colors.py@@_repr_png__L2115",
+      "group": "HC",
+      "recommendation": "exclude",
+      "parse_error": "Expecting ',' delimiter: line 3 column 22 (char 37)",
+      "evidence": "Invalid float notation and repeated comma; upstream patch is an abbreviated array with ellipses, shape (65,65,3). Missing pixels cannot be restored by syntax repair; exact PNG additionally depends on rendering/version details.",
+      "upstream_record_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Real/matplotlib@@matplotlib_colors.py@@_repr_png__L2115.jsonl",
+      "upstream_io_index": 1,
+      "value_or_branch_check_passed": null
+    },
+    {
+      "id": "matplotlib@@matplotlib_colors.py@@_repr_html__L2140",
+      "group": "HC",
+      "recommendation": "exclude",
+      "parse_error": "Invalid control character at: line 3 column 866 (char 881)",
+      "evidence": "Unclosed patch string and invalid floats; same truncated upstream patch. HTML embeds PNG output, so required pixels are missing.",
+      "upstream_record_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Real/matplotlib@@matplotlib_colors.py@@_repr_html__L2140.jsonl",
+      "upstream_io_index": 0,
+      "value_or_branch_check_passed": null
+    },
+    {
+      "id": "matplotlib@@matplotlib_path.py@@intersects_path_L667",
+      "group": "HC",
+      "recommendation": "repair_candidate",
+      "parse_error": "Invalid control character at: line 3 column 43 (char 58)",
+      "evidence": "Missing closing quote for _vertices. Upstream records both complete two-point paths; both share the endpoint (0,0), supporting reference True. Native Matplotlib execution not reproduced.",
+      "upstream_record_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Real/matplotlib@@matplotlib_path.py@@intersects_path_L667.jsonl",
+      "upstream_io_index": 2,
+      "value_or_branch_check_passed": null
+    },
+    {
+      "id": "scikit-learn@@sklearn_ensemble__bagging.py@@predict_log_proba_L1055",
+      "group": "HC",
+      "recommendation": "exclude",
+      "parse_error": "Invalid control character at: line 35 column 35 (char 1365)",
+      "evidence": "Multiline quoted array is invalid JSON. Beyond syntax, estimators_ contains only CustomSVC parameter representations, not fitted support vectors/coefficients. Upstream inputs also omit that fitted state.",
+      "upstream_record_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Real/scikit-learn@@sklearn_ensemble__bagging.py@@predict_log_proba_L1055.jsonl",
+      "upstream_io_index": 3,
+      "value_or_branch_check_passed": null
+    },
+    {
+      "id": "matplotlib@@matplotlib_cbook.py@@pts_to_midstep_L1652",
+      "group": "LC",
+      "recommendation": "repair_candidate",
+      "parse_error": "Expecting ',' delimiter: line 4 column 16 (char 47)",
+      "evidence": "Bare floats such as 0. are not JSON numbers. Complete arrays are present upstream. Explicit midpoint computation reproduces the 2x20 reference array.",
+      "upstream_record_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Real/matplotlib@@matplotlib_cbook.py@@pts_to_midstep_L1652.jsonl",
+      "upstream_io_index": 1,
+      "value_or_branch_check_passed": true
+    },
+    {
+      "id": "matplotlib@@matplotlib_colorizer.py@@_ensure_multivariate_data_L837",
+      "group": "HC",
+      "recommendation": "repair_candidate",
+      "parse_error": "Expecting ',' delimiter: line 4 column 27 (char 58)",
+      "evidence": "Invalid floats/False plus misplaced n_components and kwargs. Upstream clearly places n_components=1 in args and identifies data as a masked array. Restore upstream structure/type description; with one component the displayed code returns the input unchanged.",
+      "upstream_record_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Real/matplotlib@@matplotlib_colorizer.py@@_ensure_multivariate_data_L837.jsonl",
+      "upstream_io_index": 2,
+      "value_or_branch_check_passed": true
+    },
+    {
+      "id": "matplotlib@@matplotlib_path.py@@to_polygons_L728",
+      "group": "HC",
+      "recommendation": "repair_candidate",
+      "parse_error": "Expecting ',' delimiter: line 3 column 27 (char 42)",
+      "evidence": "Invalid bare floats. With codes=None, width=height=0, closed_only=False and transform=None, the displayed code returns [vertices], matching the reference.",
+      "upstream_record_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Real/matplotlib@@matplotlib_path.py@@to_polygons_L728.jsonl",
+      "upstream_io_index": 0,
+      "value_or_branch_check_passed": true
+    },
+    {
+      "id": "matplotlib@@matplotlib_cbook.py@@delete_masked_points_L939",
+      "group": "HC",
+      "recommendation": "repair_candidate",
+      "parse_error": "Invalid control character at: line 4 column 19 (char 50)",
+      "evidence": "args.args is erroneously quoted across lines. Upstream specifies two complete arrays and None. All array elements are finite, so displayed filtering leaves them unchanged, matching reference.",
+      "upstream_record_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Real/matplotlib@@matplotlib_cbook.py@@delete_masked_points_L939.jsonl",
+      "upstream_io_index": 4,
+      "value_or_branch_check_passed": true
+    },
+    {
+      "id": "matplotlib@@matplotlib_transforms.py@@_interval_contains_close_L2948",
+      "group": "LC",
+      "recommendation": "repair_candidate",
+      "parse_error": "Expecting ',' delimiter: line 4 column 30 (char 61)",
+      "evidence": "Invalid 1. numeric literal. 0.2 lies within [0.001,1] with the supplied tolerance, matching the semantic boolean reference np.True_. NumPy scalar representation needs a scoring rule.",
+      "upstream_record_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Real/matplotlib@@matplotlib_transforms.py@@_interval_contains_close_L2948.jsonl",
+      "upstream_io_index": 1,
+      "value_or_branch_check_passed": true
+    },
+    {
+      "id": "scikit-learn@@sklearn_svm__base.py@@predict_L800",
+      "group": "HC",
+      "recommendation": "repair_candidate",
+      "parse_error": "Expecting ',' delimiter: line 22 column 28 (char 544)",
+      "evidence": "Invalid bare floats. Unlike the bagging case, fitted support vectors, coefficients, intercepts and gamma are supplied. Independent NumPy RBF/one-vs-one reconstruction matches all 38 reference labels; minimum absolute pair margin 0.0364466887. Not a historical sklearn runtime replay.",
+      "upstream_record_path": "RE2-Bench-57b971f18567c879a7180bb6bd5b8e544dd9a47e/dataset/re2-bench/input-output/Real/scikit-learn@@sklearn_svm__base.py@@predict_L800.jsonl",
+      "upstream_io_index": 0,
+      "value_or_branch_check_passed": null
+    }
+  ]
+}

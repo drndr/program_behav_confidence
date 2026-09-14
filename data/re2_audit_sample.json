@@ -1,0 +1,358 @@
+{
+  "date": "2026-09-06",
+  "scope": "Historical 50-case exploratory audit; one assistant reviewer; not independent adjudication",
+  "export_sha256": "5dd091f2c4b7d7c27245752c0a40161f993a27d3ee1a4f41f8670ded47c1b8ab",
+  "source": "archive/2026-09-10_pre-rebuild/snapshot/research_design/2026-09-06_re2_dataset_audit_annotations.json",
+  "cases": [
+    {
+      "id": "matplotlib@@matplotlib__mathtext.py@@vpack_L1312",
+      "source": "Real",
+      "group": "HC",
+      "classification": "supported",
+      "note": "With m=additional and h=0 the method returns None; target does not require reconstructing changed layout fields. Child descriptions do not identify a Char error case."
+    },
+    {
+      "id": "sympy@@sympy_core_power.py@@_eval_is_rational_L1244",
+      "source": "Real",
+      "group": "HC",
+      "classification": "supported",
+      "note": "The symbolic expression cos(phi)**2 with ordinary unspecified-symbol interpretation does not establish rationality; None is consistent. Not a historical SymPy replay."
+    },
+    {
+      "id": "sympy@@sympy_polys_densearith.py@@dmp_sub_L633",
+      "source": "Real",
+      "group": "HC",
+      "classification": "supported",
+      "note": "u=0 delegates to dup_sub; subtracting two empty coefficient lists returns the empty list. Domain internals are irrelevant on this path."
+    },
+    {
+      "id": "scikit-learn@@sklearn_decomposition__nmf.py@@transform_L2316",
+      "source": "Real",
+      "group": "HC",
+      "classification": "unresolved",
+      "note": "Printed arrays and model state appear substantial, but MiniBatchNMF solve_W and original numerical environment were not reconstructed. No demonstrated contradiction."
+    },
+    {
+      "id": "matplotlib@@matplotlib_transforms.py@@splitx_L562",
+      "source": "Real",
+      "group": "HC",
+      "classification": "supported",
+      "note": "Splitting x interval [0.125,0.9] at 0.85 twice gives 0.78375 and the expected zero-width middle box. Reference y=0.09999999999999998 agrees to displayed input precision with 0.1; exact repr is not certified."
+    },
+    {
+      "id": "matplotlib@@matplotlib__api_deprecation.py@@delete_parameter_L314",
+      "source": "Real",
+      "group": "HC",
+      "classification": "confirmed_defect",
+      "note": "Reference requires an exact function repr containing a process memory address absent from the prompt. The shown function input omits its address; a newly created wrapper address is not inferable."
+    },
+    {
+      "id": "pydata__xarray-4758@@xarray.coding.times.py@@decode_cf_datetime",
+      "source": "Swebench",
+      "group": "HC",
+      "classification": "underspecified",
+      "note": "num_dates is null while reference identifies a specific date in 2010. Units/calendar alone do not supply the required offset. Missing data is clear, but cftime was not executed in the original environment."
+    },
+    {
+      "id": "sphinx-doc__sphinx-9665@@sphinx.util.typing.py@@restify",
+      "source": "Swebench",
+      "group": "HC",
+      "classification": "supported",
+      "note": "The first cls-is-None branch returns the exact reference :py:obj:`None`; no later dependency behavior is needed."
+    },
+    {
+      "id": "sympy@@sympy_printing_printer.py@@_print_L295",
+      "source": "Real",
+      "group": "HC",
+      "classification": "underspecified",
+      "note": "expr is printed as phi without saying whether it is a Symbol or a string. Printer dispatch depends on runtime type, and the shown string-printer uses repr. Concrete printer subtype is also not explicit."
+    },
+    {
+      "id": "sympy__sympy-13265@@sympy.simplify.trigsimp.py@@exptrigsimp",
+      "source": "Swebench",
+      "group": "HC",
+      "classification": "unresolved",
+      "note": "Reference is only nargs metadata rather than the resulting symbolic expression. This could be an intended serializer projection; the exact historical projection was not reproduced. Not counted as a wrong target."
+    },
+    {
+      "id": "sympy__sympy-16088@@sympy.core.exprtools.py@@factor_terms",
+      "source": "Swebench",
+      "group": "HC",
+      "classification": "supported",
+      "note": "Factoring a**2 out of the denominator supports 2*x/(a**2*(x**2-y**2)); function explicitly sympifies string input."
+    },
+    {
+      "id": "scikit-learn__scikit-learn-13241@@sklearn.decomposition.kernel_pca.py@@_fit_transform",
+      "source": "Swebench",
+      "group": "HC",
+      "classification": "supported",
+      "note": "Centering the displayed kernel reproduces the returned K within 1.08e-8. Randomized eigensolver affects stored eigenvectors, not this returned matrix."
+    },
+    {
+      "id": "scikit-learn@@sklearn_naive_bayes.py@@_partial_fit_L407",
+      "source": "Real",
+      "group": "HC",
+      "classification": "supported",
+      "note": "The method returns self; provided default GaussianNB hyperparameters support GaussianNB() repr. Fitted numerical statistics are not exposed by this target. No full training replay."
+    },
+    {
+      "id": "scikit-learn@@sklearn_svm__base.py@@predict_L800",
+      "source": "Real",
+      "group": "HC",
+      "classification": "confirmed_defect",
+      "note": "Input described as JSON contains bare floats such as [1.,1.,1.], which are not valid JSON. This is a formatting defect, not proof the numerical task cannot be repaired or solved."
+    },
+    {
+      "id": "matplotlib@@matplotlib_artist.py@@aliased_name_L1563",
+      "source": "Real",
+      "group": "HC",
+      "classification": "supported",
+      "note": "aliasd is empty, so appending its aliases leaves clip_on unchanged."
+    },
+    {
+      "id": "scikit-learn@@sklearn_ensemble__forest.py@@_compute_oob_predictions_L558",
+      "source": "Real",
+      "group": "HC",
+      "classification": "underspecified",
+      "note": "estimators_ contains tree hyperparameter reprs but not fitted tree nodes/leaf values. Different fitted trees with those reprs can produce different OOB predictions; the method does not retrain them."
+    },
+    {
+      "id": "sympy@@sympy_core_mul.py@@as_ordered_factors_L2099",
+      "source": "Real",
+      "group": "HC",
+      "classification": "supported",
+      "note": "For the shown product w*z the expected ordered factors are w and z; no contradictory information identified."
+    },
+    {
+      "id": "scikit-learn@@sklearn_preprocessing__data.py@@fit_L899",
+      "source": "Real",
+      "group": "HC",
+      "classification": "supported",
+      "note": "fit returns partial_fit result, which returns self; default StandardScaler parameters support StandardScaler() repr. The numeric transformed array is not requested."
+    },
+    {
+      "id": "sympy__sympy-13265@@sympy.simplify.trigsimp.py@@f",
+      "source": "Swebench",
+      "group": "HC",
+      "classification": "underspecified",
+      "note": "The symbolic expression contains literal quoted exp(...) subterms. Ordinary expression parsing does not yield the intended arithmetic; an undocumented reconstruction or repair is needed."
+    },
+    {
+      "id": "matplotlib@@matplotlib_path.py@@intersects_path_L667",
+      "source": "Real",
+      "group": "HC",
+      "classification": "confirmed_defect",
+      "note": "Input _vertices string is missing its closing quote, giving an invalid control-character JSON error. Geometry may remain inferable after repair; this is a confirmed format defect."
+    },
+    {
+      "id": "matplotlib@@matplotlib_dviread.py@@_read_L331",
+      "source": "Real",
+      "group": "HC",
+      "classification": "underspecified",
+      "note": "Return depends on next DVI bytes and file position. Only a BufferedReader filename repr and some state are shown, not file bytes or offset."
+    },
+    {
+      "id": "sympy__sympy-21208@@sympy.matrices.expressions.matexpr.py@@_matrix_derivative",
+      "source": "Swebench",
+      "group": "HC",
+      "classification": "unresolved",
+      "note": "Matrix entries are null in both input and reference projection. It is unclear whether intended scoring observes only dimensions or meaningful derivative contents. No validated historical serializer reconstruction."
+    },
+    {
+      "id": "scikit-learn@@sklearn_gaussian_process_kernels.py@@__eq___L382",
+      "source": "Real",
+      "group": "HC",
+      "classification": "underspecified",
+      "note": "self length_scale_bounds is [0.5,2], but b repr shows only RBF(length_scale=1). Equality compares all parameters; different b bounds fit the same displayed repr and change the answer."
+    },
+    {
+      "id": "django__django-11334@@django.template.library.py@@dec",
+      "source": "Swebench",
+      "group": "HC",
+      "classification": "supported",
+      "note": "Shown decorator branches return/register the supplied function and the reference metadata matches input function metadata. Body and closure not reconstructed; support concerns the requested metadata projection."
+    },
+    {
+      "id": "sympy@@sympy_core_mul.py@@_eval_is_zero_infinite_helper_L1306",
+      "source": "Real",
+      "group": "HC",
+      "classification": "supported",
+      "note": "The displayed factors of -pi/4 are finite and nonzero, supporting [False,False]."
+    },
+    {
+      "id": "HumanEval_84",
+      "source": "HumanEval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Executed displayed solve(147); exact normalized reference match."
+    },
+    {
+      "id": "sample_118",
+      "source": "cruxeval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Executed displayed string replacements; exact reference match."
+    },
+    {
+      "id": "HumanEval_100",
+      "source": "HumanEval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Executed make_a_pile(3); exact reference match."
+    },
+    {
+      "id": "ClassEval_73@RPGCharacter.level_up",
+      "source": "Classeval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Reconstructed self fields and executed displayed level_up; tuple-to-JSON normalization matches reference."
+    },
+    {
+      "id": "HumanEval_103",
+      "source": "HumanEval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Executed displayed rounded_avg(185,546); exact reference match."
+    },
+    {
+      "id": "sympy@@sympy_core_expr.py@@as_content_primitive_L2171",
+      "source": "Real",
+      "group": "LC",
+      "classification": "underspecified",
+      "note": "Method returns (1,self), but self contains only nargs={1}; it does not identify cos(phi). Other unary expressions fit the same supplied metadata and give different outputs."
+    },
+    {
+      "id": "HumanEval_92",
+      "source": "HumanEval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Executed any_int(2,1,1); exact reference match."
+    },
+    {
+      "id": "pydata__xarray-5180@@xarray.coding.times.py@@_is_standard_calendar",
+      "source": "Swebench",
+      "group": "LC",
+      "classification": "supported",
+      "note": "GREGORIAN lowercases into the explicitly provided standard-calendar set."
+    },
+    {
+      "id": "sympy__sympy-21260@@sympy.core.symbol.py@@__getnewargs_ex__",
+      "source": "Swebench",
+      "group": "LC",
+      "classification": "underspecified",
+      "note": "self is empty but return directly reads name, dummy_index, assumptions0. Target includes x and 2527079; those instance fields are not supplied."
+    },
+    {
+      "id": "django__django-11170@@django.views.debug.py@@default_urlconf",
+      "source": "Swebench",
+      "group": "LC",
+      "classification": "unresolved",
+      "note": "External template and Django response serializer were not reconstructed; several reference fields are null. Cannot distinguish an intended projection from missing response data."
+    },
+    {
+      "id": "HumanEval_66",
+      "source": "HumanEval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Executed digitSum on supplied string; exact reference match."
+    },
+    {
+      "id": "ClassEval_96@WeatherSystem.fahrenheit_to_celsius",
+      "source": "Classeval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Reconstructed temperature=80 and executed conversion; exact reference match."
+    },
+    {
+      "id": "sample_600",
+      "source": "cruxeval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Executed empty-array case; exact reference match."
+    },
+    {
+      "id": "scikit-learn@@sklearn_ensemble__bagging.py@@_validate_y_L939",
+      "source": "Real",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Reconstructed the complete printed label vector; numpy.unique inverse encoding exactly matches reference. Hidden RNG/model state is irrelevant to this method."
+    },
+    {
+      "id": "scikit-learn__scikit-learn-13302@@sklearn.linear_model.ridge.py@@ridge_regression",
+      "source": "Swebench",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Ridge closed form on displayed arrays agrees within 3.50e-7. Original float dtype/precision not fully retained; numerical support only, not exact historical reproduction."
+    },
+    {
+      "id": "ClassEval_75@ShoppingCart.remove_item",
+      "source": "Classeval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Reconstructed cart and executed remove_item; returns None as recorded."
+    },
+    {
+      "id": "sample_422",
+      "source": "cruxeval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Executed reversed squares; exact reference match."
+    },
+    {
+      "id": "atcoder_AGC007_C",
+      "source": "Avatar",
+      "group": "LC",
+      "classification": "confirmed_defect",
+      "note": "Literal displayed JSON input produces Decimal ConversionSyntax. Extra JSON decoding restores successful execution and reference agreement under float conversion."
+    },
+    {
+      "id": "atcoder_ABC178_B",
+      "source": "Avatar",
+      "group": "LC",
+      "classification": "confirmed_defect",
+      "note": "Literal displayed JSON input raises ValueError in int(); extra JSON decoding reproduces exact reference integer."
+    },
+    {
+      "id": "scikit-learn__scikit-learn-13143@@sklearn.metrics.classification.py@@recall_score",
+      "source": "Swebench",
+      "group": "LC",
+      "classification": "confirmed_defect",
+      "note": "Both label arrays are null, while reference contains five recall values. Shown type_of_target guard rejects None before a score vector can be returned."
+    },
+    {
+      "id": "atcoder_ABC169_C",
+      "source": "Avatar",
+      "group": "LC",
+      "classification": "confirmed_defect",
+      "note": "Literal displayed JSON input raises ValueError in int(); extra JSON decoding reproduces exact reference integer."
+    },
+    {
+      "id": "ClassEval_64@NumberConverter.octal_to_decimal",
+      "source": "Classeval",
+      "group": "LC",
+      "classification": "supported",
+      "note": "Executed int(51427,8); exact reference match."
+    },
+    {
+      "id": "codeforces_147_A",
+      "source": "Avatar",
+      "group": "LC",
+      "classification": "confirmed_defect",
+      "note": "Literal displayed JSON input retains quotes in stdout; extra JSON decoding reproduces reference x. x without quotes."
+    },
+    {
+      "id": "sympy__sympy-23141@@sympy.integrals.intpoly.py@@_polynomial_integrate",
+      "source": "Swebench",
+      "group": "LC",
+      "classification": "confirmed_defect",
+      "note": "hp_params is null; exact displayed loop raises TypeError before it can return reference -1/8."
+    },
+    {
+      "id": "sympy@@sympy_polys_rings.py@@cancel_L3202",
+      "source": "Real",
+      "group": "LC",
+      "classification": "underspecified",
+      "note": "PolyElement self contains ring metadata but not polynomial coefficients. With g=1 the numerator depends on those omitted coefficients; target cannot be derived from ring alone."
+    }
+  ]
+}

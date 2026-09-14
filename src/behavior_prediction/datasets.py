@@ -41,7 +41,7 @@ def load_cruxeval(path: str | Path) -> list[CruxEvalExample]:
 
 
 def load_re2_export(path: str | Path) -> list[dict]:
-    """Read the historical local RE2 export, without repairing or normalizing it.
+    """Read the local RE2 export, without repairing or normalizing it.
 
     This is not an upstream RE2 loader or an eligibility filter. Returned rows
     retain prompt context and target serialization; labels remain unvalidated.

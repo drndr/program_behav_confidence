@@ -16,18 +16,31 @@
     "previous_csv_sha256": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de"
   },
   {
-    "archive_source": "archive/2026-09-10_pre-rebuild/snapshot/_local/re2/re2_bench_lite_output_prediction_prompts.jsonl",
     "path": "data/raw/re2/re2_bench_lite_output_prediction_prompts.jsonl",
+    "source_path": "data/raw/re2/upstream-57b971f18567c879a7180bb6bd5b8e544dd9a47e.zip",
+    "source_url": "https://codeload.github.com/AnonyRepo2025/RE2-Bench/zip/57b971f18567c879a7180bb6bd5b8e544dd9a47e",
+    "artifact_url": "https://github.com/AnonyRepo2025/RE2-Bench",
+    "revision": "57b971f18567c879a7180bb6bd5b8e544dd9a47e",
+    "downloaded_at": "2026-09-10T19:14:30.294022+00:00",
     "sha256": "5dd091f2c4b7d7c27245752c0a40161f993a27d3ee1a4f41f8670ded47c1b8ab",
-    "bytes": 9116635,
-    "restored_at": "2026-09-10T15:16:53.0788562+02:00",
-    "validation": "byte-identical archive copy; benchmark validity not established",
+    "source_sha256": "cc30b16a3edb7d78b779f5f47a36c49a16fef94f7a9f76ee7312919ecf18aad1",
+    "manifest_sha256": "08241aa0cb4355c5a997852a0096e460c813f4e5734a8cdf8a5579b9ac360bc5",
     "record_count": 500,
-    "recorded_upstream_commits": [
-      "57b971f18567c879a7180bb6bd5b8e544dd9a47e"
-    ],
-    "recorded_upstream_urls": [
-      "https://github.com/AnonyRepo2025/RE2-Bench"
-    ]
+    "bytes": 9116635,
+    "group_counts": {
+      "HC": 250,
+      "LC": 250
+    },
+    "source_counts": {
+      "Real": 200,
+      "HumanEval": 43,
+      "Avatar": 34,
+      "cruxeval": 44,
+      "Swebench": 136,
+      "Classeval": 43
+    },
+    "ordering_seed": 20260806,
+    "previous_export_sha256": "5dd091f2c4b7d7c27245752c0a40161f993a27d3ee1a4f41f8670ded47c1b8ab",
+    "validation": "release manifest and unique IDs checked; targets unchanged and not repaired or certified"
   }
 ]

@@ -18,7 +18,7 @@ def main():
     re2 = load_re2_export(re2_path)
     print(json.dumps({
         "cruxeval": {"rows": len(crux), "sha256": sha256_file(crux_path), "status": "loaded; scoring pending"},
-        "re2_historical_export": {
+        "re2_bench_lite": {
             "rows": len(re2), "sha256": sha256_file(re2_path),
             "source_counts": dict(Counter(row.get("source_dataset", "unknown") for row in re2)),
             "status": "inspection only; eligibility and label validation pending",
