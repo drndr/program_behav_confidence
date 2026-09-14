@@ -1,6 +1,6 @@
 """Download the pinned CRUXEval and RE2-Bench-lite sources into data/raw.
 
-Standard library only; nothing is imported from src/. Each download validates
+Standard library only. Each download validates
 structure, writes files atomically, and records provenance in data/provenance.json.
 Reference outputs are stored unchanged; nothing here certifies their correctness.
 

@@ -14,7 +14,14 @@ __pycache__/
 .pytest_cache/
 /tmp/
 /results/private/
-/data/raw/
+/data/raw/*
+!/data/raw/cruxeval/
+/data/raw/cruxeval/*
+!/data/raw/cruxeval/cruxeval.csv
+!/data/raw/re2/
+/data/raw/re2/*
+!/data/raw/re2/re2_full.csv
+!/data/raw/re2/re2_filtered.csv
 /data/processed/
 .ipynb_checkpoints/
 *.egg-info/

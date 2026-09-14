@@ -1,4 +1,26 @@
-"""The agreed RE2 exclusions; retained records are returned unchanged."""
+"""RE2 exclusions and removal of prompt instructions and worked examples."""
+
+import re
+
+from re2_inspection import input_text
+
+
+def remove_prompts(rows):
+    """Return id/code/input/output records, retaining task and helper code."""
+    cleaned = []
+    for row in rows:
+        prompt = row["messages"][0]["content"].rsplit("[/EXAMPLE]", 1)[-1]
+        main, _, helpers = prompt.partition("Functions called during the execution:")
+        blocks = re.findall(r"\[PYTHON\](.*?)\[/PYTHON\]", main, re.S)
+        if not blocks:
+            raise ValueError(f"Missing task code: {row['id']}")
+        code = blocks[-1].strip()
+        helper_blocks = re.findall(r"\[PYTHON\](.*?)\[/PYTHON\]", helpers, re.S)
+        if helper_blocks:
+            code += "\n\n" + "\n\n".join(b.strip() for b in helper_blocks)
+        cleaned.append({"id": row["id"], "code": code,
+                        "input": input_text(row), "output": row["target_output"]})
+    return cleaned
 
 PROBLEMATIC_CASES = {
     "matplotlib@@matplotlib__api_deprecation.py@@deprecated_L97": "Unpredictable function address",
