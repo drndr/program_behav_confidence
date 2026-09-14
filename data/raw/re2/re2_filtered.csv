@@ -566,7 +566,7 @@ if s[0] == s[1] and s[2] == s[3] and (s[0] != s[2]):
     print('Yes')
 else:
     print('No')","{
-    ""input"": ""\""FFEE\""""
+    ""input"": ""FFEE""
 }","""Yes"""
 sympy@@sympy_printing_pretty_pretty.py@@_print_set_L2455,"from sympy.core.sorting import default_sort_key
 from sympy.printing.printer import Printer, print_function
@@ -13851,7 +13851,7 @@ def __hash__(self):
 atcoder_ABC178_B,"a, b, c, d = map(int, input().split())
 ans = max(a * c, a * d, b * c, b * d)
 print(ans)","{
-    ""input"": ""\""193944314 586260100 -192321079 95834122\""""
+    ""input"": ""193944314 586260100 -192321079 95834122""
 }",56183721947132200
 sympy__sympy-13551@@sympy.concrete.products.py@@_eval_product,"from __future__ import print_function, division
 from sympy.tensor.indexed import Idx
@@ -21156,7 +21156,7 @@ if sum <= n:
     print(0)
 else:
     print(sum - n)","{
-    ""input"": ""\""1 1 1\""""
+    ""input"": ""1 1 1""
 }",0
 matplotlib@@matplotlib__mathtext.py@@vpack_L1312,"import typing as T
 import numpy as np
@@ -22585,7 +22585,7 @@ y_h = a * math.sin(theta_h)
 x_m = b * math.cos(theta_m)
 y_m = b * math.sin(theta_m)
 print(((x_h - x_m) ** 2 + (y_h - y_m) ** 2) ** 0.5)","{
-    ""input"": ""\""249 677 2 24\""""
+    ""input"": ""249 677 2 24""
 }",645.0939128642154
 matplotlib@@matplotlib_path.py@@intersects_path_L667,"from weakref import WeakValueDictionary
 import numpy as np
@@ -30842,7 +30842,7 @@ def set_params(self, **params):
     }
 }","""RBF(length_scale=0.112)"""
 atcoder_ABC051_A,"print(input().replace(',', ' '))","{
-    ""input"": ""\""avrnc,fwujpcm,ggjmc\""""
+    ""input"": ""avrnc,fwujpcm,ggjmc""
 }","""avrnc fwujpcm ggjmc"""
 mwaskom__seaborn-3187@@seaborn._core.scales.py@@_setup,"from __future__ import annotations
 import re
@@ -31672,7 +31672,7 @@ ans = A - 2 * B
 if ans < 0:
     ans = 0
 print(ans)","{
-    ""input"": ""\""20 30\""""
+    ""input"": ""20 30""
 }",0
 scikit-learn@@sklearn_decomposition__pca.py@@_fit_truncated_L696,"from numbers import Integral, Real
 from scipy.sparse import issparse
@@ -32293,7 +32293,7 @@ if abs(a - b) >= 2:
     print(abs(a - b) // 2)
 else:
     print(0)","{
-    ""input"": ""\""1 1\""""
+    ""input"": ""1 1""
 }","""1 0"""
 scikit-learn__scikit-learn-14706@@sklearn.kernel_approximation.py@@_get_kernel_params,"import warnings
 import numpy as np
@@ -32687,7 +32687,7 @@ l = input().split(' ')
 x, y, a, b = (int(l[0]), int(l[1]), int(l[2]), int(l[3]))
 lcm = LCM(x, y)
 print(b // lcm - (a - 1) // lcm)","{
-    ""input"": ""\""101 171 1 1000000000\""""
+    ""input"": ""101 171 1 1000000000""
 }",57900
 scikit-learn@@sklearn_impute__base.py@@_get_missing_features_info_L886,"import numpy as np
 from scipy import sparse as sp
@@ -55505,7 +55505,7 @@ def __eq__(self, other):
 atcoder_ABC125_A,"A, B, T = map(int, input().split())
 ans = T // A * B
 print(ans)","{
-    ""input"": ""\""1 1 1\""""
+    ""input"": ""1 1 1""
 }",1
 sympy__sympy-14038@@sympy.concrete.products.py@@_eval_product,"from __future__ import print_function, division
 from sympy.tensor.indexed import Idx
@@ -61468,7 +61468,7 @@ while s // b != 0:
     h += 1
     s = s - b + 1
 print(h)","{
-    ""input"": ""\""80 970\""""
+    ""input"": ""80 970""
 }",80
 scikit-learn@@sklearn_preprocessing__encoders.py@@_compute_n_features_outs_L959,"from numbers import Integral
 import numpy as np
@@ -65327,7 +65327,7 @@ elif l != m:
     print(-1)
 else:
     print(anti, d, c, b)","{
-    ""input"": ""\""3 4 7 8\""""
+    ""input"": ""3 4 7 8""
 }","""3 8 7 4"""
 scikit-learn@@sklearn_ensemble__bagging.py@@get_metadata_routing_L625,"from abc import ABCMeta, abstractmethod
 from numbers import Integral
@@ -66273,7 +66273,7 @@ if all(a.is_finite for a in self.args):
 }",null
 atcoder_ABC070_B,"a, b, c, d = map(int, input().split())
 print(max(0, min(b, d) - max(a, c)))","{
-    ""input"": ""\""0 33 66 99\""""
+    ""input"": ""0 33 66 99""
 }",0
 attrs@@src_attr__make.py@@add_order_L1150,"import contextlib
 import inspect
@@ -71639,7 +71639,7 @@ def main():
     print('unsafe') if S <= W else print('safe')
 if __name__ == '__main__':
     main()","{
-    ""input"": ""\""74 74\""""
+    ""input"": ""74 74""
 }","""unsafe"""
 matplotlib@@matplotlib_gridspec.py@@get_grid_positions_L145,"from numbers import Integral
 import numpy as np
@@ -80262,7 +80262,7 @@ elif a < 0 and min(b - a, -a) % 2 == 0:
     print('Negative')
 else:
     print('Positive')","{
-    ""input"": ""\""1 1000000000\""""
+    ""input"": ""1 1000000000""
 }","""Positive"""
 sympy__sympy-16088@@sympy.core.exprtools.py@@factor_terms,"from __future__ import print_function, division
 from sympy.core.add import Add
@@ -81836,7 +81836,7 @@ def filldedent(s, w=70, **kwargs):
 }","""X[1, 2]"""
 codeforces_678_A,"vamshi, z = map(int, input().split())
 print((vamshi // z + 1) * z)","{
-    ""input"": ""\""14 15\""""
+    ""input"": ""14 15""
 }",15
 matplotlib@@matplotlib_backends_registry.py@@is_valid_backend_L202,"import importlib.metadata as im
 from matplotlib import _parse_to_version_info
@@ -90862,7 +90862,7 @@ atcoder_ABC108_B,"x1, y1, x2, y2 = map(int, input().split())
 a = x2 - x1
 b = y2 - y1
 print(x2 - b, y2 + a, x1 - b, y1 + a)","{
-    ""input"": ""\""100 100 100 99\""""
+    ""input"": ""100 100 100 99""
 }","""101 99 101 100"""
 matplotlib@@matplotlib_patches.py@@_get_bracket_L3427,"from . import _api, artist, cbook, colors, _docstring, hatch as mhatch, lines as mlines, transforms
 from .bezier import NonIntersectingPathException, get_cos_sin, get_intersection, get_parallels, inside_circle, make_wedged_bezier2, split_bezier_intersecting_with_closedpath, split_path_inout
@@ -112539,7 +112539,7 @@ for i in range(1, int(n) + 1):
     i = Decimal(str(i))
     ans += Decimal(str(int(n) - int(i) + 1)) / Decimal(str(i)) * (d + x * Decimal(str(int(n) * 2 - 1)) / Decimal('2'))
 print(ans)","{
-    ""input"": ""\""199996 95 12\""""
+    ""input"": ""199996 95 12""
 }",5655984170796.687
 matplotlib@@matplotlib_artist.py@@aliased_name_L1563,"from functools import cache, reduce, wraps
 import inspect
@@ -116387,7 +116387,7 @@ atcoder_ABC127_B,"r, D, x = map(int, input().split())
 for i in range(10):
     x = r * x - D
     print(x)","{
-    ""input"": ""\""2 100 105\""""
+    ""input"": ""2 100 105""
 }","""110\n120\n140\n180\n260\n420\n740\n1380\n2660\n5220"""
 scikit-learn__scikit-learn-10306@@sklearn.cross_decomposition.pls_.py@@_nipals_twoblocks_inner_loop,"import warnings
 from abc import ABCMeta, abstractmethod
@@ -124772,7 +124772,7 @@ atcoder_ABC158_A,"stdin = input()
 s = stdin
 result = 'Yes' if 'A' in s and 'B' in s else 'No'
 print(result)","{
-    ""input"": ""\""BBA\""""
+    ""input"": ""BBA""
 }","""Yes"""
 attrs@@src_attr__make.py@@build_class_L788,"import abc
 import contextlib
@@ -145113,7 +145113,7 @@ if ABC.count(5) == 2:
     print('YES' if sum(ABC) == 17 else 'NO')
 else:
     print('NO')","{
-    ""input"": ""\""7 5 5\""""
+    ""input"": ""7 5 5""
 }","""YES"""
 scikit-learn__scikit-learn-12682@@sklearn.decomposition.dict_learning.py@@dict_learning,"import time
 import sys
@@ -148957,7 +148957,7 @@ s = ' '.join(s.strip().split())
 for i in t:
     s = s.replace(' ' + i, i)
 print(s)","{
-    ""input"": ""\""x.x\""""
+    ""input"": ""x.x""
 }","""x. x"""
 psf__requests-1766@@requests.auth.py@@build_digest_header,"import os
 import re
@@ -149528,7 +149528,7 @@ def validate_data(
 atcoder_ABC153_A,"import math
 h, a = map(int, input().split())
 print(math.ceil(h / a))","{
-    ""input"": ""\""3447 629\""""
+    ""input"": ""3447 629""
 }",6
 matplotlib@@matplotlib_gridspec.py@@__getitem___L213,"from numbers import Integral
 import numpy as np
@@ -149656,7 +149656,7 @@ def get_geometry(self):
 codeforces_171_A,"a, b = input().split()
 b = int(b[::-1])
 print(int(a) + b)","{
-    ""input"": ""\""982906996 135497281\""""
+    ""input"": ""982906996 135497281""
 }",1165701527
 scikit-learn__scikit-learn-11346@@sklearn.linear_model.omp.py@@orthogonal_mp_gram,"import warnings
 from math import sqrt
@@ -150454,7 +150454,7 @@ def score_samples(self, X):
 }","""array([0., 0.])"""
 atcoder_ABC139_B,"t, h = map(int, input().split())
 print((h - 2) // (t - 1) + 1)","{
-    ""input"": ""\""8 9\""""
+    ""input"": ""8 9""
 }",2
 sympy@@sympy_core_mul.py@@_eval_is_zero_infinite_helper_L1306,"from typing import TYPE_CHECKING, ClassVar, overload, Literal
 from .operations import AssocOp, AssocOpDispatcher
@@ -150954,7 +150954,7 @@ b = b[0] + b[2:]
 a = int(a)
 b = int(b)
 print(a * b // 100)","{
-    ""input"": ""\""776013196293085 2.60\""""
+    ""input"": ""776013196293085 2.60""
 }",2017634310362021
 sympy__sympy-23141@@sympy.integrals.intpoly.py@@polytope_integrate,"from functools import cmp_to_key
 from sympy.abc import x, y, z
@@ -161817,7 +161817,7 @@ class Library:
     ""kwargs"": {}
 }","{""__annotations__"": {}, ""__doc__"": null, ""__module__"": ""template_tests.test_library"", ""__name__"": ""func"", ""__qualname__"": ""SimpleTagRegistrationTests.test_simple_tag_wrapped.\""<locals>\"".func"", ""__wrapped__"": {}}"
 atcoder_ABC151_A,print(chr(ord(input()) + 1)),"{
-    ""input"": ""\""a\""""
+    ""input"": ""a""
 }","""b"""
 matplotlib@@matplotlib_font_manager.py@@get_fontconfig_pattern_L778,"import os
 import matplotlib as mpl
@@ -162268,7 +162268,7 @@ ans = N // (A + B) * A
 rem = N % (A + B)
 ans += min(rem, A)
 print(ans)","{
-    ""input"": ""\""1 0 1\""""
+    ""input"": ""1 0 1""
 }",0
 matplotlib@@matplotlib_ticker.py@@format_data_L689,"import locale
 import math

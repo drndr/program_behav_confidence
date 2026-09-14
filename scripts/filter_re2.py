@@ -78,7 +78,7 @@ def prepare_re2(data_dir):
 
     This is a screened selection, not independent validation of every reference.
     Repairs restore upstream JSON values, including serialized object strings.
-    Avatar stdin normalization is outside this function's scope.
+    Avatar stdin is restored from upstream strings or numeric values as text.
     """
     data_dir = Path(data_dir)
     provenance = json.loads((data_dir / "provenance.json").read_text(encoding="utf-8"))
@@ -100,10 +100,32 @@ def prepare_re2(data_dir):
         for original in retained:
             case_id = original["id"]
             row = deepcopy(original)
+            review = None
+            kind = None
             if case_id in repairs:
                 review = repairs[case_id]
                 upstream = json.loads(archive.read(review["upstream_record_path"]).decode("utf-8").splitlines()[review["upstream_io_index"]])
                 values = upstream["values"]["inputs"]
+                kind = "malformed_json"
+            elif original["source_dataset"] == "Avatar":
+                path = (f"RE2-Bench-{original['artifact_commit']}/dataset/re2-bench/"
+                        f"input-output/Avatar/{original['upstream_case_name']}")
+                upstream = json.loads(archive.read(path).decode("utf-8").splitlines()[original["upstream_io_index"]])["values"]["input"]
+                before = json.loads(input_text(original))
+                if before != {"input": json.dumps(upstream, indent=4)}:
+                    raise ValueError(f"Unexpected Avatar encoding: {case_id}")
+                if isinstance(upstream, str):
+                    stdin = upstream  # Preserve whitespace and newlines exactly.
+                    kind = "avatar_string_decode"
+                elif type(upstream) in (int, float):
+                    stdin = json.dumps(upstream, allow_nan=False)
+                    kind = "avatar_numeric_text"
+                else:
+                    raise ValueError(f"Unsupported Avatar stdin type: {case_id}")
+                values = {"input": stdin}
+                review = {"evidence": "Restore upstream stdin as text; numeric inputs already have this value.",
+                          "upstream_record_path": path, "upstream_io_index": original["upstream_io_index"]}
+            if review is not None:
                 replacement = json.dumps(values, indent=4, ensure_ascii=False, allow_nan=False)
                 prompt = row["messages"][0]["content"]
                 match = list(re.finditer(r"\[INPUT\](.*?)\[/INPUT\]", prompt, re.S))[-1]
@@ -112,7 +134,7 @@ def prepare_re2(data_dir):
                 row["original_prompt_sha256"] = original["prompt_sha256"]
                 row["prompt_sha256"] = hashlib.sha256(row["messages"][0]["content"].encode("utf-8")).hexdigest()
                 row["input_repair"] = "restore_upstream_inputs_as_valid_json"
-                repaired.append({"id": case_id, "before": input_text(original), "after": input_text(row),
+                repaired.append({"id": case_id, "kind": kind, "before": input_text(original), "after": input_text(row),
                                  "evidence": review["evidence"], "upstream_path": review["upstream_record_path"],
                                  "upstream_io_index": review["upstream_io_index"]})
                 if json.loads(input_text(row)) != values:
@@ -120,14 +142,18 @@ def prepare_re2(data_dir):
             json.loads(input_text(row))  # Fail rather than retain unexpected malformed inputs.
             selected.append(row)
     counts = dict(Counter(r["reason"] for r in excluded))
-    if (len(rows), len(selected), len(repaired), counts) != (500, 446, 7, {
+    repair_counts = dict(Counter(r["kind"] for r in repaired))
+    if repair_counts != {"malformed_json": 7, "avatar_string_decode": 27, "avatar_numeric_text": 7}:
+        raise ValueError("Unexpected input repair counts")
+    if (len(rows), len(selected), len(repaired), counts) != (500, 446, 41, {
         "cruxeval_overlap": 44, "problematic_sample": 10
     }):
         raise ValueError("Selection differs from the reviewed 500-record release")
     return remove_prompts(selected), {"source_sha256": digest, "input_count": len(rows), "retained_count": len(selected),
                       "excluded_count": len(excluded), "repaired_count": len(repaired),
+                      "repair_counts": repair_counts,
                       "exclusion_counts": counts, "excluded": excluded, "repairs": repaired,
-                      "limitations": "Screened, not fully validated. Object representations and targets unchanged. Avatar stdin encoding unchanged."}
+                      "limitations": "Screened, not fully validated. Targets unchanged. Seven malformed inputs repaired; 27 Avatar strings decoded and seven numeric stdin values verified."}
 
 
 
@@ -149,4 +175,4 @@ def build_re2(data_dir=ROOT / "data"):
 
 if __name__ == "__main__":
     rows, report = build_re2()
-    print(f"500 samples -> {len(rows)} retained; 54 excluded; {report['repaired_count']} inputs repaired.")
+    print(f"500 samples -> {len(rows)} retained; 54 excluded; 7 malformed inputs repaired; 34 Avatar inputs normalized (7 numeric values unchanged).")
