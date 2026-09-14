@@ -8,8 +8,8 @@ from pathlib import Path
 import re
 import zipfile
 
-from .datasets import load_cruxeval, load_re2_export, sha256_file
-from .re2_inspection import input_text, inspect_re2
+from datasets import load_cruxeval, load_re2_export, sha256_file
+from re2_inspection import input_text, inspect_re2
 
 
 def prepare_re2(data_dir):

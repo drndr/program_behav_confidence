@@ -1,10 +1,13 @@
 import csv
 import json
+from pathlib import Path
+import sys
 import tempfile
 import unittest
-from pathlib import Path
 
-from behavior_prediction.datasets import load_cruxeval, load_re2_export
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from datasets import load_cruxeval, load_re2_export
 
 
 class DatasetTests(unittest.TestCase):

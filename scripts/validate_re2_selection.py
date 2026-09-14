@@ -13,8 +13,8 @@ from collections import Counter
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from behavior_prediction.datasets import load_re2_export, load_cruxeval, sha256_file
-from behavior_prediction.re2_inspection import inspect_re2, input_text
+from datasets import load_re2_export, load_cruxeval, sha256_file
+from re2_inspection import inspect_re2, input_text
 
 
 def main():
@@ -32,7 +32,7 @@ def main():
     reports, selected = [], []
     output_dir = ROOT / "data/processed/re2_validation"
     output_dir.mkdir(parents=True, exist_ok=True)
-    worker = ROOT / "src/behavior_prediction/re2_replay.py"
+    worker = ROOT / "src/re2_replay.py"
     for index, row in enumerate(rows):
         flag = checks[row["id"]]
         report = {"id": row["id"], "source": row["source_dataset"], "group": row["complexity_group"],

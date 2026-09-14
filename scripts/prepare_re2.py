@@ -6,7 +6,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from behavior_prediction.re2_selection import prepare_re2, write_re2_selection
+from re2_selection import prepare_re2, write_re2_selection
 
 
 if __name__ == "__main__":
