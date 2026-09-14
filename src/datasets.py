@@ -81,3 +81,17 @@ def sha256_file(path: str | Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def write_re2_csv(rows, path):
+    """Export all record fields; nested values and target_value use JSON text."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fields = list(dict.fromkeys(key for row in rows for key in row))
+    with path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({key: json.dumps(value, ensure_ascii=False)
+                             if isinstance(value, (dict, list)) or key == "target_value" else value
+                             for key, value in row.items()})

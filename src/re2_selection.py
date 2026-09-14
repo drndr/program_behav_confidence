@@ -8,8 +8,9 @@ from pathlib import Path
 import re
 import zipfile
 
-from datasets import load_cruxeval, load_re2_export, sha256_file
-from re2_inspection import input_text, inspect_re2
+from datasets import load_re2_export, sha256_file
+from re2_inspection import input_text
+from re2_filter import filter_re2
 
 
 def prepare_re2(data_dir):
@@ -32,27 +33,12 @@ def prepare_re2(data_dir):
     if sha256_file(archive_path) != source["source_sha256"]:
         raise ValueError("Upstream archive hash mismatch")
     rows = load_re2_export(raw_path)
-    crux = load_cruxeval(data_dir / "raw/cruxeval/cruxeval.csv")
-    flags = {r["id"]: r for r in inspect_re2(rows, {r.id for r in crux}, archive_path)}
-    excluded_reviews = {c["id"]: c for c in invalid["cases"] if c["recommendation"] == "exclude"}
-    excluded_reviews.update({c["id"]: c for c in valid["cases"] if c["recommendation"] == "exclude_as_presented"})
     repairs = {c["id"]: c for c in invalid["cases"] if c["recommendation"] == "repair_candidate"}
-    selected, excluded, repaired = [], [], []
+    retained, excluded = filter_re2(rows)
+    selected, repaired = [], []
     with zipfile.ZipFile(archive_path) as archive:
-        for original in rows:
+        for original in retained:
             case_id = original["id"]
-            flag = flags[case_id]
-            reason = None
-            if flag["cruxeval_source"]:
-                reason = "cruxeval_overlap"
-            elif flag["unexposed_address"]:
-                reason = "unexposed_reference_address"
-            elif case_id in excluded_reviews:
-                reason = "reviewed_input_or_state_problem"
-            if reason:
-                excluded.append({"id": case_id, "reason": reason,
-                                 "evidence": excluded_reviews.get(case_id, {}).get("evidence", reason)})
-                continue
             row = deepcopy(original)
             if case_id in repairs:
                 review = repairs[case_id]
@@ -75,7 +61,7 @@ def prepare_re2(data_dir):
             selected.append(row)
     counts = dict(Counter(r["reason"] for r in excluded))
     if (len(rows), len(selected), len(repaired), counts) != (500, 446, 7, {
-        "cruxeval_overlap": 44, "unexposed_reference_address": 4, "reviewed_input_or_state_problem": 6
+        "cruxeval_overlap": 44, "problematic_sample": 10
     }):
         raise ValueError("Selection differs from the reviewed 500-record release")
     return selected, {"source_sha256": digest, "input_count": len(rows), "retained_count": len(selected),
