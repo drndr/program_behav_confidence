@@ -23,6 +23,7 @@ __pycache__/
 !/data/raw/re2/re2_full.csv
 !/data/raw/re2/re2_filtered.csv
 /data/processed/
+/data/prompts/
 .ipynb_checkpoints/
 *.egg-info/
 /build/
