@@ -1,4 +1,4 @@
-"""Filter RE2, remove extra prompts, and export full and filtered task CSVs."""
+"""Filter RE2, reduce prompts to code, entrypoint and input, and export full and filtered task CSVs."""
 
 import csv
 from collections import Counter
@@ -17,8 +17,17 @@ from datasets import load_re2_export, sha256_file
 from re2_inspection import input_text
 
 
+# The task question names the called function; stdin programs have no name.
+QUESTION = re.compile(r"What will be the output of (?:`([^`]+)`,? given )?the following input:")
+
+
 def remove_prompts(rows):
-    """Return id/code/input/output records, retaining task and helper code."""
+    """Return id/code/entrypoint/input/output records, retaining task and helper code.
+
+    entrypoint is the function or method the task calls, or "" for programs
+    that read stdin. The name is taken from the prompt because ids do not
+    always carry it (HumanEval), and it is checked against the extracted code.
+    """
     cleaned = []
     for row in rows:
         prompt = row["messages"][0]["content"].rsplit("[/EXAMPLE]", 1)[-1]
@@ -30,8 +39,23 @@ def remove_prompts(rows):
         helper_blocks = re.findall(r"\[PYTHON\](.*?)\[/PYTHON\]", helpers, re.S)
         if helper_blocks:
             code += "\n\n" + "\n\n".join(b.strip() for b in helper_blocks)
-        cleaned.append({"id": row["id"], "code": code,
-                        "input": input_text(row), "output": row["target_output"]})
+        questions = QUESTION.findall(prompt)  # The last one belongs to the task, not a worked example.
+        if not questions:
+            raise ValueError(f"Missing task question: {row['id']}")
+        entrypoint = questions[-1]
+        task_input = input_text(row)
+        if entrypoint:
+            if not re.search(r"\bdef\s+" + re.escape(entrypoint) + r"\s*\(", code):
+                raise ValueError(f"Entrypoint {entrypoint} is not defined in the task code: {row['id']}")
+        else:
+            try:
+                stdin_only = set(json.loads(task_input)) == {"input"}
+            except (ValueError, TypeError):
+                stdin_only = False
+            if not stdin_only:
+                raise ValueError(f"Program without entrypoint must take stdin input only: {row['id']}")
+        cleaned.append({"id": row["id"], "code": code, "entrypoint": entrypoint,
+                        "input": task_input, "output": row["target_output"]})
     return cleaned
 
 PROBLEMATIC_CASES = {
@@ -64,11 +88,11 @@ def filter_re2(rows):
 
 
 def write_re2_csv(rows, path):
-    """Write already-cleaned id/code/input/output records."""
+    """Write already-cleaned id/code/entrypoint/input/output records."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=["id", "code", "input", "output"])
+        writer = csv.DictWriter(stream, fieldnames=["id", "code", "entrypoint", "input", "output"])
         writer.writeheader()
         writer.writerows(rows)
 
@@ -149,9 +173,13 @@ def prepare_re2(data_dir):
         "cruxeval_overlap": 44, "problematic_sample": 10
     }):
         raise ValueError("Selection differs from the reviewed 500-record release")
-    return remove_prompts(selected), {"source_sha256": digest, "input_count": len(rows), "retained_count": len(selected),
+    final = remove_prompts(selected)
+    stdin_programs = sum(not r["entrypoint"] for r in final)
+    if stdin_programs != 34:
+        raise ValueError("Expected 34 stdin programs among the retained samples")
+    return final, {"source_sha256": digest, "input_count": len(rows), "retained_count": len(selected),
                       "excluded_count": len(excluded), "repaired_count": len(repaired),
-                      "repair_counts": repair_counts,
+                      "repair_counts": repair_counts, "stdin_programs": stdin_programs,
                       "exclusion_counts": counts, "excluded": excluded, "repairs": repaired,
                       "limitations": "Screened, not fully validated. Targets unchanged. Seven malformed inputs repaired; 27 Avatar strings decoded and seven numeric stdin values verified."}
 
