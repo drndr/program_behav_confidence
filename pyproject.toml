@@ -11,7 +11,8 @@ dependencies = []
 
 [project.optional-dependencies]
 notebook = ["jupyterlab>=4,<5", "ipykernel>=6,<8"]
+metrics = ["tiktoken==0.14.0"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = ["datasets", "re2_inspection"]
+py-modules = ["datasets", "re2_inspection", "predictions", "program_properties"]
