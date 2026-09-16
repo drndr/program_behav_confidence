@@ -7,7 +7,7 @@ name = "program-behavior-reliability"
 version = "0.1.0"
 description = "Research on program output prediction, confidence, and program properties"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = ["python-dotenv>=1,<2"]
 
 [project.optional-dependencies]
 notebook = ["jupyterlab>=4,<5", "ipykernel>=6,<8"]
@@ -15,4 +15,4 @@ metrics = ["tiktoken==0.14.0"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = ["datasets", "re2_inspection", "predictions", "program_properties", "prompt_template"]
+py-modules = ["datasets", "re2_inspection", "predictions", "program_properties", "prompt_template", "model_client"]
