@@ -1,0 +1,9 @@
+{
+  "dataset": "re2",
+  "prompt_kind": "prediction",
+  "count": 446,
+  "source_path": "data/raw/re2/re2_filtered.csv",
+  "source_sha256": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
+  "template_sha256": "2ebe67fb596d109c91ee4857a6bc235ddd539639329b903a2c02ac2d54195c26",
+  "generated_at": "2026-09-16T11:40:24.577572+00:00"
+}

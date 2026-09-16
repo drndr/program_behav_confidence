@@ -3,7 +3,7 @@
     python scripts/generate_prompts.py            # both datasets
     python scripts/generate_prompts.py re2        # one dataset
 
-Each row has id, dataset, entrypoint, prompt and prompt_sha256. A manifest per
+Each row has id, dataset, entrypoint, messages and prompt_sha256. A manifest per
 dataset records the source CSV hash and the prompt template hash, so results
 can be tied to the exact wording that produced them.
 """
@@ -19,7 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from datasets import sha256_file
-from predictions import load_examples, prediction_prompt, template_sha256
+from predictions import load_examples
+from prompt_template import prediction_prompt, template_sha256
 
 SOURCES = {"cruxeval": "raw/cruxeval/cruxeval.csv", "re2": "raw/re2/re2_filtered.csv"}
 
@@ -31,9 +32,10 @@ def generate(name, data_dir, out_dir, limit=None):
     for example in examples:
         prompt = prediction_prompt(example)
         rows.append({"id": example["id"], "dataset": name, "entrypoint": example["entrypoint"],
-                     "prompt": prompt, "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest()})
+                     "messages": [{"role": "user", "content": prompt}],
+                     "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest()})
     out_dir.mkdir(parents=True, exist_ok=True)
-    output = out_dir / f"{name}_prediction.jsonl"
+    output = out_dir / f"{name}_prompts.jsonl"
     with output.open("w", encoding="utf-8", newline="\n") as stream:
         for row in rows:
             stream.write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -41,7 +43,7 @@ def generate(name, data_dir, out_dir, limit=None):
                 "source_path": (source.relative_to(ROOT) if source.is_relative_to(ROOT) else source).as_posix(),
                 "source_sha256": sha256_file(source), "template_sha256": template_sha256(),
                 "generated_at": datetime.now(timezone.utc).isoformat()}
-    (out_dir / f"{name}_prediction.manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    (out_dir / f"{name}_prompts.manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return manifest
 
 

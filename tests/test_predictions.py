@@ -4,8 +4,8 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from predictions import (RE2_INPUT_NOTE, confidence_prompt, parse_prediction, parse_verdict,
-                         prediction_prompt, same_value, score_prediction, template_sha256)
+from predictions import parse_prediction, parse_verdict, same_value, score_prediction
+from prompt_template import RE2_INPUT_NOTE, confidence_prompt, prediction_prompt, template_sha256
 
 CRUX = {"dataset": "cruxeval", "entrypoint": "f", "code": "def f(a):\n    return a", "input": "'x'", "output": "'x'"}
 RE2 = {"dataset": "re2", "entrypoint": "pair", "code": "def pair(a):\n    return (a, a)",

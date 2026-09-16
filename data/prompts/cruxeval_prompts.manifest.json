@@ -1,0 +1,9 @@
+{
+  "dataset": "cruxeval",
+  "prompt_kind": "prediction",
+  "count": 800,
+  "source_path": "data/raw/cruxeval/cruxeval.csv",
+  "source_sha256": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
+  "template_sha256": "2ebe67fb596d109c91ee4857a6bc235ddd539639329b903a2c02ac2d54195c26",
+  "generated_at": "2026-09-16T11:40:24.339640+00:00"
+}
