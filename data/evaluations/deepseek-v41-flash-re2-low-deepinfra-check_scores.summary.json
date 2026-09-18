@@ -1,0 +1,44 @@
+{
+  "run": "data/predictions/deepseek-v41-flash-re2-low-deepinfra-check.jsonl",
+  "sha256": {
+    "data/predictions/deepseek-v41-flash-re2-low-deepinfra-check.jsonl": "65a94d3964a42744b29d15dd76796f9b1470f5fb38c5addf703eb9a581023994",
+    "data/raw/cruxeval/cruxeval.csv": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
+    "data/raw/re2/re2_filtered.csv": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
+    "src/predictions.py": "9829c919a00b79ad928b952e153bda70d6455359ab7ace94ee2454365263ef11",
+    "scripts/evaluate_predictions.py": "ec62b1cbf7d50c5180fe40bbeb665e8ed1545b33305476b47dac315f3b33cccb"
+  },
+  "summary": {
+    "re2/strict": {
+      "total": 10,
+      "correct": 5,
+      "incorrect": 2,
+      "unscored": 3,
+      "statuses": {
+        "scored": 5,
+        "invalid_prediction": 2,
+        "request_incomplete": 3
+      }
+    },
+    "re2/relaxed": {
+      "total": 10,
+      "correct": 6,
+      "incorrect": 1,
+      "unscored": 3,
+      "statuses": {
+        "scored": 6,
+        "invalid_prediction": 1,
+        "request_incomplete": 3
+      }
+    },
+    "re2/normalized": {
+      "total": 10,
+      "correct": 7,
+      "incorrect": 0,
+      "unscored": 3,
+      "statuses": {
+        "scored": 7,
+        "request_incomplete": 3
+      }
+    }
+  }
+}
