@@ -57,6 +57,74 @@ class ResponseTests(unittest.TestCase):
 
 
 class ScoringTests(unittest.TestCase):
+    def normalized(self, reference, prediction):
+        import json
+        return score_prediction(dict(RE2, output=json.dumps(reference)),
+                                f"<prediction>{prediction}</prediction>", "normalized")
+
+    def test_normalized_complex_and_symbolic_outputs(self):
+        self.assertFalse(self.normalized("(-5+10j)", "(-11+2j)")["correct"])
+        self.assertTrue(self.normalized("(-5+10j)", "-5 + 10j")["correct"])
+        reference = ["2 - 2*cos(phi)", {}, []]
+        self.assertTrue(self.normalized(reference, "(2-2*cos(phi), {}, [])")["correct"])
+        self.assertFalse(self.normalized(reference, "(2-3*cos(phi), {}, [])")["correct"])
+
+    def test_normalized_array_shape_values_and_exactness(self):
+        self.assertTrue(self.normalized("array([1., 2.])", "array([1,2], dtype=float64)")["correct"])
+        self.assertFalse(self.normalized("array([1., 2.])", "array([1,2,3])")["correct"])
+        self.assertFalse(self.normalized("array([1., 2.])", "array([[1,2]])")["correct"])
+        self.assertFalse(self.normalized("array([1.0])", "array([1.00000001])")["correct"])
+        self.assertTrue(self.normalized("[[1 2]\n [3 4]]", "array([[1,2],[3,4]])")["correct"])
+        self.assertIsNone(self.normalized("array([1, ..., 4])", "array([1,2,3,4])")["correct"])
+
+    def test_unknown_constructors_remain_pending_in_every_mode(self):
+        import json
+        for reference in ("GaussianNB(priors=None)", "UnknownForm('x',0,0)"):
+            for mode in ("strict", "relaxed", "normalized"):
+                result = score_prediction(dict(RE2, output=json.dumps(reference)),
+                                          "<prediction>OtherClass()</prediction>", mode)
+                self.assertEqual(result["status"], "needs_scoring_policy")
+        self.assertIsNone(self.normalized("array([1])", "__import__('os').system('echo BAD')")["correct"])
+
+    def test_prettyform_display_normalization(self):
+        reference = "prettyForm('{Q.integer, Q.positive}',0,0)"
+        for prediction in ("{'Q.positive', 'Q.integer'}", "'{Q.integer, Q.positive}'",
+                           "prettyForm('{Q.integer, Q.positive}',1,2)"):
+            self.assertTrue(self.normalized(reference, prediction)["correct"])
+        for prediction in ("{'Q.integer'}", "{'Q.integer', 'Q.negative'}",
+                           "{'Q.integer', 'Q.positive', 'Q.real'}"):
+            self.assertFalse(self.normalized(reference, prediction)["correct"])
+        self.assertTrue(self.normalized("prettyForm('x + y',0,0)", "'x + y'")["correct"])
+        self.assertFalse(self.normalized("prettyForm('x + y',0,0)", "'x+y'")["correct"])
+        self.assertIsNone(self.normalized("prettyForm('x',0,0)",
+                                         "prettyForm(dangerous())")["correct"])
+        import json
+        for mode in ("strict", "relaxed"):
+            self.assertEqual(score_prediction(dict(RE2, output=json.dumps(reference)),
+                "<prediction>{'Q.integer', 'Q.positive'}</prediction>", mode)["status"], "needs_scoring_policy")
+
+    def test_empty_constructor_ignores_arguments_only_in_normalized(self):
+        for prediction in ("GaussianNB()", "GaussianNB(var_smoothing=100)",
+                           "'GaussianNB(priors=None)'", "GaussianNB(123)"):
+            self.assertTrue(self.normalized("GaussianNB()", prediction)["correct"])
+        for prediction in ("BernoulliNB()", "GaussianNB", "other.GaussianNB()"):
+            self.assertFalse(self.normalized("GaussianNB()", prediction)["correct"])
+        self.assertIsNone(self.normalized("pkg.Class()", "pkg.Class(x=1)")["correct"])
+        self.assertIsNone(self.normalized("GaussianNB(priors=None)", "GaussianNB(priors=[1])")["correct"])
+        for mode in ("strict", "relaxed"):
+            self.assertEqual(score_prediction(dict(RE2, output='"GaussianNB()"'),
+                "<prediction>GaussianNB(var_smoothing=100)</prediction>", mode)["status"], "needs_scoring_policy")
+
+    def test_estimator_rule_generalizes_without_accepting_containers(self):
+        for name in ("RandomForestClassifier", "StandardScaler", "KMeans",
+                     "sklearn.ensemble.RandomForestClassifier"):
+            self.assertTrue(self.normalized(f"{name}()", f"{name}(arbitrary=123)")["correct"])
+        self.assertFalse(self.normalized("RandomForestClassifier()", "KMeans()")["correct"])
+        for name in ("set", "Counter", "deque", "UnknownEstimator", "fake.GaussianNB"):
+            self.assertIsNone(self.normalized(f"{name}()", f"{name}([1])")["correct"])
+        self.assertIsNone(self.normalized("RandomForestClassifier(n_estimators=10)",
+                                         "RandomForestClassifier(n_estimators=20)")["correct"])
+
     def test_preserve_nested_types(self):
         self.assertFalse(same_value([True], [1]))
         self.assertFalse(same_value((1,), [1]))
@@ -83,9 +151,47 @@ class ScoringTests(unittest.TestCase):
     def test_serialized_objects_are_flagged_not_scored(self):
         example = dict(RE2, output='"array([1])"')
         result = score_prediction(example, "<prediction>'array([1])'</prediction>")
-        self.assertEqual((result["status"], result["correct"], result["exact_match"]), ("needs_scoring_policy", None, True))
+        self.assertEqual((result["status"], result["correct"]), ("scored", True))
         plain = score_prediction(dict(RE2, output='"4"'), "<prediction>4</prediction>")
         self.assertEqual((plain["status"], plain["correct"]), ("scored", False))
+
+    def test_relaxed_accepts_unquoted_strings_only(self):
+        for value in ("Yes", "^a/?$", "   "):
+            example = dict(CRUX, output=repr(value))
+            text = f"<prediction>{value}</prediction>"
+            self.assertIsNone(score_prediction(example, text)["correct"])
+            self.assertTrue(score_prediction(example, text, "relaxed")["correct"])
+        self.assertFalse(score_prediction(CRUX, "<prediction>wrong</prediction>", "relaxed")["correct"])
+        self.assertFalse(score_prediction(dict(CRUX, output="'4'"),
+                                         "<prediction>4</prediction>", "relaxed")["correct"])
+
+    def test_relaxed_keeps_tag_and_object_restrictions(self):
+        self.assertEqual(score_prediction(CRUX, "x", "relaxed")["status"], "invalid_response")
+        for mode in ("strict", "relaxed"):
+            result = score_prediction(dict(RE2, output='"array([1])"'),
+                                      "<prediction>array([1])</prediction>", mode)
+            self.assertEqual(result["status"], "needs_scoring_policy")
+
+    def test_review_regressions(self):
+        import json
+        for reference, prediction in [("set()", "set([1])"), ("Counter()", "Counter({'a':1})")]:
+            self.assertIsNone(self.normalized(reference, prediction)["correct"])
+        for value in ("<div>a</div>", "Integral(x, x)", "[ True False]"):
+            for mode in ("strict", "relaxed", "normalized"):
+                result = score_prediction(dict(RE2, output=json.dumps(value)),
+                                          f"<prediction>{value!r}</prediction>", mode)
+                self.assertTrue(result["correct"])
+        for mode in ("relaxed", "normalized"):
+            for value in ("Yes", "hello world", "   "):
+                result = score_prediction(dict(RE2, output=json.dumps(value)),
+                                          f"<prediction>\n{value}\n</prediction>", mode)
+                self.assertTrue(result["correct"])
+        self.assertFalse(self.normalized("prettyForm('x + y',0,0)", "x+y")["correct"])
+        self.assertIsNone(self.normalized("[ True False]", "array([True,False])")["correct"])
+        self.assertIsNone(self.normalized("['a' 'b']", "array(['a','b'])")["correct"])
+        self.assertTrue(self.normalized(["array([1,2])"], "[array([1,2])]")["correct"])
+        self.assertEqual(self.normalized(5, "five")["status"], "invalid_prediction")
+        self.assertFalse(same_value({True}, {1}))
 
 
 if __name__ == "__main__":
