@@ -134,6 +134,16 @@ class ScoringTests(unittest.TestCase):
                                       ("Matrix([[1, 0], [0, 1]])", "Matrix([[1,0],[0,1]])"), ("np.uint8(2)", "np.uint8(2)")):
             self.assertTrue(self.normalized(reference, prediction)["correct"])
         self.assertFalse(self.normalized("Matrix([[1, 0], [0, 1]])", "Matrix([[1.0, 0], [0, 1]])")["correct"])
+        # Python builtins and standard collections take content, not defaults.
+        for reference, prediction in (("Counter()", "Counter(a=3)"), ("dict()", "dict(a=1)"), ("set()", "set(a=1)"),
+                                      ("collections.Counter()", "collections.Counter(a=3)"),
+                                      ("dict(a=1)", "dict(a=1, b=2)"), ("SimpleNamespace(a=1)", "SimpleNamespace(a=1, b=2)"),
+                                      ("defaultdict(int)", "defaultdict(int, a=1)")):
+            self.assertFalse(self.normalized(reference, prediction)["correct"], (reference, prediction))
+        for reference, prediction in (("dict(a=1, b=2)", "dict(b=2, a=1)"), ("Counter(a=3)", "Counter(a=3)"),
+                                      ("OrderedDict()", "OrderedDict()")):
+            self.assertTrue(self.normalized(reference, prediction)["correct"], (reference, prediction))
+        self.assertFalse(self.normalized("Foo(a=1)", "Foo(**kw)")["correct"])
         example = dict(RE2, output='"GaussianNB()"')
         for mode in ("strict", "relaxed"):
             self.assertFalse(score_prediction(example, "<prediction>GaussianNB(var_smoothing=100)</prediction>", mode)["correct"])

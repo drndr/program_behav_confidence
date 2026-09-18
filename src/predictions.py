@@ -11,12 +11,15 @@ every mode; the modes differ only in how much is normalized before comparing.
               (content only), literals JSON could not store (complex, tuple, bytes), and any
               other object repr or expression compared as a syntax tree where positional
               arguments are content and must match, while keywords the prediction adds beyond
-              the reference are taken as spelled-out defaults; applied inside lists and dicts
+              the reference are taken as spelled-out defaults (never for Python builtins and
+              standard collections, whose keywords are content); applied inside lists and dicts
 
 Only ast parsing and literal evaluation are used; a prediction is never executed.
 """
 
 import ast
+import builtins
+import collections
 import csv
 import json
 import math
@@ -234,18 +237,31 @@ def _pretty_content(text):
 
 _JSON_TYPES = (str, int, float, bool, type(None))
 _NOT_A_LITERAL = object()
+# Python's own constructors take content, never parameters at defaults: dict(a=1) is not dict().
+_CONTENT_CALLABLES = frozenset(name for name in dir(builtins) if not name.startswith("_")) | frozenset(
+    name for name in dir(collections) if not name.startswith("_")) | {"SimpleNamespace"}
 
 
 def _tree_equal(left, right):
-    """Structural equality of expression trees; keywords absent from the left tree are defaults."""
+    """Structural equality of expression trees.
+
+    In a call, positional arguments are content and must match. Keywords in the
+    left (reference) tree must match; keywords only the right tree has are taken
+    as parameters spelled out at their defaults, except for Python builtins and
+    standard collections, whose keywords are content and must match exactly.
+    """
     if isinstance(left, ast.Call) and isinstance(right, ast.Call):
-        if ast.unparse(left.func) != ast.unparse(right.func) or len(left.args) != len(right.args):
+        callee = ast.unparse(left.func)
+        if callee != ast.unparse(right.func) or len(left.args) != len(right.args):
             return False
         if not all(_tree_equal(a, b) for a, b in zip(left.args, right.args)):
             return False
-        given = {k.arg: k.value for k in right.keywords if k.arg is not None}
-        return all(k.arg is not None and k.arg in given and _tree_equal(k.value, given[k.arg])
-                   for k in left.keywords)
+        if any(k.arg is None for k in left.keywords + right.keywords):
+            return False  # ** unpacking: contents unknown
+        given = {k.arg: k.value for k in right.keywords}
+        if callee.split(".")[-1] in _CONTENT_CALLABLES and set(given) != {k.arg for k in left.keywords}:
+            return False
+        return all(k.arg in given and _tree_equal(k.value, given[k.arg]) for k in left.keywords)
     if isinstance(left, ast.Constant) and isinstance(right, ast.Constant):
         return type(left.value) is type(right.value) and left.value == right.value
     if type(left) is not type(right):

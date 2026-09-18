@@ -59,7 +59,8 @@ not store, such as complex numbers, compare by value. Every other object repr or
 expression is compared as a syntax tree: positional arguments are content and
 must match exactly, keywords in the reference must match, and keywords the
 prediction adds are taken as spelled-out defaults (a repr omits parameters at
-their defaults), recursively; whitespace and redundant parentheses do not
+their defaults) — except for Python builtins and standard collections such as
+`dict` or `Counter`, whose keywords are content and must match — recursively; whitespace and redundant parentheses do not
 matter, algebraic equivalence is not tested, and a plain value stored as text
 keeps its type distinction from strict. Nothing is executed. The evaluator
 refuses a run whose prompt files or source CSVs differ from the current ones.
