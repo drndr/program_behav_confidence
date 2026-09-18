@@ -1,25 +1,47 @@
-"""Score a saved run in all modes; no model calls. Usage: python scripts/evaluate_predictions.py RUN.jsonl"""
+"""Score a saved run in all modes; no model calls. Usage: python scripts/evaluate_predictions.py RUN.jsonl
+
+Before scoring, the run's manifest must name prompt files whose hashes equal the
+current data/prompts files, and those prompts must come from the current CSVs.
+Every completed response is scored right or wrong; requests that failed or were
+truncated have no answer and are counted as unscored.
+"""
 
 import argparse
 from collections import Counter
 import hashlib
-import importlib.metadata
 import json
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+from datasets import sha256_file
 from predictions import SCORING_MODES, load_examples, score_prediction
+
+SOURCES = {"cruxeval": ROOT / "data/raw/cruxeval/cruxeval.csv", "re2": ROOT / "data/raw/re2/re2_filtered.csv"}
+
+
+def relative(path):
+    path = Path(path).resolve()
+    return path.relative_to(ROOT).as_posix() if path.is_relative_to(ROOT) else path.as_posix()
+
+
+def check_provenance(run_manifest):
+    """Refuse to score a run whose prompts differ from the current prompt files and CSVs."""
+    for name, digest in run_manifest["configuration"]["prompt_files"].items():
+        prompt_file = ROOT / "data/prompts" / name
+        if not prompt_file.exists() or sha256_file(prompt_file) != digest:
+            raise ValueError(f"{name} differs from the prompts this run used; regenerate or keep the old prompts")
+        manifest = json.loads(prompt_file.with_name(prompt_file.stem + ".manifest.json").read_text(encoding="utf-8"))
+        dataset = manifest["dataset"]
+        if sha256_file(SOURCES[dataset]) != manifest["source_sha256"]:
+            raise ValueError(f"{SOURCES[dataset].name} differs from the CSV the {dataset} prompts were generated from")
 
 
 def evaluate(path, out_dir):
-    # Require the declared scoring dependency before writing any results.
-    sklearn_version = importlib.metadata.version("scikit-learn")
-    sources = {"cruxeval": ROOT / "data/raw/cruxeval/cruxeval.csv",
-               "re2": ROOT / "data/raw/re2/re2_filtered.csv"}
-    examples = {(ds, r["id"]): r for ds, source in sources.items()
-                for r in load_examples(source, ds)}
+    run_manifest = json.loads(path.with_name(path.stem + ".manifest.json").read_text(encoding="utf-8"))
+    check_provenance(run_manifest)
+    examples = {(ds, r["id"]): r for ds, source in SOURCES.items() for r in load_examples(source, ds)}
     latest = {}
     for line in path.read_text(encoding="utf-8").splitlines():
         if line.strip():
@@ -46,18 +68,19 @@ def evaluate(path, out_dir):
     out_dir.mkdir(parents=True, exist_ok=True)
     output = out_dir / f"{path.stem}_scores.jsonl"
     output.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in results), encoding="utf-8")
-    hashes = {str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p):
-              hashlib.sha256(p.read_bytes()).hexdigest()
-              for p in [path.resolve(), *sources.values(), ROOT / "src/predictions.py", Path(__file__).resolve()]}
-    output.with_suffix(".summary.json").write_text(
-        json.dumps({"sha256": hashes, "scikit_learn_version": sklearn_version, "summary": summary}, indent=2) + "\n", encoding="utf-8")
+    hashed = [path, *SOURCES.values(), ROOT / "src/predictions.py", Path(__file__)]
+    record = {"run": relative(path), "sha256": {relative(p): sha256_file(p) for p in hashed}, "summary": summary}
+    output.with_suffix(".summary.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2))
     return results
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("predictions", type=Path)
     parser.add_argument("--out-dir", type=Path, default=ROOT / "data/evaluations")
     args = parser.parse_args()
-    evaluate(args.predictions, args.out_dir)
+    try:
+        evaluate(args.predictions, args.out_dir)
+    except (ValueError, FileNotFoundError) as error:
+        raise SystemExit(str(error))

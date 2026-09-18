@@ -1,10 +1,11 @@
+import json
 from pathlib import Path
 import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from predictions import parse_prediction, parse_verdict, same_value, score_prediction
+from predictions import SCORING_MODES, parse_prediction, parse_verdict, same_value, score_prediction
 from prompt_template import RE2_INPUT_NOTE, confidence_prompt, prediction_prompt, template_sha256
 
 CRUX = {"dataset": "cruxeval", "entrypoint": "f", "code": "def f(a):\n    return a", "input": "'x'", "output": "'x'"}
@@ -58,9 +59,17 @@ class ResponseTests(unittest.TestCase):
 
 class ScoringTests(unittest.TestCase):
     def normalized(self, reference, prediction):
-        import json
         return score_prediction(dict(RE2, output=json.dumps(reference)),
                                 f"<prediction>{prediction}</prediction>", "normalized")
+
+    def test_every_mode_labels_every_prediction(self):
+        # A completed response is always right or wrong; only the status says why.
+        for mode in SCORING_MODES:
+            for example, text in ((CRUX, "<prediction>f(1)</prediction>"), (RE2, "<prediction>{1, 2}</prediction>"),
+                                  (dict(RE2, output='"GaussianNB(priors=None)"'), "<prediction>OtherClass()</prediction>"),
+                                  (dict(RE2, output='"array([1, ..., 4])"'), "<prediction>array([1,2,3,4])</prediction>")):
+                self.assertIs(score_prediction(example, text, mode)["correct"], False, (mode, text))
+            self.assertIs(score_prediction(CRUX, "no tags", mode)["correct"], False)
 
     def test_normalized_complex_and_symbolic_outputs(self):
         self.assertFalse(self.normalized("(-5+10j)", "(-11+2j)")["correct"])
@@ -75,16 +84,17 @@ class ScoringTests(unittest.TestCase):
         self.assertFalse(self.normalized("array([1., 2.])", "array([[1,2]])")["correct"])
         self.assertFalse(self.normalized("array([1.0])", "array([1.00000001])")["correct"])
         self.assertTrue(self.normalized("[[1 2]\n [3 4]]", "array([[1,2],[3,4]])")["correct"])
-        self.assertIsNone(self.normalized("array([1, ..., 4])", "array([1,2,3,4])")["correct"])
+        self.assertTrue(self.normalized("array([1, 2])", "[1 2]")["correct"])
+        self.assertTrue(self.normalized("[ True False]", "array([True,False])")["correct"])
+        self.assertFalse(self.normalized("[ True False]", "array([1,0])")["correct"])
+        self.assertFalse(self.normalized("array([1, ..., 4])", "array([1,2,3,4])")["correct"])
 
-    def test_unknown_constructors_remain_pending_in_every_mode(self):
-        import json
-        for reference in ("GaussianNB(priors=None)", "UnknownForm('x',0,0)"):
-            for mode in ("strict", "relaxed", "normalized"):
-                result = score_prediction(dict(RE2, output=json.dumps(reference)),
-                                          "<prediction>OtherClass()</prediction>", mode)
-                self.assertEqual(result["status"], "needs_scoring_policy")
-        self.assertIsNone(self.normalized("array([1])", "__import__('os').system('echo BAD')")["correct"])
+    def test_model_text_is_never_executed(self):
+        for reference, prediction in (("array([1])", "__import__('os').system('echo BAD')"),
+                                      ("prettyForm('x',0,0)", "prettyForm(dangerous())"),
+                                      ("GaussianNB()", "GaussianNB(x=__import__('os').system('echo BAD'))")):
+            self.assertIn(self.normalized(reference, prediction)["correct"], (True, False))
+        self.assertFalse(self.normalized("array([1])", "__import__('os').system('echo BAD')")["correct"])
 
     def test_prettyform_display_normalization(self):
         reference = "prettyForm('{Q.integer, Q.positive}',0,0)"
@@ -96,40 +106,62 @@ class ScoringTests(unittest.TestCase):
             self.assertFalse(self.normalized(reference, prediction)["correct"])
         self.assertTrue(self.normalized("prettyForm('x + y',0,0)", "'x + y'")["correct"])
         self.assertFalse(self.normalized("prettyForm('x + y',0,0)", "'x+y'")["correct"])
-        self.assertIsNone(self.normalized("prettyForm('x',0,0)",
-                                         "prettyForm(dangerous())")["correct"])
-        import json
-        for mode in ("strict", "relaxed"):
-            self.assertEqual(score_prediction(dict(RE2, output=json.dumps(reference)),
-                "<prediction>{'Q.integer', 'Q.positive'}</prediction>", mode)["status"], "needs_scoring_policy")
+        self.assertFalse(self.normalized("prettyForm('x + y',0,0)", "x+y")["correct"])
+        for mode in ("strict", "relaxed"):  # Without the rule the display text must match exactly.
+            example = dict(RE2, output=json.dumps(reference))
+            self.assertFalse(score_prediction(example, "<prediction>{'Q.integer', 'Q.positive'}</prediction>", mode)["correct"])
+            self.assertTrue(score_prediction(example, f"<prediction>{reference!r}</prediction>", mode)["correct"])
 
-    def test_empty_constructor_ignores_arguments_only_in_normalized(self):
-        for prediction in ("GaussianNB()", "GaussianNB(var_smoothing=100)",
-                           "'GaussianNB(priors=None)'", "GaussianNB(123)"):
+    def test_keywords_are_parameters_positionals_are_content(self):
+        # A repr omits parameters at their defaults: extra keywords in the prediction are allowed,
+        # keywords in the reference must match, positional arguments must match exactly.
+        for prediction in ("GaussianNB()", "GaussianNB(var_smoothing=100)", "'GaussianNB(priors=None)'"):
             self.assertTrue(self.normalized("GaussianNB()", prediction)["correct"])
-        for prediction in ("BernoulliNB()", "GaussianNB", "other.GaussianNB()"):
+        for prediction in ("GaussianNB(123)", "BernoulliNB()", "GaussianNB", "other.GaussianNB()"):
             self.assertFalse(self.normalized("GaussianNB()", prediction)["correct"])
-        self.assertIsNone(self.normalized("pkg.Class()", "pkg.Class(x=1)")["correct"])
-        self.assertIsNone(self.normalized("GaussianNB(priors=None)", "GaussianNB(priors=[1])")["correct"])
+        self.assertTrue(self.normalized("pkg.Class()", "pkg.Class(x=1)")["correct"])
+        self.assertTrue(self.normalized("RBF(length_scale=0.112)", "RBF(length_scale=0.112, length_scale_bounds=(1e-05, 100000.0))")["correct"])
+        self.assertFalse(self.normalized("RBF(length_scale=0.112)", "RBF(length_scale=0.2)")["correct"])
+        self.assertFalse(self.normalized("RBF(length_scale=0.112)", "RBF()")["correct"])
+        self.assertTrue(self.normalized("RFE(estimator=SVC(kernel='linear'), step=0.1)",
+                                        "RFE(step=0.1, estimator=SVC(kernel='linear', C=1.0), verbose=0)")["correct"])
+        self.assertFalse(self.normalized("RFE(estimator=SVC(kernel='linear'), step=0.1)",
+                                         "RFE(step=0.1, estimator=SVC(kernel='rbf'))")["correct"])
+        for reference, prediction in (("set()", "set([1])"), ("Counter()", "Counter({'a': 1})"),
+                                      ("frozenset({1})", "frozenset({1, 2})"), ("slice(0, 1, None)", "slice(0, 1)")):
+            self.assertFalse(self.normalized(reference, prediction)["correct"])
+        for reference, prediction in (("frozenset({1})", "frozenset({1})"), ("slice(0, 1, None)", "slice(0,1,None)"),
+                                      ("Matrix([[1, 0], [0, 1]])", "Matrix([[1,0],[0,1]])"), ("np.uint8(2)", "np.uint8(2)")):
+            self.assertTrue(self.normalized(reference, prediction)["correct"])
+        self.assertFalse(self.normalized("Matrix([[1, 0], [0, 1]])", "Matrix([[1.0, 0], [0, 1]])")["correct"])
+        example = dict(RE2, output='"GaussianNB()"')
         for mode in ("strict", "relaxed"):
-            self.assertEqual(score_prediction(dict(RE2, output='"GaussianNB()"'),
-                "<prediction>GaussianNB(var_smoothing=100)</prediction>", mode)["status"], "needs_scoring_policy")
+            self.assertFalse(score_prediction(example, "<prediction>GaussianNB(var_smoothing=100)</prediction>", mode)["correct"])
+        self.assertTrue(score_prediction(example, "<prediction>GaussianNB()</prediction>", "relaxed")["correct"])
 
-    def test_estimator_rule_generalizes_without_accepting_containers(self):
-        for name in ("RandomForestClassifier", "StandardScaler", "KMeans",
-                     "sklearn.ensemble.RandomForestClassifier"):
-            self.assertTrue(self.normalized(f"{name}()", f"{name}(arbitrary=123)")["correct"])
-        self.assertFalse(self.normalized("RandomForestClassifier()", "KMeans()")["correct"])
-        for name in ("set", "Counter", "deque", "UnknownEstimator", "fake.GaussianNB"):
-            self.assertIsNone(self.normalized(f"{name}()", f"{name}([1])")["correct"])
-        self.assertIsNone(self.normalized("RandomForestClassifier(n_estimators=10)",
-                                         "RandomForestClassifier(n_estimators=20)")["correct"])
+    def test_expressions_compare_as_syntax_trees(self):
+        self.assertTrue(self.normalized("Equivalent(Q.even(X*Z), Q.even(X) | Q.even(Z))",
+                                        "Equivalent(Q.even(X * Z), (Q.even(X) | Q.even(Z)))")["correct"])
+        self.assertTrue(self.normalized("ceiling(x) >= x", "ceiling(x)>=x")["correct"])
+        self.assertTrue(self.normalized("-2*(cos(phi))", "-2*cos(phi)")["correct"])
+        self.assertTrue(self.normalized("GridSpec(1, 1)[0:1, 0:1]", "GridSpec(1, 1)[0:1, 0:1]")["correct"])
+        self.assertFalse(self.normalized("ceiling(x) >= x", "ceiling(x) > x")["correct"])
+        self.assertFalse(self.normalized("2 - 2*cos(phi)", "-2*cos(phi) + 2")["correct"])  # syntax, not algebra
+        # A plain value stored as text keeps its type distinction from strict.
+        self.assertFalse(self.normalized("4", "4")["correct"])
+        self.assertTrue(self.normalized("4", "'4'")["correct"])
+        self.assertFalse(self.normalized("True", "True")["correct"])
+        # Literals JSON could not store compare by value.
+        self.assertTrue(self.normalized("(1, 2)", "(1, 2)")["correct"])
+        self.assertFalse(self.normalized("(1, 2)", "[1, 2]")["correct"])
+        self.assertTrue(self.normalized("b'\x00'", "b'\x00'")["correct"])
 
     def test_preserve_nested_types(self):
         self.assertFalse(same_value([True], [1]))
         self.assertFalse(same_value((1,), [1]))
         self.assertFalse(same_value({True: 2}, {1: 2}))
         self.assertTrue(same_value({"a": [1, "x"]}, {"a": [1, "x"]}))
+        self.assertFalse(same_value({True}, {1}))
 
     def test_cruxeval_is_type_strict(self):
         self.assertTrue(score_prediction(CRUX, "<prediction>'x'</prediction>")["correct"])
@@ -143,15 +175,30 @@ class ScoringTests(unittest.TestCase):
         self.assertTrue(score_prediction(keyed, "<prediction>{1: 'x'}</prediction>")["correct"])
         self.assertFalse(score_prediction(RE2, "<prediction>(1, 2)</prediction>")["correct"])
 
+    def test_non_finite_values(self):
+        example = dict(RE2, output='{"score": -Infinity}')
+        for prediction in ("{'score': -inf}", "{'score': float('-inf')}", "{'score': -float('inf')}"):
+            self.assertTrue(score_prediction(example, f"<prediction>{prediction}</prediction>")["correct"], prediction)
+        self.assertFalse(score_prediction(example, "<prediction>{'score': inf}</prediction>")["correct"])
+        self.assertTrue(score_prediction(dict(RE2, output="NaN"), "<prediction>nan</prediction>")["correct"])
+        self.assertTrue(score_prediction(dict(CRUX, output="float('inf')"), "<prediction>inf</prediction>")["correct"])
+        for prediction in ("math.inf", "np.nan", "float('x')", "Infinity()"):
+            self.assertEqual(score_prediction(example, f"<prediction>{prediction}</prediction>")["status"],
+                             "invalid_prediction", prediction)
+
     def test_statuses_for_bad_responses(self):
         self.assertEqual(score_prediction(CRUX, "no tags")["status"], "invalid_response")
         self.assertEqual(score_prediction(CRUX, "<prediction>f(1)</prediction>")["status"], "invalid_prediction")
         self.assertEqual(score_prediction(RE2, "<prediction>{1, 2}</prediction>")["status"], "invalid_prediction")
 
-    def test_serialized_objects_are_flagged_not_scored(self):
+    def test_object_strings_compare_exactly_below_normalized(self):
         example = dict(RE2, output='"array([1])"')
-        result = score_prediction(example, "<prediction>'array([1])'</prediction>")
-        self.assertEqual((result["status"], result["correct"]), ("scored", True))
+        self.assertTrue(score_prediction(example, "<prediction>'array([1])'</prediction>")["correct"])
+        self.assertFalse(score_prediction(example, "<prediction>'array([1.])'</prediction>")["correct"])
+        self.assertFalse(score_prediction(example, "<prediction>array([1])</prediction>")["correct"])  # unquoted
+        self.assertTrue(score_prediction(example, "<prediction>array([1])</prediction>", "relaxed")["correct"])
+        self.assertFalse(score_prediction(example, "<prediction>array([1.])</prediction>", "relaxed")["correct"])
+        self.assertTrue(score_prediction(example, "<prediction>array([1.])</prediction>", "normalized")["correct"])
         plain = score_prediction(dict(RE2, output='"4"'), "<prediction>4</prediction>")
         self.assertEqual((plain["status"], plain["correct"]), ("scored", False))
 
@@ -159,25 +206,18 @@ class ScoringTests(unittest.TestCase):
         for value in ("Yes", "^a/?$", "   "):
             example = dict(CRUX, output=repr(value))
             text = f"<prediction>{value}</prediction>"
-            self.assertIsNone(score_prediction(example, text)["correct"])
+            self.assertFalse(score_prediction(example, text)["correct"])
             self.assertTrue(score_prediction(example, text, "relaxed")["correct"])
         self.assertFalse(score_prediction(CRUX, "<prediction>wrong</prediction>", "relaxed")["correct"])
         self.assertFalse(score_prediction(dict(CRUX, output="'4'"),
                                          "<prediction>4</prediction>", "relaxed")["correct"])
-
-    def test_relaxed_keeps_tag_and_object_restrictions(self):
         self.assertEqual(score_prediction(CRUX, "x", "relaxed")["status"], "invalid_response")
-        for mode in ("strict", "relaxed"):
-            result = score_prediction(dict(RE2, output='"array([1])"'),
-                                      "<prediction>array([1])</prediction>", mode)
-            self.assertEqual(result["status"], "needs_scoring_policy")
 
     def test_review_regressions(self):
-        import json
         for reference, prediction in [("set()", "set([1])"), ("Counter()", "Counter({'a':1})")]:
-            self.assertIsNone(self.normalized(reference, prediction)["correct"])
+            self.assertFalse(self.normalized(reference, prediction)["correct"])
         for value in ("<div>a</div>", "Integral(x, x)", "[ True False]"):
-            for mode in ("strict", "relaxed", "normalized"):
+            for mode in SCORING_MODES:
                 result = score_prediction(dict(RE2, output=json.dumps(value)),
                                           f"<prediction>{value!r}</prediction>", mode)
                 self.assertTrue(result["correct"])
@@ -186,12 +226,9 @@ class ScoringTests(unittest.TestCase):
                 result = score_prediction(dict(RE2, output=json.dumps(value)),
                                           f"<prediction>\n{value}\n</prediction>", mode)
                 self.assertTrue(result["correct"])
-        self.assertFalse(self.normalized("prettyForm('x + y',0,0)", "x+y")["correct"])
-        self.assertIsNone(self.normalized("[ True False]", "array([True,False])")["correct"])
-        self.assertIsNone(self.normalized("['a' 'b']", "array(['a','b'])")["correct"])
+        self.assertFalse(self.normalized("['a' 'b']", "array(['a','b'])")["correct"])  # string arrays: exact text only
         self.assertTrue(self.normalized(["array([1,2])"], "[array([1,2])]")["correct"])
         self.assertEqual(self.normalized(5, "five")["status"], "invalid_prediction")
-        self.assertFalse(same_value({True}, {1}))
 
 
 if __name__ == "__main__":

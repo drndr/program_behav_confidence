@@ -1,18 +1,18 @@
 {
+  "run": "data/predictions/gpt54-nano-pilot.jsonl",
   "sha256": {
-    "data\\predictions\\gpt54-nano-pilot.jsonl": "5010f84837e18342fbbec04b779b26fc4f5a43f10223f8f14aa55a75216dca71",
-    "data\\raw\\cruxeval\\cruxeval.csv": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
-    "data\\raw\\re2\\re2_filtered.csv": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
-    "src\\predictions.py": "92071fa5c847067e69ee76cb71e4f3490adf1be0037c3e01a565524fbc3d6077",
-    "scripts\\evaluate_predictions.py": "94eded92334e9fd89c8a0d03e68025ebdbb0bc7407da458eeeff3c3740cfe59a"
+    "data/predictions/gpt54-nano-pilot.jsonl": "5010f84837e18342fbbec04b779b26fc4f5a43f10223f8f14aa55a75216dca71",
+    "data/raw/cruxeval/cruxeval.csv": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
+    "data/raw/re2/re2_filtered.csv": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
+    "src/predictions.py": "9829c919a00b79ad928b952e153bda70d6455359ab7ace94ee2454365263ef11",
+    "scripts/evaluate_predictions.py": "ec62b1cbf7d50c5180fe40bbeb665e8ed1545b33305476b47dac315f3b33cccb"
   },
-  "scikit_learn_version": "1.7.2",
   "summary": {
     "cruxeval/strict": {
       "total": 10,
       "correct": 5,
-      "incorrect": 4,
-      "unscored": 1,
+      "incorrect": 5,
+      "unscored": 0,
       "statuses": {
         "scored": 9,
         "invalid_prediction": 1
@@ -24,7 +24,8 @@
       "incorrect": 5,
       "unscored": 0,
       "statuses": {
-        "scored": 10
+        "scored": 9,
+        "invalid_prediction": 1
       }
     },
     "cruxeval/normalized": {
@@ -33,29 +34,28 @@
       "incorrect": 5,
       "unscored": 0,
       "statuses": {
-        "scored": 10
+        "scored": 9,
+        "invalid_prediction": 1
       }
     },
     "re2/strict": {
       "total": 10,
       "correct": 2,
-      "incorrect": 0,
-      "unscored": 8,
+      "incorrect": 8,
+      "unscored": 0,
       "statuses": {
         "scored": 2,
-        "invalid_prediction": 4,
-        "needs_scoring_policy": 4
+        "invalid_prediction": 8
       }
     },
     "re2/relaxed": {
       "total": 10,
       "correct": 4,
-      "incorrect": 1,
-      "unscored": 5,
+      "incorrect": 6,
+      "unscored": 0,
       "statuses": {
-        "scored": 5,
-        "invalid_prediction": 1,
-        "needs_scoring_policy": 4
+        "scored": 4,
+        "invalid_prediction": 6
       }
     },
     "re2/normalized": {
@@ -64,7 +64,8 @@
       "incorrect": 3,
       "unscored": 0,
       "statuses": {
-        "scored": 10
+        "scored": 7,
+        "invalid_prediction": 3
       }
     }
   }

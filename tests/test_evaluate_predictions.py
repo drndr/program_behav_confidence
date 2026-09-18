@@ -6,31 +6,52 @@ import sys
 import tempfile
 import unittest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
 from evaluate_predictions import evaluate
+from datasets import sha256_file
 from predictions import load_examples
 
 
+def write_run(directory, rows, prompt_files):
+    path = Path(directory) / "pilot.jsonl"
+    path.write_text("\n".join(json.dumps(r) for r in rows), encoding="utf-8")
+    manifest = {"configuration": {"prompt_files": prompt_files}}
+    path.with_name("pilot.manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    return path
+
+
 class EvaluationTests(unittest.TestCase):
+    def setUp(self):
+        self.prompt_files = {"cruxeval_prompts.jsonl": sha256_file(ROOT / "data/prompts/cruxeval_prompts.jsonl")}
+
     def test_latest_attempt_and_noncompleted_results(self):
-        root = Path(__file__).resolve().parents[1]
-        examples = load_examples(root / "data/raw/cruxeval/cruxeval.csv", "cruxeval")[:3]
-        rows = [{"dataset": "cruxeval", "id": e["id"], "repetition": 0,
-                 "attempt": 1, "status": "error"} for e in examples]
+        examples = load_examples(ROOT / "data/raw/cruxeval/cruxeval.csv", "cruxeval")[:4]
+        rows = [{"dataset": "cruxeval", "id": e["id"], "repetition": 0, "attempt": 1, "status": "error"} for e in examples]
         rows[2]["status"] = "incomplete"
-        rows.append(dict(rows[0], attempt=2, status="completed",
-                         text=f"<prediction>{examples[0]['output']}</prediction>"))
+        rows[3].update(status="completed", text="no tags at all")
+        rows.append(dict(rows[0], attempt=2, status="completed", text=f"<prediction>{examples[0]['output']}</prediction>"))
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "pilot.jsonl"
-            path.write_text("\n".join(json.dumps(r) for r in rows), encoding="utf-8")
+            path = write_run(directory, rows, self.prompt_files)
             with contextlib.redirect_stdout(io.StringIO()):
                 results = evaluate(path, Path(directory) / "scores")
-            self.assertEqual(len(results), 9)
+            self.assertEqual(len(results), 12)
             summary = json.loads((Path(directory) / "scores/pilot_scores.summary.json").read_text())
             for mode in ("strict", "relaxed", "normalized"):
                 group = summary["summary"][f"cruxeval/{mode}"]
-                self.assertEqual((group["total"], group["correct"], group["unscored"]), (3, 1, 2))
-                self.assertEqual(group["statuses"], {"scored": 1, "request_error": 1, "request_incomplete": 1})
+                # Only requests without an answer are unscored; a malformed answer is wrong.
+                self.assertEqual((group["total"], group["correct"], group["incorrect"], group["unscored"]), (4, 1, 1, 2))
+                self.assertEqual(group["statuses"], {"scored": 1, "invalid_response": 1,
+                                                     "request_error": 1, "request_incomplete": 1})
+            self.assertTrue(all("\\" not in key for key in summary["sha256"]))
+
+    def test_refuses_run_whose_prompts_changed(self):
+        rows = [{"dataset": "cruxeval", "id": "sample_0", "repetition": 0, "status": "error"}]
+        with tempfile.TemporaryDirectory() as directory:
+            path = write_run(directory, rows, {"cruxeval_prompts.jsonl": "0" * 64})
+            with self.assertRaisesRegex(ValueError, "differs from the prompts"):
+                evaluate(path, Path(directory) / "scores")
+            self.assertFalse((Path(directory) / "scores").exists())
 
 
 if __name__ == "__main__":

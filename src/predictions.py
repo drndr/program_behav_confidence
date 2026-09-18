@@ -1,31 +1,29 @@
-"""Dataset loading, response parsing, and scoring prototype. No model calls."""
+"""Dataset loading, response parsing, and scoring. No model calls, no execution of model text.
+
+Three nested scoring modes. Every completed response is scored right or wrong in
+every mode; the modes differ only in how much is normalized before comparing.
+
+  strict      typed Python literal equality; RE2 predictions pass through json.dumps/loads
+              the way upstream produced its references (tuples -> lists, dict keys -> strings)
+  relaxed     strict, plus an unquoted answer compared as string content
+  normalized  relaxed, plus RE2 representation rules keyed on the reference text: numeric
+              or boolean array displays (formatting and dtype ignored), prettyForm displays
+              (content only), literals JSON could not store (complex, tuple, bytes), and any
+              other object repr or expression compared as a syntax tree where positional
+              arguments are content and must match, while keywords the prediction adds beyond
+              the reference are taken as spelled-out defaults; applied inside lists and dicts
+
+Only ast parsing and literal evaluation are used; a prediction is never executed.
+"""
 
 import ast
 import csv
 import json
-import importlib
+import math
 from pathlib import Path
 import re
-from functools import lru_cache
 
 SCORING_MODES = ("strict", "relaxed", "normalized")
-
-
-@lru_cache(maxsize=1)
-def estimator_names():
-    """Discover trusted installed classes, never import a model-supplied name."""
-    from sklearn.base import BaseEstimator
-    from sklearn.utils.discovery import all_estimators
-    names = set()
-    for name, cls in all_estimators():
-        if issubclass(cls, BaseEstimator):
-            names.add(name)
-            names.add(f"{cls.__module__}.{name}")
-            # Public sklearn modules re-export their estimator classes.
-            public_module = ".".join(cls.__module__.split(".")[:2])
-            if getattr(importlib.import_module(public_module), name, None) is cls:
-                names.add(f"{public_module}.{name}")
-    return frozenset(names)
 
 
 def load_examples(path, dataset):
@@ -65,25 +63,74 @@ def parse_verdict(text):
     return verdict
 
 
-# --- scoring ------------------------------------------------------------------
+# --- literals -----------------------------------------------------------------
+
+_NON_FINITE = {"inf": math.inf, "infinity": math.inf, "nan": math.nan}
+
+
+class _NonFinite(ast.NodeTransformer):
+    """Rewrite inf, nan and float('inf'|'-inf'|'nan') into constants; nothing else."""
+
+    def visit_Name(self, node):
+        if node.id in _NON_FINITE:
+            return ast.copy_location(ast.Constant(_NON_FINITE[node.id]), node)
+        return node
+
+    def visit_Call(self, node):
+        if (isinstance(node.func, ast.Name) and node.func.id == "float" and len(node.args) == 1
+                and not node.keywords and isinstance(node.args[0], ast.Constant)
+                and isinstance(node.args[0].value, str)
+                and node.args[0].value.strip().lower().lstrip("+-") in _NON_FINITE):
+            return ast.copy_location(ast.Constant(float(node.args[0].value)), node)
+        return self.generic_visit(node)
+
+
+def parse_literal(text):
+    """Parse literal text into an AST expression, accepting inf/nan spellings."""
+    tree = ast.parse(text.strip(), mode="eval")
+    return ast.fix_missing_locations(_NonFinite().visit(tree)).body
+
+
+def literal_value(node):
+    return ast.literal_eval(node)
+
 
 def reference_value(example):
     if example["dataset"] == "cruxeval":
-        return ast.literal_eval(example["output"])
+        return literal_value(parse_literal(example["output"]))
     return json.loads(example["output"])
 
 
 def prediction_value(example, literal):
     """Evaluate a predicted literal the way the dataset's references were produced."""
-    value = ast.literal_eval(literal)
+    value = literal_value(parse_literal(literal))
     if example["dataset"] == "re2":
         # Upstream RE2 recorded json.dumps(return value): tuples become lists, dict keys strings.
-        value = json.loads(json.dumps(value, allow_nan=False))
+        value = json.loads(json.dumps(value))
     return value
 
 
+def same_value(left, right):
+    """Exact values and types: no bool/number, tuple/list, or float coercion. NaN equals NaN."""
+    if type(left) is not type(right):
+        return False
+    if isinstance(left, float) and math.isnan(left):
+        return math.isnan(right)
+    if isinstance(left, (list, tuple)):
+        return len(left) == len(right) and all(same_value(a, b) for a, b in zip(left, right))
+    if isinstance(left, dict):
+        return len(left) == len(right) and all(
+            any(same_value(k, other) and same_value(v, right[other]) for other in right)
+            for k, v in left.items())
+    if isinstance(left, (set, frozenset)):
+        return len(left) == len(right) and all(any(same_value(a, b) for b in right) for a in left)
+    return left == right
+
+
+# --- example inspection --------------------------------------------------------
+
 def representation_pending(value):
-    # Serialized library objects require a separate, agreed comparison policy.
+    """Reference text that stands for a library object; used for example selection only."""
     if isinstance(value, str):
         return bool(re.search(r"\b(?:array|masked_array|np\.[A-Za-z_]+)\b|<[^>]+>", value)
                     or re.match(r"^[\w.]+\s*\(", value.strip())
@@ -125,23 +172,13 @@ def select_examples(examples, count=8):
     return selected
 
 
-def same_value(left, right):
-    """Exact values and types: no bool/number, tuple/list, or float coercion."""
-    if type(left) is not type(right):
-        return False
-    if isinstance(left, (list, tuple)):
-        return len(left) == len(right) and all(same_value(a, b) for a, b in zip(left, right))
-    if isinstance(left, dict):
-        return len(left) == len(right) and all(
-            any(same_value(k, other) and same_value(v, right[other]) for other in right)
-            for k, v in left.items())
-    if isinstance(left, (set, frozenset)):
-        return len(left) == len(right) and all(any(same_value(a, b) for b in right) for a in left)
-    return left == right
+# --- normalized representation rules ---------------------------------------------
+
+_RULE_ERRORS = (ValueError, SyntaxError, TypeError, AttributeError, RecursionError)
 
 
 def _array_values(text):
-    """Read numeric array displays without evaluating calls; dtype is ignored."""
+    """Read numeric/boolean array displays without evaluating calls; dtype is ignored."""
     text = text.strip()
     if "..." in text:
         raise ValueError("Abbreviated array display")
@@ -151,16 +188,18 @@ def _array_values(text):
                 k.arg != "dtype" for k in node.keywords):
             raise ValueError("Unsupported array representation")
         return ast.literal_eval(node.args[0])
-    # NumPy str(array) omits commas. Only accept brackets and numeric tokens.
-    if not re.fullmatch(r"[\[\]\s,0-9eE+.\-]+", text):
+    # NumPy str(array) omits commas. Only accept brackets, numbers and booleans.
+    if not re.fullmatch(r"(?:[\[\]\s,0-9eE+.\-]|True|False)+", text):
         raise ValueError("Unsupported array representation")
-    text = re.sub(r"(?<=[0-9.\]])\s+(?=[+\-0-9.\[])", ",", text)
+    text = re.sub(r"(?<=[0-9.\]e])\s+(?=[+\-0-9.\[TF])", ",", text)
     return ast.literal_eval(text)
 
 
 def _numeric_equal(left, right):
     if isinstance(left, (list, tuple)) and isinstance(right, (list, tuple)):
         return len(left) == len(right) and all(_numeric_equal(a, b) for a, b in zip(left, right))
+    if isinstance(left, bool) or isinstance(right, bool):
+        return type(left) is type(right) and left == right
     if type(left) not in (int, float, complex) or type(right) not in (int, float, complex):
         raise ValueError("Array contains unsupported values")
     return left == right  # Exact numeric equality; no tolerance or dtype comparison.
@@ -193,109 +232,131 @@ def _pretty_content(text):
     return ("text", text)
 
 
+_JSON_TYPES = (str, int, float, bool, type(None))
+_NOT_A_LITERAL = object()
+
+
+def _tree_equal(left, right):
+    """Structural equality of expression trees; keywords absent from the left tree are defaults."""
+    if isinstance(left, ast.Call) and isinstance(right, ast.Call):
+        if ast.unparse(left.func) != ast.unparse(right.func) or len(left.args) != len(right.args):
+            return False
+        if not all(_tree_equal(a, b) for a, b in zip(left.args, right.args)):
+            return False
+        given = {k.arg: k.value for k in right.keywords if k.arg is not None}
+        return all(k.arg is not None and k.arg in given and _tree_equal(k.value, given[k.arg])
+                   for k in left.keywords)
+    if isinstance(left, ast.Constant) and isinstance(right, ast.Constant):
+        return type(left.value) is type(right.value) and left.value == right.value
+    if type(left) is not type(right):
+        return False
+    if isinstance(left, ast.AST):
+        return all(_tree_equal(getattr(left, field), getattr(right, field))
+                   for field in left._fields if field != "ctx")
+    if isinstance(left, list):
+        return len(left) == len(right) and all(_tree_equal(a, b) for a, b in zip(left, right))
+    return left == right
+
+
+def _representation_rule(reference, source):
+    """Compare a candidate's text with an object-like reference string; raises when no rule applies."""
+    reference = reference.strip()
+    if re.match(r"^prettyForm\s*\(", reference):
+        return _pretty_content(reference) == _pretty_content(source)
+    if reference.startswith(("array(", "np.array(")) or (reference.startswith("[") and reference.endswith("]")):
+        return _numeric_equal(_array_values(reference), _array_values(source))
+    expression = parse_literal(reference)  # SyntaxError: the reference is display text, not an expression.
+    try:
+        value = literal_value(expression)
+    except _RULE_ERRORS:
+        value = _NOT_A_LITERAL
+    if value is not _NOT_A_LITERAL:
+        if isinstance(value, _JSON_TYPES):
+            # A plain value stored as text (e.g. "4"): strict already decided; keep the type distinction.
+            raise ValueError("Plain value stored as text")
+        # A literal JSON could not store (complex, tuple, bytes): compare values.
+        return same_value(value, literal_value(parse_literal(source)))
+    # Object reprs and expressions: positional arguments are content, extra keywords are defaults.
+    return _tree_equal(expression, parse_literal(source))
+
+
 def _normalized_equal(reference, node, source_text, bare_text=None):
-    """Reference-guided comparison: return None for unsupported object semantics."""
+    """Reference-guided comparison with representation rules; always True or False."""
     if isinstance(reference, str):
         try:
-            candidate = ast.literal_eval(node)
-        except (ValueError, SyntaxError):
+            candidate = literal_value(node)
+        except _RULE_ERRORS:
             candidate = bare_text if bare_text is not None else ast.get_source_segment(source_text, node)
-        source = candidate if isinstance(candidate, str) else ast.get_source_segment(source_text, node)
-        if isinstance(candidate, str) and candidate == reference:
+        if candidate == reference:
             return True
-        if re.match(r"^prettyForm\s*\(", reference.strip()):
-            try:
-                return _pretty_content(reference) == _pretty_content(source)
-            except (ValueError, SyntaxError, TypeError):
-                return None
-        # Lenient class-name-only comparison; arguments are deliberately ignored.
-        empty_constructor = re.fullmatch(r"([A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)\(\s*\)", reference.strip())
-        if empty_constructor and empty_constructor[1] in estimator_names():
-            try:
-                call = ast.parse(source, mode="eval").body
-                return isinstance(call, ast.Call) and ast.unparse(call.func) == empty_constructor[1]
-            except (ValueError, SyntaxError):
-                return False
-        is_array = reference.strip().startswith(("array(", "np.array(")) or (
-            reference.strip().startswith("[") and reference.strip().endswith("]"))
-        if is_array:
-            try:
-                return _numeric_equal(_array_values(reference), _array_values(source))
-            except (ValueError, SyntaxError, TypeError):
-                return None
-        try:
-            value = ast.literal_eval(reference)
-            if isinstance(value, complex):
-                other = ast.literal_eval(source)
-                return type(other) in (int, float, complex) and value == other
-        except (ValueError, SyntaxError):
-            pass
-        # Match expression syntax only, never algebraic equivalence or execution.
-        try:
-            expression = ast.parse(reference, mode="eval").body
-            symbolic = isinstance(expression, ast.BinOp) or (
-                isinstance(expression, ast.Call) and isinstance(expression.func, ast.Name)
-                and expression.func.id in {"sin", "cos", "tan", "exp", "log", "sqrt"})
-            if symbolic:
-                return ast.dump(expression) == ast.dump(ast.parse(source, mode="eval").body)
-        except (ValueError, SyntaxError):
-            pass
-        if representation_pending(reference):
-            return None
-        return same_value(candidate, reference)
-    if isinstance(reference, list) and isinstance(node, (ast.List, ast.Tuple)):
-        if len(reference) != len(node.elts):
+        source = candidate if isinstance(candidate, str) else ast.get_source_segment(source_text, node)
+        if source is None:
             return False
-        matches = [_normalized_equal(r, n, source_text) for r, n in zip(reference, node.elts)]
-        return False if False in matches else (None if None in matches else True)
+        try:
+            return bool(_representation_rule(reference, source))
+        except _RULE_ERRORS:
+            return False
+    if isinstance(reference, list) and isinstance(node, (ast.List, ast.Tuple)):
+        return len(reference) == len(node.elts) and all(
+            _normalized_equal(r, n, source_text) for r, n in zip(reference, node.elts))
     if isinstance(reference, dict) and isinstance(node, ast.Dict):
         try:
-            keys = [next(iter(json.loads(json.dumps({ast.literal_eval(k): 0})))) for k in node.keys]
-        except (ValueError, SyntaxError, TypeError):
-            return None
+            keys = [next(iter(json.loads(json.dumps({literal_value(k): 0})))) for k in node.keys]
+        except _RULE_ERRORS:
+            return False
         if len(keys) != len(set(keys)) or set(keys) != set(reference):
             return False
-        matches = [_normalized_equal(reference[k], n, source_text) for k, n in zip(keys, node.values)]
-        return False if False in matches else (None if None in matches else True)
-    return same_value(ast.literal_eval(node), reference)
+        return all(_normalized_equal(reference[k], n, source_text) for k, n in zip(keys, node.values))
+    try:
+        return same_value(literal_value(node), reference)
+    except _RULE_ERRORS:
+        return False
 
+
+# --- scoring ------------------------------------------------------------------
 
 def score_prediction(example, text, mode="strict"):
-    """strict: typed literals; relaxed: also allow unquoted, non-literal strings.
+    """Score one raw model response against the example's reference.
 
-    normalized additionally compares supported RE2 object representations.
-    All require one prediction tag. No numeric tolerance or object evaluation.
+    Returns status and correct. correct is True or False for every response that
+    contains a prediction; status records why a response could not be read as a
+    literal (invalid_response: no single tag; invalid_prediction: not a literal).
     """
     if mode not in SCORING_MODES:
         raise ValueError(f"Unknown scoring mode: {mode}")
     try:
         literal = parse_prediction(text)
     except ValueError as error:
-        return {"status": "invalid_response", "correct": None, "detail": str(error)}
+        return {"status": "invalid_response", "correct": False, "detail": str(error)}
     try:
         reference = reference_value(example)
     except (ValueError, SyntaxError):
         return {"status": "unsupported_reference", "correct": None}
-    if mode == "normalized" and example["dataset"] == "re2":
-        try:
-            bare_text = re.findall(r"<prediction>(.*?)</prediction>", text, re.S)[0].strip("\r\n")
-            result = _normalized_equal(reference, ast.parse(literal, mode="eval").body, literal, bare_text)
-            return {"status": "needs_scoring_policy" if result is None else "scored", "correct": result}
-        except (ValueError, SyntaxError, TypeError):
-            pass
     try:
         prediction = prediction_value(example, literal)
-    except (ValueError, SyntaxError, TypeError):
-        if example["dataset"] == "re2" and representation_pending(reference):
-            return {"status": "needs_scoring_policy", "correct": None}
-        if mode in {"relaxed", "normalized"} and isinstance(reference, str):
-            # Keep whitespace: spaces and newlines may be the actual output.
-            prediction = re.findall(r"<prediction>(.*?)</prediction>", text, re.S)[0].strip("\r\n")
-            return {"status": "scored", "correct": prediction == reference,
-                    "detail": "Compared unquoted string content"}
-        return {"status": "invalid_prediction", "correct": None}
-    if same_value(prediction, reference):
+        parsed = True
+    except _RULE_ERRORS:
+        parsed = False
+    if parsed and same_value(prediction, reference):
         return {"status": "scored", "correct": True}
-    if example["dataset"] == "re2" and representation_pending(reference):
-        return {"status": "needs_scoring_policy", "correct": None, "exact_match": same_value(prediction, reference)}
-    return {"status": "scored", "correct": same_value(prediction, reference)}
+    wrong = {"status": "scored" if parsed else "invalid_prediction", "correct": False}
+    if mode == "strict":
+        return wrong
+    # Keep spaces: they may be the actual output. Surrounding line breaks are formatting.
+    bare = re.findall(r"<prediction>(.*?)</prediction>", text, re.S)[0].strip("\r\n")
+    if not parsed and isinstance(reference, str) and bare == reference:
+        return {"status": "scored", "correct": True, "detail": "unquoted string content"}
+    if mode == "relaxed" or example["dataset"] != "re2":
+        return wrong
+    try:
+        node = parse_literal(literal)
+    except SyntaxError:
+        node = None  # e.g. NumPy's comma-less display; try the rules on the raw text.
+    try:
+        matched = (_normalized_equal(reference, node, literal, bare) if node is not None
+                   else isinstance(reference, str) and _representation_rule(reference, bare))
+    except _RULE_ERRORS:
+        matched = False
+    if matched:
+        return {"status": "scored", "correct": True, "detail": "representation rule"}
+    return wrong

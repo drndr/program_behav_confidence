@@ -41,26 +41,26 @@ token limits, reasoning settings, provider selection, and log-probabilities.
 Evaluate a saved run in strict, relaxed, and normalized modes:
 
 ```sh
-python -m pip install "scikit-learn==1.7.2"
 python scripts/evaluate_predictions.py data/predictions/gpt54-nano-pilot.jsonl
 ```
 
-Strict compares typed Python literals; relaxed also accepts unquoted strings when
-literal parsing fails. All modes require prediction tags. Unquoted strings in
-relaxed/normalized modes ignore surrounding CR/LF characters, retaining spaces;
-quoted strings retain all content. Exact parsed reference matches are accepted.
-Normalized additionally compares RE2 numeric arrays (shape and exact values,
-ignoring dtype), complex numbers, and symbolic-expression syntax, including nested
-outputs. Empty-argument references for recognized scikit-learn estimators accept the same
-constructor name with any arguments (class-name comparison only, not state or
-parameter equivalence). Recognition uses installed `BaseEstimator` class metadata,
-cached once; the library version is recorded in evaluation summaries.
-Other constructors, including empty containers, do not
-receive this shortcut. Unsupported boolean/string array displays remain unscored.
-`prettyForm` compares display content, ignoring its wrapper and layout metadata;
-set displays of names/strings also ignore element order and element quotes.
-Other display text retains its whitespace. This deliberately relaxes return types.
-It does not execute expressions or test algebraic equivalence. Other unknown
-constructors and unsupported array displays remain unscored; object detection is
-heuristic because RE2 stores these as strings. Results go to `data/evaluations/`;
-summaries separate correct, incorrect, and unscored answers, using the latest attempt.
+Every completed response is scored right or wrong in every mode; only requests
+that failed or were truncated are unscored. The modes are nested and differ in
+how much is normalized before comparing. Strict compares typed Python literals
+(RE2 predictions pass through `json.dumps`/`loads` like the references, so
+tuples become lists and dict keys strings); object references such as
+`array([1., 2.])` must be reproduced exactly as a quoted string. Relaxed also
+accepts an unquoted answer as string content, ignoring surrounding line breaks
+but keeping spaces. Normalized additionally applies RE2 representation rules
+keyed on the reference text. Numeric/boolean array displays compare shape and
+exact values, ignoring dtype and formatting. `prettyForm` displays compare their
+content only (set displays ignore element order and quotes). Literals JSON could
+not store, such as complex numbers, compare by value. Every other object repr or
+expression is compared as a syntax tree: positional arguments are content and
+must match exactly, keywords in the reference must match, and keywords the
+prediction adds are taken as spelled-out defaults (a repr omits parameters at
+their defaults), recursively; whitespace and redundant parentheses do not
+matter, algebraic equivalence is not tested, and a plain value stored as text
+keeps its type distinction from strict. Nothing is executed. The evaluator
+refuses a run whose prompt files or source CSVs differ from the current ones.
+Results go to `data/evaluations/`, using each item's latest attempt.
