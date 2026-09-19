@@ -15,10 +15,10 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from datasets import sha256_file
-from predictions import SCORING_MODES, load_examples, score_prediction
+from datasets import DATASET_SOURCES, load_examples, sha256_file
+from scoring import SCORING_MODES, score_prediction
 
-SOURCES = {"cruxeval": ROOT / "data/raw/cruxeval/cruxeval.csv", "re2": ROOT / "data/raw/re2/re2_filtered.csv"}
+SOURCES = {name: ROOT / "data" / path for name, path in DATASET_SOURCES.items()}
 
 
 def relative(path):
@@ -68,7 +68,7 @@ def evaluate(path, out_dir):
     out_dir.mkdir(parents=True, exist_ok=True)
     output = out_dir / f"{path.stem}_scores.jsonl"
     output.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in results), encoding="utf-8")
-    hashed = [path, *SOURCES.values(), ROOT / "src/predictions.py", Path(__file__)]
+    hashed = [path, *SOURCES.values(), ROOT / "src/scoring.py", Path(__file__)]
     record = {"run": relative(path), "sha256": {relative(p): sha256_file(p) for p in hashed}, "summary": summary}
     output.with_suffix(".summary.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2))

@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from evaluate_predictions import evaluate
 from datasets import sha256_file
-from predictions import load_examples
+from datasets import load_examples
 
 
 def write_run(directory, rows, prompt_files):

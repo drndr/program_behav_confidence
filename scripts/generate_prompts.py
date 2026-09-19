@@ -18,11 +18,10 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from datasets import sha256_file
-from predictions import load_examples
+from datasets import DATASET_SOURCES, load_examples, sha256_file
 from prompt_template import prediction_prompt, template_sha256
 
-SOURCES = {"cruxeval": "raw/cruxeval/cruxeval.csv", "re2": "raw/re2/re2_filtered.csv"}
+SOURCES = DATASET_SOURCES
 
 
 def generate(name, data_dir, out_dir, limit=None):

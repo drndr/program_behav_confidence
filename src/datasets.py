@@ -3,40 +3,40 @@
 import csv
 import hashlib
 import json
-from dataclasses import dataclass
 from pathlib import Path
 
 
-@dataclass(frozen=True)
-class CruxEvalExample:
-    id: str
-    code: str
-    input: str
-    output: str
+DATASET_SOURCES = {"cruxeval": "raw/cruxeval/cruxeval.csv", "re2": "raw/re2/re2_filtered.csv"}
 
 
-def load_cruxeval(path: str | Path) -> list[CruxEvalExample]:
-    """Preserve the CSV's text exactly, including empty-string targets.
+def load_examples(path: str | Path, dataset: str) -> list[dict]:
+    """Read final CSVs as text, adding dataset and CRUXEval's entrypoint.
 
-    Schema validation is not validation that the reference answer is correct.
-    Inputs may represent multiple function arguments; do not coerce their text.
+    Validate the schema and IDs without interpreting inputs or reference values.
+    An empty RE2 entrypoint denotes a stdin program.
     """
-    examples = []
-    seen = set()
+    if dataset not in DATASET_SOURCES:
+        raise ValueError(f"Unknown dataset: {dataset}")
+    required = {"id", "code", "input", "output"}
+    if dataset == "re2":
+        required.add("entrypoint")
+    csv.field_size_limit(10_000_000)
+    examples, seen = [], set()
     with Path(path).open(encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
-        required = {"id", "code", "input", "output"}
-        if reader.fieldnames is None or set(reader.fieldnames) != required or len(reader.fieldnames) != 4:
-            raise ValueError("CRUXEval requires exactly id, code, input, output columns")
+        if reader.fieldnames is None or set(reader.fieldnames) != required or len(reader.fieldnames) != len(required):
+            raise ValueError(f"{dataset} requires exactly {', '.join(sorted(required))} columns")
         for index, row in enumerate(reader, start=1):
             if None in row or any(value is None for value in row.values()):
-                raise ValueError(f"Malformed CRUXEval row {index}")
+                raise ValueError(f"Malformed {dataset} row {index}")
             if not row["id"].strip() or not row["code"].strip():
                 raise ValueError(f"Missing ID or code in row {index}")
             if row["id"] in seen:
-                raise ValueError(f"Duplicate CRUXEval ID: {row['id']}")
+                raise ValueError(f"Duplicate {dataset} ID: {row['id']}")
             seen.add(row["id"])
-            examples.append(CruxEvalExample(**row))
+            if dataset == "cruxeval":
+                row["entrypoint"] = "f"
+            examples.append(dict(row, dataset=dataset))
     return examples
 
 

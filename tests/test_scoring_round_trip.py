@@ -14,7 +14,8 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from predictions import SCORING_MODES, load_examples, reference_value, score_prediction
+from datasets import load_examples
+from scoring import SCORING_MODES, reference_value, score_prediction
 from prompt_template import prediction_prompt
 
 DATASETS = {"cruxeval": ("data/raw/cruxeval/cruxeval.csv", 800), "re2": ("data/raw/re2/re2_filtered.csv", 446)}

@@ -1,4 +1,4 @@
-"""Dataset loading, response parsing, and scoring. No model calls, no execution of model text.
+"""Response parsing and scoring. No model calls, no execution of model text.
 
 Three nested scoring modes. Every completed response is scored right or wrong in
 every mode; the modes differ only in how much is normalized before comparing.
@@ -20,29 +20,11 @@ Only ast parsing and literal evaluation are used; a prediction is never executed
 import ast
 import builtins
 import collections
-import csv
 import json
 import math
-from pathlib import Path
 import re
 
 SCORING_MODES = ("strict", "relaxed", "normalized")
-
-
-def load_examples(path, dataset):
-    """Rows with id, code, entrypoint, input, output and dataset.
-
-    CRUXEval keeps its upstream columns; every one of its programs is a single
-    function f, so the entrypoint is filled in here. RE2 CSVs carry the column.
-    """
-    csv.field_size_limit(10_000_000)
-    with Path(path).open(encoding="utf-8-sig", newline="") as stream:
-        rows = [dict(row, dataset=dataset) for row in csv.DictReader(stream)]
-    if dataset == "cruxeval":
-        rows = [dict(row, entrypoint="f") for row in rows]
-    if any(row.get("entrypoint") is None for row in rows):
-        raise ValueError(f"Missing entrypoint column in {path}")
-    return rows
 
 
 # --- responses ----------------------------------------------------------------

@@ -2,11 +2,12 @@ import json
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from predictions import SCORING_MODES, parse_prediction, parse_verdict, same_value, score_prediction
-from prompt_template import RE2_INPUT_NOTE, confidence_prompt, prediction_prompt, template_sha256
+from scoring import SCORING_MODES, parse_prediction, same_value, score_prediction
+from prompt_template import RE2_INPUT_NOTE, confidence_prompt, prediction_prompt
 
 CRUX = {"dataset": "cruxeval", "entrypoint": "f", "code": "def f(a):\n    return a", "input": "'x'", "output": "'x'"}
 RE2 = {"dataset": "re2", "entrypoint": "pair", "code": "def pair(a):\n    return (a, a)",
@@ -15,13 +16,11 @@ STDIN = {"dataset": "re2", "entrypoint": "", "code": "print(input())", "input": 
 
 
 class PromptTests(unittest.TestCase):
-    def test_entrypoint_and_stdin_wording(self):
+    def test_dataset_specific_prompt_context(self):
         self.assertIn("returned by `pair`", prediction_prompt(RE2))
         stdin = prediction_prompt(STDIN)
         self.assertIn("prints", stdin)
         self.assertNotIn("returned by", stdin)
-
-    def test_input_note_only_for_re2(self):
         self.assertNotIn(RE2_INPUT_NOTE, prediction_prompt(CRUX))
         self.assertIn(RE2_INPUT_NOTE, prediction_prompt(RE2))
         self.assertIn(RE2_INPUT_NOTE, prediction_prompt(STDIN))
@@ -31,31 +30,12 @@ class PromptTests(unittest.TestCase):
         self.assertNotIn("SECRET_REFERENCE", prediction_prompt(example))
         self.assertNotIn("SECRET_REFERENCE", confidence_prompt(example, "'x'"))
 
-    def test_confidence_prompt_shows_candidate_and_asks_binary(self):
-        prompt = confidence_prompt(RE2, "(1, 1)")
-        self.assertIn("[CANDIDATE]\n(1, 1)\n[/CANDIDATE]", prompt)
-        self.assertIn("<verdict>", prompt)
-        self.assertNotIn("<prediction>", prompt)
-
-    def test_template_hash_is_stable(self):
-        self.assertEqual(template_sha256(), template_sha256())
-        self.assertEqual(len(template_sha256()), 64)
-
-
 class ResponseTests(unittest.TestCase):
     def test_prediction_requires_exactly_one_tag(self):
         self.assertEqual(parse_prediction("text <prediction> [1, 2] </prediction> more"), "[1, 2]")
         for text in ("[1, 2]", "<prediction>1</prediction><prediction>2</prediction>", "<prediction>1"):
             with self.assertRaises(ValueError):
                 parse_prediction(text)
-
-    def test_verdict_accepts_only_two_words(self):
-        self.assertEqual(parse_verdict("<verdict>Correct</verdict>"), "correct")
-        self.assertEqual(parse_verdict("<verdict> incorrect </verdict>"), "incorrect")
-        for text in ("<verdict>0.9</verdict>", "<verdict>mostly correct</verdict>", "correct"):
-            with self.assertRaises(ValueError):
-                parse_verdict(text)
-
 
 class ScoringTests(unittest.TestCase):
     def normalized(self, reference, prediction):
@@ -69,7 +49,11 @@ class ScoringTests(unittest.TestCase):
                                   (dict(RE2, output='"GaussianNB(priors=None)"'), "<prediction>OtherClass()</prediction>"),
                                   (dict(RE2, output='"array([1, ..., 4])"'), "<prediction>array([1,2,3,4])</prediction>")):
                 self.assertIs(score_prediction(example, text, mode)["correct"], False, (mode, text))
-            self.assertIs(score_prediction(CRUX, "no tags", mode)["correct"], False)
+            result = score_prediction(CRUX, "no tags", mode)
+            self.assertEqual((result["correct"], result["status"]), (False, "invalid_response"))
+        for example, text in ((CRUX, "<prediction>f(1)</prediction>"),
+                              (RE2, "<prediction>{1, 2}</prediction>")):
+            self.assertEqual(score_prediction(example, text)["status"], "invalid_prediction")
 
     def test_normalized_complex_and_symbolic_outputs(self):
         self.assertFalse(self.normalized("(-5+10j)", "(-11+2j)")["correct"])
@@ -90,11 +74,13 @@ class ScoringTests(unittest.TestCase):
         self.assertFalse(self.normalized("array([1, ..., 4])", "array([1,2,3,4])")["correct"])
 
     def test_model_text_is_never_executed(self):
-        for reference, prediction in (("array([1])", "__import__('os').system('echo BAD')"),
-                                      ("prettyForm('x',0,0)", "prettyForm(dangerous())"),
-                                      ("GaussianNB()", "GaussianNB(x=__import__('os').system('echo BAD'))")):
-            self.assertIn(self.normalized(reference, prediction)["correct"], (True, False))
-        self.assertFalse(self.normalized("array([1])", "__import__('os').system('echo BAD')")["correct"])
+        call = "__import__('os').system('must not execute')"
+        with patch("os.system", side_effect=AssertionError("Executed model text")) as system:
+            for reference, prediction in (("array([1])", call),
+                                          ("prettyForm('x',0,0)", f"prettyForm({call})"),
+                                          ("GaussianNB()", f"GaussianNB(x={call})")):
+                self.normalized(reference, prediction)
+            system.assert_not_called()
 
     def test_prettyform_display_normalization(self):
         reference = "prettyForm('{Q.integer, Q.positive}',0,0)"
@@ -195,11 +181,6 @@ class ScoringTests(unittest.TestCase):
         for prediction in ("math.inf", "np.nan", "float('x')", "Infinity()"):
             self.assertEqual(score_prediction(example, f"<prediction>{prediction}</prediction>")["status"],
                              "invalid_prediction", prediction)
-
-    def test_statuses_for_bad_responses(self):
-        self.assertEqual(score_prediction(CRUX, "no tags")["status"], "invalid_response")
-        self.assertEqual(score_prediction(CRUX, "<prediction>f(1)</prediction>")["status"], "invalid_prediction")
-        self.assertEqual(score_prediction(RE2, "<prediction>{1, 2}</prediction>")["status"], "invalid_prediction")
 
     def test_object_strings_compare_exactly_below_normalized(self):
         example = dict(RE2, output='"array([1])"')

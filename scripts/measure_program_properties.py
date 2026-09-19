@@ -15,16 +15,15 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 import tiktoken
-from datasets import sha256_file
+from datasets import DATASET_SOURCES, load_examples, sha256_file
 from program_properties import measure_properties
 
-SOURCES = {"cruxeval": "raw/cruxeval/cruxeval.csv", "re2": "raw/re2/re2_filtered.csv"}
+SOURCES = DATASET_SOURCES
 METRICS = ("code_token_length", "input_token_length", "executable_lines")
 
 
 def run(data_dir, out_dir, encoding_name="o200k_base"):
     encoding = tiktoken.get_encoding(encoding_name)
-    csv.field_size_limit(10_000_000)
     out_dir.mkdir(parents=True, exist_ok=True)
     manifest = {"created_at": datetime.now(timezone.utc).isoformat(),
                 "encoding": encoding_name, "tiktoken_version": importlib.metadata.version("tiktoken"),
@@ -37,12 +36,9 @@ def run(data_dir, out_dir, encoding_name="o200k_base"):
                     "missing": "Blank executable_lines means tokenization failed, not zero. lexical_only means tokenization succeeded but AST parsing failed; source-size count only."}}
     for name, relative in SOURCES.items():
         source = data_dir / relative
-        with source.open(encoding="utf-8-sig", newline="") as stream:
-            examples = list(csv.DictReader(stream))
-        if len({r["id"] for r in examples}) != len(examples):
-            raise ValueError(f"Duplicate IDs in {source}")
+        examples = load_examples(source, name)
         rows = [{"dataset": name, "id": r["id"], "tokenizer": encoding_name,
-                 **measure_properties(dict(r, dataset=name), encoding)} for r in examples]
+                 **measure_properties(r, encoding)} for r in examples]
         output = out_dir / f"{name}_properties.csv"
         with output.open("w", encoding="utf-8", newline="") as stream:
             writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
