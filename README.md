@@ -38,6 +38,16 @@ Results are saved under `data/predictions/`. Repeat the same command to resume;
 add `--retry-errors` to retry failed requests. See `--help` for repetitions,
 token limits, reasoning settings, provider selection, and log-probabilities.
 
+Write verification (confidence judge) prompts for a saved prediction run — one
+per completed prediction, showing the judge what the predictor saw plus the
+candidate answer, never the reference — into `data/prompts/verification/RUN/`,
+in the runner's format (`--prompt-dir data/prompts/verification/RUN`). The
+judge wording is not final yet; each manifest records `wording_final`.
+
+```sh
+python scripts/generate_verification_prompts.py data/predictions/gpt54-nano-pilot.jsonl
+```
+
 Evaluate a saved run in strict, relaxed, and normalized modes:
 
 ```sh

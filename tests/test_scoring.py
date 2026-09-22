@@ -8,7 +8,9 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from scoring import SCORING_MODES, parse_prediction, prediction_logprobs, same_value, score_prediction
-from prompt_template import RE2_INPUT_NOTE, confidence_prompt, prediction_prompt
+import prompt_template
+from prompt_template import (RE2_INPUT_NOTE, prediction_prompt, prediction_template_sha256, task_sentence,
+                             verification_prompt, verification_template_sha256, verification_wording_final)
 
 CRUX = {"dataset": "cruxeval", "entrypoint": "f", "code": "def f(a):\n    return a", "input": "'x'", "output": "'x'"}
 RE2 = {"dataset": "re2", "entrypoint": "pair", "code": "def pair(a):\n    return (a, a)",
@@ -29,7 +31,30 @@ class PromptTests(unittest.TestCase):
     def test_reference_never_included(self):
         example = dict(CRUX, output="SECRET_REFERENCE")
         self.assertNotIn("SECRET_REFERENCE", prediction_prompt(example))
-        self.assertNotIn("SECRET_REFERENCE", confidence_prompt(example, "'x'"))
+        self.assertNotIn("SECRET_REFERENCE", verification_prompt(example, "'x'"))
+
+    def test_verification_prompt_structure(self):
+        # Wording is not decided; the structure is: what the predictor saw, plus the candidate.
+        prompt = verification_prompt(RE2, "(1, 1)")
+        self.assertIn(task_sentence(RE2), prompt)
+        self.assertIn("[CODE]\n" + RE2["code"] + "\n[/CODE]", prompt)
+        self.assertIn(RE2_INPUT_NOTE, prompt)
+        self.assertIn("[CANDIDATE]\n(1, 1)\n[/CANDIDATE]", prompt)
+        self.assertNotIn("<prediction>", prompt)
+        self.assertNotIn("\n\n\n", prompt)  # empty wording slots leave no blank paragraphs
+        self.assertFalse(verification_wording_final())
+        with patch.object(prompt_template, "VERIFICATION_HEADER", "Judge."), \
+                patch.object(prompt_template, "VERIFICATION_ANSWER", "Answer in <verdict> tags."):
+            self.assertTrue(verification_wording_final())
+            self.assertTrue(verification_prompt(RE2, "(1, 1)").startswith("Judge.\n\n"))
+
+    def test_template_hashes_are_independent(self):
+        before = prediction_template_sha256(), verification_template_sha256()
+        self.assertEqual(before, (prediction_template_sha256(), verification_template_sha256()))
+        with patch.object(prompt_template, "VERIFICATION_HEADER", "Judge."):
+            self.assertEqual(prediction_template_sha256(), before[0])
+            self.assertNotEqual(verification_template_sha256(), before[1])
+
 
 class ResponseTests(unittest.TestCase):
     def test_prediction_requires_exactly_one_tag(self):
@@ -37,6 +62,7 @@ class ResponseTests(unittest.TestCase):
         for text in ("[1, 2]", "<prediction>1</prediction><prediction>2</prediction>", "<prediction>1"):
             with self.assertRaises(ValueError):
                 parse_prediction(text)
+
 
 def tokens(*pairs):
     return {"content": [{"token": t, "bytes": list(t.encode("utf-8")), "logprob": lp} for t, lp in pairs]}

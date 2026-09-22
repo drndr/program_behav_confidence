@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from datasets import DATASET_SOURCES, load_examples, sha256_file
-from prompt_template import prediction_prompt, template_sha256
+from prompt_template import prediction_prompt, prediction_template_sha256
 
 SOURCES = DATASET_SOURCES
 
@@ -40,7 +40,7 @@ def generate(name, data_dir, out_dir, limit=None):
             stream.write(json.dumps(row, ensure_ascii=False) + "\n")
     manifest = {"dataset": name, "prompt_kind": "prediction", "count": len(rows),
                 "source_path": (source.relative_to(ROOT) if source.is_relative_to(ROOT) else source).as_posix(),
-                "source_sha256": sha256_file(source), "template_sha256": template_sha256(),
+                "source_sha256": sha256_file(source), "template_sha256": prediction_template_sha256(),
                 "generated_at": datetime.now(timezone.utc).isoformat()}
     (out_dir / f"{name}_prompts.manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return manifest
