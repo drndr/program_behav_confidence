@@ -1,5 +1,6 @@
 import io
 import json
+from http.client import IncompleteRead
 from pathlib import Path
 import sys
 import unittest
@@ -11,6 +12,11 @@ from model_client import OpenRouterClient
 
 class Reply(io.BytesIO):
     status = 200
+
+
+class IncompleteReply(Reply):
+    def read(self, *args, **kwargs):
+        raise IncompleteRead(b"partial")
 
 
 class ClientTests(unittest.TestCase):
@@ -51,6 +57,11 @@ class ClientTests(unittest.TestCase):
         result = OpenRouterClient("test-secret", transport=fail).complete([], "m", {})
         self.assertEqual(result["status"], "error")
         self.assertNotIn("test-secret", json.dumps(result))
+
+    def test_incomplete_http_response_is_recorded_as_error(self):
+        result = OpenRouterClient("test-secret", transport=lambda *a, **k: IncompleteReply()).complete([], "m", {})
+        self.assertEqual(result["status"], "error")
+        self.assertIsNone(result["raw_response"])
 
 
 if __name__ == "__main__":

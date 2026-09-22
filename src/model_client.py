@@ -3,6 +3,7 @@
 import json
 import os
 import time
+from http.client import IncompleteRead
 from typing import Protocol
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -44,7 +45,7 @@ class OpenRouterClient:
         except HTTPError as error:
             status_code = error.code
             raw_text = error.read().decode("utf-8", errors="replace")
-        except (URLError, TimeoutError, OSError) as error:
+        except (IncompleteRead, URLError, TimeoutError, OSError) as error:
             return {"status": "error", "error": str(error).replace(self._api_key, "[REDACTED]"),
                     "latency_seconds": time.perf_counter() - started,
                     "http_status": None, "raw_response": None}
