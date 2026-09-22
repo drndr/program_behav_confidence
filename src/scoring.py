@@ -48,6 +48,49 @@ def parse_verdict(text):
     return verdict
 
 
+def prediction_logprobs(text, logprobs):
+    """Mean log-probability of the tokens that produced the <prediction> content.
+
+    Tokens are concatenated by their bytes and the prediction content is located in
+    that stream between its tags (providers may prepend a </think> token, append an
+    end marker, or drop a tag's first token). A token overlapping the content counts,
+    so tag-adjacent tokens such as ">'" are included. Returns None when the stream
+    does not reproduce the content exactly.
+    """
+    content = logprobs.get("content") if isinstance(logprobs, dict) else None
+    match = re.search(r"<prediction>(.*?)</prediction>", text, re.S)
+    if not content or match is None:
+        return None
+    inner = match.group(1)
+    lead, trail = len(inner) - len(inner.lstrip()), len(inner) - len(inner.rstrip())
+    if lead + trail >= len(inner):
+        return None
+    spans, offset, pieces = [], 0, []
+    for token in content:
+        raw = bytes(token["bytes"]) if token.get("bytes") is not None else str(token.get("token") or "").encode("utf-8")
+        if not isinstance(token.get("logprob"), (int, float)):
+            return None
+        spans.append((offset, offset + len(raw), float(token["logprob"])))
+        pieces.append(raw)
+        offset += len(raw)
+    stream = b"".join(pieces)
+    # Anchor on tag suffixes: providers sometimes drop the first token of a tag ("<p", "</")
+    # from the stream, but the content itself must be reproduced exactly.
+    pattern = rb"rediction>(" + re.escape(inner.encode("utf-8")) + rb")(?:</)?prediction>"
+    found = list(re.finditer(pattern, stream, re.S))
+    if not found:
+        return None
+    located = found[-1]
+    content_start = located.start(1) + len(inner[:lead].encode("utf-8"))
+    content_end = located.end(1) - len(inner[len(inner) - trail:].encode("utf-8"))
+    selected = [logprob for start, end, logprob in spans if start < content_end and end > content_start]
+    if not selected:
+        return None
+    mean = sum(selected) / len(selected)
+    return {"token_count": len(selected), "sum_logprob": sum(selected), "mean_logprob": mean,
+            "geometric_mean_probability": math.exp(mean)}
+
+
 # --- literals -----------------------------------------------------------------
 
 _NON_FINITE = {"inf": math.inf, "infinity": math.inf, "nan": math.nan}

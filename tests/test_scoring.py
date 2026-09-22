@@ -1,4 +1,5 @@
 import json
+import math
 from pathlib import Path
 import sys
 import unittest
@@ -6,7 +7,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from scoring import SCORING_MODES, parse_prediction, same_value, score_prediction
+from scoring import SCORING_MODES, parse_prediction, prediction_logprobs, same_value, score_prediction
 from prompt_template import RE2_INPUT_NOTE, confidence_prompt, prediction_prompt
 
 CRUX = {"dataset": "cruxeval", "entrypoint": "f", "code": "def f(a):\n    return a", "input": "'x'", "output": "'x'"}
@@ -36,6 +37,48 @@ class ResponseTests(unittest.TestCase):
         for text in ("[1, 2]", "<prediction>1</prediction><prediction>2</prediction>", "<prediction>1"):
             with self.assertRaises(ValueError):
                 parse_prediction(text)
+
+def tokens(*pairs):
+    return {"content": [{"token": t, "bytes": list(t.encode("utf-8")), "logprob": lp} for t, lp in pairs]}
+
+
+class LogprobTests(unittest.TestCase):
+    ANSWER = [("<p", -0.1), ("red", -0.1), ("iction", -0.1), (">'", -0.5), ("4", -1.0), ("'", -0.2),
+              ("</", -0.1), ("prediction", -0.1), (">", -0.1)]
+    TEXT = "<prediction>'4'</prediction>"
+
+    def test_mean_over_content_tokens_including_tag_adjacent_ones(self):
+        result = prediction_logprobs(self.TEXT, tokens(*self.ANSWER))
+        self.assertEqual(result["token_count"], 3)  # ">'", "4", "'"
+        self.assertAlmostEqual(result["mean_logprob"], (-0.5 - 1.0 - 0.2) / 3)
+        self.assertAlmostEqual(result["geometric_mean_probability"], math.exp(result["mean_logprob"]))
+
+    def test_tolerates_provider_stream_variants(self):
+        # A </think> token before, an end marker after, or a dropped first tag token.
+        variants = ([("</think>", -0.01)] + self.ANSWER + [("<|end|>", -0.01)],
+                    self.ANSWER[1:], self.ANSWER[:6] + self.ANSWER[7:])
+        for content in variants:
+            result = prediction_logprobs(self.TEXT, tokens(*content))
+            self.assertEqual(result["token_count"], 3, content)
+
+    def test_refuses_streams_that_do_not_reproduce_the_answer(self):
+        garbled = [("<p", -0.1), ("red", -0.1), ("iction", -0.1), (">'", -0.5), ("5", -1.0), ("'", -0.2), ("</", -0.1)]
+        self.assertIsNone(prediction_logprobs(self.TEXT, tokens(*garbled)))
+        self.assertIsNone(prediction_logprobs(self.TEXT, tokens(("<p", -0.1))))
+        self.assertIsNone(prediction_logprobs(self.TEXT, {"content": []}))
+        self.assertIsNone(prediction_logprobs(self.TEXT, None))
+        self.assertIsNone(prediction_logprobs("no tags", tokens(*self.ANSWER)))
+        missing = {"content": [{"token": t, "logprob": None} for t, _ in self.ANSWER]}
+        self.assertIsNone(prediction_logprobs(self.TEXT, missing))
+
+    def test_whitespace_padding_and_multibyte_content(self):
+        text = "<prediction>\n  [1, 'é']\n</prediction>"
+        content = [("<prediction>", -0.1), ("\n  ", -0.3), ("[1", -0.2), (", '", -0.2), ("é", -0.4), ("']", -0.2),
+                   ("\n", -0.3), ("</prediction>", -0.1)]
+        result = prediction_logprobs(text, tokens(*content))
+        self.assertEqual(result["token_count"], 4)  # padding tokens excluded
+        self.assertAlmostEqual(result["mean_logprob"], (-0.2 - 0.2 - 0.4 - 0.2) / 4)
+
 
 class ScoringTests(unittest.TestCase):
     def normalized(self, reference, prediction):

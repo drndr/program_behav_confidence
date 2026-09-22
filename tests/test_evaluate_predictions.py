@@ -30,7 +30,9 @@ class EvaluationTests(unittest.TestCase):
         rows = [{"dataset": "cruxeval", "id": e["id"], "repetition": 0, "attempt": 1, "status": "error"} for e in examples]
         rows[2]["status"] = "incomplete"
         rows[3].update(status="completed", text="no tags at all")
-        rows.append(dict(rows[0], attempt=2, status="completed", text=f"<prediction>{examples[0]['output']}</prediction>"))
+        answer = f"<prediction>{examples[0]['output']}</prediction>"
+        logprobs = {"content": [{"token": answer, "bytes": list(answer.encode("utf-8")), "logprob": -0.25}]}
+        rows.append(dict(rows[0], attempt=2, status="completed", text=answer, logprobs=logprobs))
         with tempfile.TemporaryDirectory() as directory:
             path = write_run(directory, rows, self.prompt_files)
             with contextlib.redirect_stdout(io.StringIO()):
@@ -44,6 +46,11 @@ class EvaluationTests(unittest.TestCase):
                 self.assertEqual(group["statuses"], {"scored": 1, "invalid_response": 1,
                                                      "request_error": 1, "request_incomplete": 1})
             self.assertTrue(all("\\" not in key for key in summary["sha256"]))
+
+            scored = [r for r in results if r["status"] == "scored"]
+            self.assertEqual({r["prediction_mean_logprob"] for r in scored}, {-0.25})
+            self.assertEqual(summary["summary"]["cruxeval/strict"]["with_logprobs"], 1)
+            self.assertTrue(all(r["prediction_mean_logprob"] is None for r in results if r["status"] != "scored"))
 
     def test_refuses_run_whose_prompts_changed(self):
         rows = [{"dataset": "cruxeval", "id": "sample_0", "repetition": 0, "status": "error"}]

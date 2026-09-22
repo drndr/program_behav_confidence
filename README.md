@@ -65,3 +65,8 @@ matter, algebraic equivalence is not tested, and a plain value stored as text
 keeps its type distinction from strict. Nothing is executed. The evaluator
 refuses a run whose prompt files or source CSVs differ from the current ones.
 Results go to `data/evaluations/`, using each item's latest attempt.
+
+When token log-probabilities are available, evaluation also reports the mean
+log-probability, geometric mean probability, and token count for the prediction
+content, plus coverage counts in the summary. These are token-level confidence
+signals, not calibrated probabilities of correctness.

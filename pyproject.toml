@@ -15,4 +15,4 @@ metrics = ["tiktoken==0.14.0"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = ["datasets", "re2_inspection", "scoring", "program_properties", "prompt_template", "model_client"]
+py-modules = ["datasets", "re2_inspection", "scoring", "program_properties", "prompt_template", "model_client", "runs"]
