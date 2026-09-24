@@ -87,11 +87,12 @@ prediction adds are taken as spelled-out defaults (a repr omits parameters at
 their defaults) — except for Python builtins and standard collections such as
 `dict` or `Counter`, whose keywords are content and must match — recursively; whitespace and redundant parentheses do not
 matter, algebraic equivalence is not tested, and a plain value stored as text
-keeps its type distinction from strict. Nothing is executed. The evaluator
-refuses a run whose prompt files or source CSVs differ from the current ones.
-Results go to `data/evaluations/`, using each item's latest attempt.
+keeps its type distinction from strict. Nothing is executed. Results go to `data/evaluations/`, using each item's latest attempt.
 
 When token log-probabilities are available, evaluation also reports the mean
 log-probability, geometric mean probability, and token count for the prediction
 content, plus coverage counts in the summary. These are token-level confidence
 signals, not calibrated probabilities of correctness.
+The summary's `mean_prediction_logprob` averages these per-answer means with
+equal weight per item, using only items with usable log-probabilities.
+`with_logprobs` gives that denominator; the mean is null when none are available.
