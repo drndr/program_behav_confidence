@@ -30,19 +30,25 @@ SCORING_MODES = ("strict", "relaxed", "normalized")
 # --- responses ----------------------------------------------------------------
 
 def _single_tag(text, tag):
-    matches = re.findall(rf"<{tag}>(.*?)</{tag}>", text, re.S)
-    if len(matches) != 1:
-        raise ValueError(f"Expected exactly one <{tag}> block, found {len(matches)}")
-    return matches[0].strip()
+    """Raw content of the one <tag> block, unstripped.
+
+    Empty blocks are ignored when a non-empty one exists: models restate the format
+    ("inside <prediction></prediction> tags") before answering.
+    """
+    blocks = re.findall(rf"<{tag}>(.*?)</{tag}>", text, re.S)
+    blocks = [b for b in blocks if b.strip()] or blocks
+    if len(blocks) != 1:
+        raise ValueError(f"Expected exactly one <{tag}> block, found {len(blocks)}")
+    return blocks[0]
 
 
 def parse_prediction(text):
     """The literal text inside the single <prediction> block, not evaluated."""
-    return _single_tag(text, "prediction")
+    return _single_tag(text, "prediction").strip()
 
 
 def parse_verdict(text):
-    verdict = _single_tag(text, "verdict").lower()
+    verdict = _single_tag(text, "verdict").strip().lower()
     if verdict not in {"correct", "incorrect"}:
         raise ValueError(f"Verdict must be correct or incorrect, got {verdict!r}")
     return verdict
@@ -54,14 +60,16 @@ def prediction_logprobs(text, logprobs):
     Tokens are concatenated by their bytes and the prediction content is located in
     that stream between its tags (providers may prepend a </think> token, append an
     end marker, or drop a tag's first token). A token overlapping the content counts,
-    so tag-adjacent tokens such as ">'" are included. Returns None when the stream
-    does not reproduce the content exactly.
+    so tag-adjacent tokens such as ">'" are included. Returns None when the response
+    has no single prediction block or the stream does not reproduce the content exactly.
     """
     content = logprobs.get("content") if isinstance(logprobs, dict) else None
-    match = re.search(r"<prediction>(.*?)</prediction>", text, re.S)
-    if not content or match is None:
+    try:
+        inner = _single_tag(text, "prediction")
+    except ValueError:
         return None
-    inner = match.group(1)
+    if not content:
+        return None
     lead, trail = len(inner) - len(inner.lstrip()), len(inner) - len(inner.rstrip())
     if lead + trail >= len(inner):
         return None
@@ -384,7 +392,7 @@ def score_prediction(example, text, mode="strict"):
     if mode == "strict":
         return wrong
     # Keep spaces: they may be the actual output. Surrounding line breaks are formatting.
-    bare = re.findall(r"<prediction>(.*?)</prediction>", text, re.S)[0].strip("\r\n")
+    bare = _single_tag(text, "prediction").strip("\r\n")
     if not parsed and isinstance(reference, str) and bare == reference:
         return {"status": "scored", "correct": True, "detail": "unquoted string content"}
     if mode == "relaxed" or example["dataset"] != "re2":

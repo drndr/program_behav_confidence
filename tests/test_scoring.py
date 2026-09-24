@@ -59,9 +59,22 @@ class PromptTests(unittest.TestCase):
 class ResponseTests(unittest.TestCase):
     def test_prediction_requires_exactly_one_tag(self):
         self.assertEqual(parse_prediction("text <prediction> [1, 2] </prediction> more"), "[1, 2]")
-        for text in ("[1, 2]", "<prediction>1</prediction><prediction>2</prediction>", "<prediction>1"):
+        for text in ("[1, 2]", "<prediction>1</prediction><prediction>2</prediction>", "<prediction>1",
+                     "<prediction></prediction><prediction> </prediction>"):
             with self.assertRaises(ValueError):
                 parse_prediction(text)
+
+    def test_empty_blocks_are_ignored_beside_an_answer(self):
+        # Models restate the format before answering; that empty block is not a second answer.
+        text = "Put it inside <prediction></prediction> tags.\n<prediction>'x'</prediction>"
+        self.assertEqual(parse_prediction(text), "'x'")
+        self.assertEqual(parse_prediction("<prediction></prediction>"), "")
+        with self.assertRaises(ValueError):
+            parse_prediction("<prediction></prediction><prediction>1</prediction><prediction>2</prediction>")
+        for mode in SCORING_MODES:
+            self.assertTrue(score_prediction(CRUX, text, mode)["correct"])
+        unquoted = "Use <prediction></prediction>.\n<prediction>x</prediction>"
+        self.assertTrue(score_prediction(CRUX, unquoted, "relaxed")["correct"])
 
 
 def tokens(*pairs):
@@ -94,8 +107,16 @@ class LogprobTests(unittest.TestCase):
         self.assertIsNone(prediction_logprobs(self.TEXT, {"content": []}))
         self.assertIsNone(prediction_logprobs(self.TEXT, None))
         self.assertIsNone(prediction_logprobs("no tags", tokens(*self.ANSWER)))
+        self.assertIsNone(prediction_logprobs(self.TEXT + self.TEXT, tokens(*self.ANSWER, *self.ANSWER)))
         missing = {"content": [{"token": t, "logprob": None} for t, _ in self.ANSWER]}
         self.assertIsNone(prediction_logprobs(self.TEXT, missing))
+
+    def test_answer_after_an_empty_format_mention(self):
+        mention = [("Use", -0.3), (" <", -0.2), ("prediction", -0.1), ("></", -0.1), ("prediction", -0.1), (">.", -0.2),
+                   ("\n", -0.1)]
+        result = prediction_logprobs("Use <prediction></prediction>.\n" + self.TEXT, tokens(*mention, *self.ANSWER))
+        self.assertEqual(result["token_count"], 3)
+        self.assertAlmostEqual(result["mean_logprob"], (-0.5 - 1.0 - 0.2) / 3)
 
     def test_whitespace_padding_and_multibyte_content(self):
         text = "<prediction>\n  [1, 'é']\n</prediction>"

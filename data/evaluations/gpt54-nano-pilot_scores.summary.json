@@ -4,8 +4,8 @@
     "data/predictions/gpt54-nano-pilot.jsonl": "5010f84837e18342fbbec04b779b26fc4f5a43f10223f8f14aa55a75216dca71",
     "data/raw/cruxeval/cruxeval.csv": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
     "data/raw/re2/re2_filtered.csv": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
-    "src/predictions.py": "f9a96fbd9876da4eeb97cf9eb2f6a13587168a5bd3bade1de1f6e5ee51c397a3",
-    "scripts/evaluate_predictions.py": "ec62b1cbf7d50c5180fe40bbeb665e8ed1545b33305476b47dac315f3b33cccb"
+    "src/scoring.py": "5830c55ea2bcd72a5565c420cfa349ad33bdf8a6c759c42525123052de46b718",
+    "scripts/evaluate_predictions.py": "5c9ad8a5ecc451f82f506142de185932e466493f64d1834b08ae5adceb470538"
   },
   "summary": {
     "cruxeval/strict": {
@@ -13,6 +13,8 @@
       "correct": 5,
       "incorrect": 5,
       "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
       "statuses": {
         "scored": 9,
         "invalid_prediction": 1
@@ -23,6 +25,8 @@
       "correct": 5,
       "incorrect": 5,
       "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
       "statuses": {
         "scored": 9,
         "invalid_prediction": 1
@@ -33,6 +37,8 @@
       "correct": 5,
       "incorrect": 5,
       "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
       "statuses": {
         "scored": 9,
         "invalid_prediction": 1
@@ -43,6 +49,8 @@
       "correct": 2,
       "incorrect": 8,
       "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
       "statuses": {
         "scored": 2,
         "invalid_prediction": 8
@@ -53,6 +61,8 @@
       "correct": 4,
       "incorrect": 6,
       "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
       "statuses": {
         "scored": 4,
         "invalid_prediction": 6
@@ -63,6 +73,8 @@
       "correct": 7,
       "incorrect": 3,
       "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
       "statuses": {
         "scored": 7,
         "invalid_prediction": 3
