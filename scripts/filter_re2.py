@@ -14,11 +14,18 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from datasets import load_re2_export, sha256_file
-from re2_inspection import input_text
 
 
 # The task question names the called function; stdin programs have no name.
 QUESTION = re.compile(r"What will be the output of (?:`([^`]+)`,? given )?the following input:")
+
+
+def input_text(row):
+    """The final INPUT block belongs to the task in this release's templates."""
+    blocks = re.findall(r"\[INPUT\](.*?)\[/INPUT\]", row["messages"][0]["content"], re.S)
+    if not blocks:
+        raise ValueError(f"No input block: {row['id']}")
+    return re.sub(r"^```(?:json|python)?\s*|\s*```$", "", blocks[-1].strip()).strip()
 
 
 def remove_prompts(rows):
