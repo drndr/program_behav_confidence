@@ -8,6 +8,7 @@ notebook/   Jupyter notebooks
 scripts/    Research scripts
 tests/      Unit tests
 data/       Datasets
+explorer/   Local results browser
 ```
 
 ## Setup
@@ -96,3 +97,9 @@ signals, not calibrated probabilities of correctness.
 The summary's `mean_prediction_logprob` averages these per-answer means with
 equal weight per item, using only items with usable log-probabilities.
 `with_logprobs` gives that denominator; the mean is null when none are available.
+
+Browse evaluated runs item by item at http://127.0.0.1:8000:
+
+```sh
+python explorer/serve.py
+```

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "explorer",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["explorer/serve.py", "8000"],
+      "port": 8000
+    }
+  ]
+}

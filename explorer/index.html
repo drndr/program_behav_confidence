@@ -1,0 +1,162 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Results explorer</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; font: 14px system-ui, sans-serif; background: #fff; color: #000;
+         display: grid; grid-template-columns: min(720px, 50vw) 1fr; height: 100vh; }
+  #list { overflow: auto; border-right: 1px solid #ddd; }
+  #bar { position: sticky; top: 0; background: #fff; padding: 8px; border-bottom: 1px solid #ddd; }
+  #bar div + div { margin-top: 6px; }
+  #detail { overflow: auto; padding: 8px 16px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 3px 6px; text-align: left; border-bottom: 1px solid #eee; white-space: nowrap; }
+  th { cursor: pointer; user-select: none; }
+  .mark { text-align: center; }
+  .num { text-align: right; }
+  td.id { max-width: 250px; overflow: hidden; text-overflow: ellipsis; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: #f4f4f4; }
+  tr.selected { background: #e3ecfb; }
+  pre { background: #f6f6f6; padding: 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
+</style>
+<div id="list">
+  <div id="bar">
+    <div><select id="run"></select> <span id="count"></span></div>
+    <div>
+      <select id="dataset"></select>
+      Show <select id="show"></select>
+      in <select id="mode"><option>strict</option><option>relaxed</option><option selected>normalized</option></select>
+    </div>
+  </div>
+  <table>
+    <thead><tr id="head"></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</div>
+<div id="detail">Select an item.</div>
+<script>
+const MODES = ["strict", "relaxed", "normalized"];
+const MARK = {true: "✓", false: "✗", null: "–"};
+const VERDICTS = {all: () => true, correct: v => v === true, wrong: v => v === false, unscored: v => v === null};
+const COLUMNS = [
+  {label: "#", title: "Position in the run; stays with the item when filtering or sorting", value: i => i.number, cls: "num"},
+  {label: "Dataset", value: i => i.dataset},
+  {label: "Item", value: i => i.id, cls: "id"},
+  ...MODES.map(m => ({label: m[0].toUpperCase() + m.slice(1), value: i => i.correct[m], show: v => MARK[v], cls: "mark"})),
+  {label: "Logprob", title: "Mean log-probability of the answer tokens",
+   value: i => i.logprob, show: v => v === null ? "" : v.toExponential(1), cls: "num"},
+  {label: "Reasoning tokens", value: i => i.reasoning_tokens, show: v => v ?? "", cls: "num"},
+];
+const $ = id => document.getElementById(id);
+let items = [], sortColumn = null, descending = false;
+
+function inDataset(item) {
+  return !$("dataset").value || item.dataset === $("dataset").value;
+}
+
+function matches(item) {
+  const show = $("show").value, mode = $("mode").value;
+  if (!inDataset(item)) return false;
+  if (show.startsWith("status:")) return item.status[mode] === show.slice("status:".length);
+  return VERDICTS[show](item.correct[mode]);
+}
+
+// Options carry counts for the current dataset and mode; statuses are the ones present in the run.
+function refreshShow() {
+  const mode = $("mode").value, keep = $("show").value;
+  const pool = items.filter(inDataset);
+  const options = Object.keys(VERDICTS).map(v => [v, `${v} (${pool.filter(i => VERDICTS[v](i.correct[mode])).length})`]);
+  for (const status of [...new Set(pool.map(i => i.status[mode]))].sort()) {
+    options.push(["status:" + status, `status ${status} (${pool.filter(i => i.status[mode] === status).length})`]);
+  }
+  $("show").replaceChildren(...options.map(([value, label]) => new Option(label, value)));
+  $("show").value = options.some(([value]) => value === keep) ? keep : "all";
+}
+
+// Missing values sort last in either direction; ids compare with their numbers ("sample_2" < "sample_10").
+function compare(a, b) {
+  if (a === b) return 0;
+  if (a === null || a === undefined) return 1;
+  if (b === null || b === undefined) return -1;
+  const order = typeof a === "string" ? a.localeCompare(b, undefined, {numeric: true}) : (a < b ? -1 : 1);
+  return descending ? -order : order;
+}
+
+function renderHead() {
+  $("head").replaceChildren(...COLUMNS.map(column => {
+    const th = document.createElement("th");
+    th.textContent = column.label + (column === sortColumn ? (descending ? " ▼" : " ▲") : "");
+    th.className = column.cls ?? "";
+    if (column.title) th.title = column.title;
+    th.onclick = () => {
+      descending = column === sortColumn ? !descending : false;
+      sortColumn = column;
+      renderHead();
+      render();
+    };
+    return th;
+  }));
+}
+
+function render() {
+  const shown = items.filter(matches);
+  if (sortColumn) shown.sort((a, b) => compare(sortColumn.value(a), sortColumn.value(b)));
+  $("count").textContent = `${shown.length} of ${items.length} items`;
+  const rows = $("rows");
+  rows.replaceChildren();
+  for (const item of shown) {
+    const tr = rows.insertRow();
+    for (const column of COLUMNS) {
+      const cell = tr.insertCell();
+      const value = column.value(item);
+      cell.textContent = column.show ? column.show(value) : value;
+      cell.className = column.cls ?? "";
+    }
+    tr.cells[COLUMNS.findIndex(c => c.cls === "id")].title = item.id;
+    tr.onclick = () => {
+      rows.querySelector(".selected")?.classList.remove("selected");
+      tr.classList.add("selected");
+      showItem(item);
+    };
+  }
+}
+
+function showItem(item) {
+  const detail = $("detail");
+  detail.replaceChildren();
+  const heading = document.createElement("h3");
+  heading.textContent = `#${item.number}  ${item.dataset} / ${item.id}`;
+  detail.append(heading);
+  for (const [label, text] of [["Code", item.code], ["Input", item.input], ["Reference", item.reference],
+                               ["Response", item.response ?? "(no response)"],
+                               ["Reasoning", item.reasoning ?? "(none)"]]) {
+    const h = document.createElement("h4");
+    const pre = document.createElement("pre");
+    h.textContent = label;
+    pre.textContent = text;
+    detail.append(h, pre);
+  }
+}
+
+async function loadRun(run) {
+  items = await (await fetch("/api/runs/" + run)).json();
+  items.forEach((item, index) => item.number = index + 1);
+  const keep = $("dataset").value;
+  const datasets = [...new Set(items.map(i => i.dataset))].sort();
+  $("dataset").replaceChildren(new Option("all datasets", ""), ...datasets.map(d => new Option(d, d)));
+  $("dataset").value = datasets.includes(keep) ? keep : "";
+  refreshShow();
+  render();
+  $("detail").textContent = "Select an item.";
+}
+
+(async () => {
+  renderHead();
+  for (const run of await (await fetch("/api/runs")).json()) $("run").add(new Option(run, run));
+  $("run").onchange = () => loadRun($("run").value);
+  $("dataset").onchange = $("mode").onchange = () => { refreshShow(); render(); };
+  $("show").onchange = render;
+  if ($("run").value) loadRun($("run").value);
+})();
+</script>
