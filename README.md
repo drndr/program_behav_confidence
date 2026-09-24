@@ -38,6 +38,21 @@ Results are saved under `data/predictions/`. Repeat the same command to resume;
 add `--retry-errors` to retry failed requests. See `--help` for repetitions,
 token limits, reasoning settings, provider selection, and log-probabilities.
 
+For a log-probability pilot, use `--require-logprobs --backend together`
+(or another tested provider). This implies `--logprobs`, pins the backend with
+fallbacks disabled, and validates that the saved answer has usable aligned
+token log-probabilities. Every response is saved before validation failure stops
+the run; its completion status is preserved separately from `logprob_validation`.
+An unresolved validation failure also blocks resume. API errors can be retried
+explicitly with `--retry-errors`; completed answers are not silently resampled.
+Incomplete responses (including token-limit truncations) are retained and skipped
+on resume; they do not stop collection for missing answer log-probabilities.
+Malformed answer tags also do not stop collection when provider log-probabilities
+are present. These responses remain saved for scoring as incorrect, with
+`invalid_answer_format` recorded separately; they are not resampled.
+Use `--reasoning-effort none` to request no reasoning, and inspect a small pilot's
+reported reasoning usage and visible answer text before scaling up.
+
 Write verification (confidence judge) prompts for a saved prediction run — one
 per completed prediction, showing the judge what the predictor saw plus the
 candidate answer, never the reference — into `data/prompts/verification/RUN/`,

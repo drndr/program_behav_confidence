@@ -12,6 +12,7 @@ from collections import Counter
 from datetime import datetime, timezone
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -21,6 +22,36 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from datasets import sha256_file
 from model_client import OpenRouterClient
+from scoring import parse_prediction, prediction_logprobs
+
+
+def validate_logprobs(result):
+    """Keep response status intact; independently validate usable answer logprobs."""
+    if result["status"] != "completed":
+        return {"valid": False, "reason": "response_not_completed"}
+    logprobs = result.get("logprobs")
+    if not isinstance(logprobs, dict) or not logprobs.get("content"):
+        return {"valid": False, "reason": "missing_or_unaligned_logprobs"}
+    try:
+        parse_prediction(result.get("text") or "")
+    except ValueError:
+        return {"valid": False, "reason": "invalid_answer_format"}
+    try:
+        metrics = prediction_logprobs(result.get("text") or "", result.get("logprobs"))
+        if metrics is None:
+            return {"valid": False, "reason": "missing_or_unaligned_logprobs"}
+        if not math.isfinite(metrics["mean_logprob"]) or metrics["mean_logprob"] > 0:
+            return {"valid": False, "reason": "invalid_logprob_value"}
+    except (ValueError, TypeError, KeyError, OverflowError, AttributeError):
+        return {"valid": False, "reason": "malformed_answer_or_logprobs"}
+    return {"valid": True, **metrics}
+
+
+def logprobs_block_run(result):
+    if result["status"] == "incomplete":
+        return False
+    validation = validate_logprobs(result)
+    return not validation["valid"] and validation.get("reason") != "invalid_answer_format"
 
 
 def now():
@@ -90,15 +121,19 @@ def run(args, client=None):
     parameters = {"max_tokens": args.max_tokens, "provider": {"require_parameters": True}}
     if args.temperature is not None:
         parameters["temperature"] = args.temperature
-    if args.logprobs:
+    if args.logprobs or args.require_logprobs:
         parameters["logprobs"] = True
     if args.backend:
         parameters["provider"].update(only=[args.backend], allow_fallbacks=False)
     if args.reasoning_effort is not None:
         parameters["reasoning"] = {"effort": args.reasoning_effort}
+        if args.reasoning_effort == "none":
+            parameters["reasoning"]["enabled"] = False
     config = {"provider": "openrouter", "model": args.model, "parameters": parameters,
               "timeout": args.timeout, "repetitions": args.repetitions, "limit_per_dataset": args.limit,
               "prompt_files": {p.name: sha256_file(p) for p in paths}}
+    if args.require_logprobs:
+        config["require_logprobs"] = True
     request_count = len(prompts) * args.repetitions
     if args.dry_run:
         print(json.dumps({"requests": request_count, "configuration": config}, indent=2))
@@ -140,9 +175,13 @@ def run(args, client=None):
                     key = (prompt["dataset"], prompt["id"], repetition)
                     prior = latest.get(key)
                     if prior and (prior["status"] != "error" or not args.retry_errors):
+                        if args.require_logprobs and logprobs_block_run(prior):
+                            raise ValueError("Saved response fails required logprob validation; inspect it before resuming")
                         counts["skipped"] += 1
                         continue
                     result = client.complete(prompt["messages"], args.model, parameters)
+                    if args.require_logprobs:
+                        result["logprob_validation"] = validate_logprobs(result)
                     record = {"dataset": prompt["dataset"], "id": prompt["id"], "repetition": repetition,
                               "attempt": attempts[key] + 1, "prompt_sha256": prompt["prompt_sha256"],
                               "provider": client.provider, "requested_model": args.model,
@@ -152,6 +191,9 @@ def run(args, client=None):
                     os.fsync(stream.fileno())
                     counts[result["status"]] += 1
                     print(f"{prompt['dataset']} {prompt['id']} repeat={repetition}: {result['status']}", flush=True)
+                    if args.require_logprobs and logprobs_block_run(result):
+                        raise ValueError("Saved response fails required logprob validation: "
+                                         + result["logprob_validation"]["reason"])
                     if result.get("http_status") in (401, 402, 403, 429):
                         print("Stopping on authentication, credit, permission or rate-limit error; see saved response.")
                         return dict(counts)
@@ -174,6 +216,8 @@ def parser():
     p.add_argument("--temperature", type=float, help="Omit to use the model/provider default")
     p.add_argument("--timeout", type=float, default=120)
     p.add_argument("--logprobs", action="store_true")
+    p.add_argument("--require-logprobs", action="store_true",
+                   help="Require usable answer logprobs; retain and skip incomplete responses")
     p.add_argument("--backend", help="Restrict OpenRouter to one backend provider slug")
     p.add_argument("--reasoning-effort", choices=("none", "minimal", "low", "medium", "high", "xhigh"))
     p.add_argument("--retry-errors", action="store_true")
