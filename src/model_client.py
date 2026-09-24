@@ -69,8 +69,10 @@ class OpenRouterClient:
             return dict(result, error="Invalid completion message; see raw_response")
         content = message.get("content")
         finish = choice.get("finish_reason")
+        # Token log-probabilities are large; keep one copy, in the logprobs field, not in raw_response too.
+        logprobs = choice.pop("logprobs", None)
         return dict(result,
                     status="completed" if finish == "stop" and isinstance(content, str) and content.strip() else "incomplete",
                     text=content, finish_reason=finish, usage=raw.get("usage"),
-                    logprobs=choice.get("logprobs"), response_id=raw.get("id"),
+                    logprobs=logprobs, response_id=raw.get("id"),
                     returned_model=raw.get("model"), backend_provider=raw.get("provider"))

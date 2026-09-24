@@ -21,9 +21,10 @@ class IncompleteReply(Reply):
 
 class ClientTests(unittest.TestCase):
     def test_request_and_raw_response_preserved(self):
+        logprobs = {"content": [{"token": "1", "logprob": -0.5}]}
         raw = {"id": "generation-1", "model": "resolved/model", "provider": "backend",
                "choices": [{"message": {"content": "<prediction>1</prediction>", "reasoning": "trace"},
-                            "finish_reason": "stop", "logprobs": {"content": []}}],
+                            "finish_reason": "stop", "logprobs": logprobs}],
                "usage": {"total_tokens": 10, "cost": 0.001}}
         def transport(request, timeout):
             payload = json.loads(request.data)
@@ -34,7 +35,12 @@ class ClientTests(unittest.TestCase):
             return Reply(json.dumps(raw).encode())
         client = OpenRouterClient("test-secret", transport=transport)
         result = client.complete([{"role": "user", "content": "question"}], "requested/model", {})
-        self.assertEqual(result["raw_response"], raw)
+        # Log-probabilities are stored once, in their own field; the rest of the response is kept verbatim.
+        self.assertEqual(result["logprobs"], logprobs)
+        self.assertNotIn("logprobs", result["raw_response"]["choices"][0])
+        expected = json.loads(json.dumps(raw))
+        del expected["choices"][0]["logprobs"]
+        self.assertEqual(result["raw_response"], expected)
         self.assertEqual(result["status"], "completed")
         self.assertEqual(result["backend_provider"], "backend")
         self.assertNotIn("test-secret", json.dumps(result))
