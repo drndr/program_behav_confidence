@@ -1,16 +1,16 @@
 {
-  "created_at": "2026-09-15T12:47:04.259658+00:00",
+  "created_at": "2026-09-25T19:54:55.316348+00:00",
   "encoding": "o200k_base",
   "tiktoken_version": "0.14.0",
   "python_version": "3.12.14",
   "sources": {
     "cruxeval": {
-      "path": "C:\\Users\\drndr\\Documents\\fse2027-program-behavior-reliability\\data\\raw\\cruxeval\\cruxeval.csv",
+      "path": "data/raw/cruxeval/cruxeval.csv",
       "sha256": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
       "output_sha256": "7cd35ed27acd03a0122e4c097c9a8d48f1072a2f8ca2967ad72a0f1a8d36d103"
     },
     "re2": {
-      "path": "C:\\Users\\drndr\\Documents\\fse2027-program-behavior-reliability\\data\\raw\\re2\\re2_filtered.csv",
+      "path": "data/raw/re2/re2_filtered.csv",
       "sha256": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
       "output_sha256": "7fd9468bd76eea8b1a851a015febf13cc0f8deef3122baddef93bef96df48186"
     }
@@ -69,7 +69,7 @@
   },
   "implementation_sha256": {
     "src/program_properties.py": "8438e5ebf74754cdbf8d1a70259f0077ddedc17b3ea0b0b08a07fb2fc62b66c8",
-    "scripts/measure_program_properties.py": "a153f64e65cca9dbabfc740d0e36c783ec77a5b4ed8fcd445d13dc9ebd19bf52"
+    "scripts/measure_program_properties.py": "523495cb1d2b1ef731e3f63b67d4d3e0de7e86733271988bd4a10bab142b98bd"
   },
   "definitions": {
     "tokens": "Exact code/input CSV fields using encode_ordinary; full supplied code including helpers and comments, no prompt or reference. Fixed reference encoding, not provider-specific token usage.",

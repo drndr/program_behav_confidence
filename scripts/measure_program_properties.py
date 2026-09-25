@@ -50,7 +50,8 @@ def run(data_dir, out_dir, encoding_name="o200k_base"):
             summary[metric] = {"available": len(values), "min": min(values) if values else None,
                                "median": statistics.median(values) if values else None,
                                "max": max(values) if values else None}
-        manifest["sources"][name] = {"path": str(source), "sha256": sha256_file(source),
+        path = source.relative_to(ROOT).as_posix() if source.is_relative_to(ROOT) else source.as_posix()
+        manifest["sources"][name] = {"path": path, "sha256": sha256_file(source),
                                      "output_sha256": sha256_file(output)}
         manifest["summary"][name] = summary
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
