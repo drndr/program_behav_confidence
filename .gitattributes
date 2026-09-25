@@ -1,0 +1,6 @@
+# Manifests record SHA-256 hashes of these files, so every checkout must have
+# their exact bytes: no line-ending conversion. The csv module ends rows with
+# CRLF while code fields keep LF.
+*.csv -text
+/data/prompts/**/*.jsonl -text
+/data/predictions/*.jsonl -text
