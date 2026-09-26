@@ -5,45 +5,58 @@
   :root { color-scheme: light; }
   body { margin: 0; font: 14px system-ui, sans-serif; background: #fff; color: #000;
          display: grid; grid-template-columns: min(720px, 50vw) 1fr; height: 100vh; }
-  #list { overflow: auto; border-right: 1px solid #ddd; }
-  #bar { position: sticky; top: 0; background: #fff; padding: 8px; border-bottom: 1px solid #ddd; }
-  #bar div + div { margin-top: 6px; }
+  #list { display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid #ddd; }
+  #bar { padding: 8px; background: #fafafa; border-bottom: 1px solid #ddd; }
+  #count, .empty { color: #666; }
+  #table { flex: 1; overflow: auto; }
   #detail { overflow: auto; padding: 8px 16px; }
   table { border-collapse: collapse; width: 100%; }
   th, td { padding: 3px 6px; text-align: left; border-bottom: 1px solid #eee; white-space: nowrap; }
-  th { cursor: pointer; user-select: none; }
+  th { position: sticky; top: 0; background: #fff; box-shadow: inset 0 -1px #ddd; cursor: pointer; user-select: none; }
   .mark { text-align: center; }
-  .num { text-align: right; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .ok { color: #1a7f37; }
+  .no { color: #cf222e; }
+  .na { color: #999; }
   td.id { max-width: 250px; overflow: hidden; text-overflow: ellipsis; }
   tbody tr { cursor: pointer; }
   tbody tr:hover { background: #f4f4f4; }
   tr.selected { background: #e3ecfb; }
-  pre { background: #f6f6f6; padding: 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  h3 { font-size: 15px; font-weight: 600; margin: 6px 0 4px; overflow-wrap: anywhere; }
+  .label { font-size: 12px; color: #666; margin: 14px 0 4px; }
+  pre { margin: 0; background: #f6f6f6; padding: 8px; border-radius: 4px; white-space: pre-wrap; overflow-wrap: anywhere;
+        font: 12.5px/1.45 ui-monospace, Consolas, monospace; }
+  mark { background: #fff3b0; }
 </style>
 <div id="list">
   <div id="bar">
-    <div><select id="run"></select> <span id="count"></span></div>
-    <div>
-      <select id="dataset"></select>
-      Show <select id="show"></select>
-      in <select id="mode"><option>strict</option><option>relaxed</option><option selected>normalized</option></select>
-    </div>
+    <select id="run"></select> Show <select id="show"></select> <span id="count"></span>
   </div>
-  <table>
-    <thead><tr id="head"></tr></thead>
-    <tbody id="rows"></tbody>
-  </table>
+  <div id="table">
+    <table>
+      <thead><tr id="head"></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
 </div>
-<div id="detail">Select an item.</div>
+<div id="detail"><p class="empty">Select an item.</p></div>
 <script>
 const MODES = ["strict", "relaxed", "normalized"];
 const MARK = {true: "✓", false: "✗", null: "–"};
-const VERDICTS = {all: () => true, correct: v => v === true, wrong: v => v === false, unscored: v => v === null};
+const MARK_CLASS = {true: "mark ok", false: "mark no", null: "mark na"};
+// Filters use normalized scoring. Truncated: the response ended before an answer (token limit).
+const FILTERS = {
+  all: () => true,
+  correct: item => item.correct.normalized === true,
+  incorrect: item => item.correct.normalized === false,
+  truncated: item => item.status.normalized === "request_incomplete",
+};
 const COLUMNS = [
   {label: "#", title: "Position in the run; stays with the item when filtering or sorting", value: i => i.number, cls: "num"},
   {label: "Dataset", value: i => i.dataset},
   {label: "Item", value: i => i.id, cls: "id"},
-  ...MODES.map(m => ({label: m[0].toUpperCase() + m.slice(1), value: i => i.correct[m], show: v => MARK[v], cls: "mark"})),
+  ...MODES.map(m => ({label: m[0].toUpperCase() + m.slice(1), value: i => i.correct[m], show: v => MARK[v],
+                      cls: "mark", cellClass: v => MARK_CLASS[v]})),
   {label: "Logprob", title: "Mean log-probability of the answer tokens",
    value: i => i.logprob, show: v => v === null ? "" : v.toExponential(1), cls: "num"},
   {label: "Reasoning tokens", value: i => i.reasoning_tokens, show: v => v ?? "", cls: "num"},
@@ -51,27 +64,12 @@ const COLUMNS = [
 const $ = id => document.getElementById(id);
 let items = [], sortColumn = null, descending = false;
 
-function inDataset(item) {
-  return !$("dataset").value || item.dataset === $("dataset").value;
-}
-
-function matches(item) {
-  const show = $("show").value, mode = $("mode").value;
-  if (!inDataset(item)) return false;
-  if (show.startsWith("status:")) return item.status[mode] === show.slice("status:".length);
-  return VERDICTS[show](item.correct[mode]);
-}
-
-// Options carry counts for the current dataset and mode; statuses are the ones present in the run.
+// Options carry counts for the loaded run.
 function refreshShow() {
-  const mode = $("mode").value, keep = $("show").value;
-  const pool = items.filter(inDataset);
-  const options = Object.keys(VERDICTS).map(v => [v, `${v} (${pool.filter(i => VERDICTS[v](i.correct[mode])).length})`]);
-  for (const status of [...new Set(pool.map(i => i.status[mode]))].sort()) {
-    options.push(["status:" + status, `status ${status} (${pool.filter(i => i.status[mode] === status).length})`]);
-  }
-  $("show").replaceChildren(...options.map(([value, label]) => new Option(label, value)));
-  $("show").value = options.some(([value]) => value === keep) ? keep : "all";
+  const keep = $("show").value || "all";
+  $("show").replaceChildren(...Object.keys(FILTERS).map(f =>
+    new Option(`${f} (${items.filter(FILTERS[f]).length})`, f)));
+  $("show").value = keep;
 }
 
 // Missing values sort last in either direction; ids compare with their numbers ("sample_2" < "sample_10").
@@ -100,7 +98,7 @@ function renderHead() {
 }
 
 function render() {
-  const shown = items.filter(matches);
+  const shown = items.filter(FILTERS[$("show").value]);
   if (sortColumn) shown.sort((a, b) => compare(sortColumn.value(a), sortColumn.value(b)));
   $("count").textContent = `${shown.length} of ${items.length} items`;
   const rows = $("rows");
@@ -111,7 +109,7 @@ function render() {
       const cell = tr.insertCell();
       const value = column.value(item);
       cell.textContent = column.show ? column.show(value) : value;
-      cell.className = column.cls ?? "";
+      cell.className = column.cellClass ? column.cellClass(value) : column.cls ?? "";
     }
     tr.cells[COLUMNS.findIndex(c => c.cls === "id")].title = item.id;
     tr.onclick = () => {
@@ -131,31 +129,40 @@ function showItem(item) {
   for (const [label, text] of [["Code", item.code], ["Input", item.input], ["Reference", item.reference],
                                ["Response", item.response ?? "(no response)"],
                                ["Reasoning", item.reasoning ?? "(none)"]]) {
-    const h = document.createElement("h4");
+    const caption = document.createElement("div");
     const pre = document.createElement("pre");
-    h.textContent = label;
-    pre.textContent = text;
-    detail.append(h, pre);
+    caption.className = "label";
+    caption.textContent = label;
+    if (label === "Response") appendHighlighted(pre, text);
+    else pre.textContent = text;
+    detail.append(caption, pre);
   }
+}
+
+// Mark the <prediction> blocks so the answer stands out in long responses.
+function appendHighlighted(pre, text) {
+  let last = 0;
+  for (const match of text.matchAll(/<prediction>[\s\S]*?<\/prediction>/g)) {
+    const mark = document.createElement("mark");
+    mark.textContent = match[0];
+    pre.append(text.slice(last, match.index), mark);
+    last = match.index + match[0].length;
+  }
+  pre.append(text.slice(last));
 }
 
 async function loadRun(run) {
   items = await (await fetch("/api/runs/" + run)).json();
   items.forEach((item, index) => item.number = index + 1);
-  const keep = $("dataset").value;
-  const datasets = [...new Set(items.map(i => i.dataset))].sort();
-  $("dataset").replaceChildren(new Option("all datasets", ""), ...datasets.map(d => new Option(d, d)));
-  $("dataset").value = datasets.includes(keep) ? keep : "";
   refreshShow();
   render();
-  $("detail").textContent = "Select an item.";
+  $("detail").innerHTML = '<p class="empty">Select an item.</p>';
 }
 
 (async () => {
   renderHead();
   for (const run of await (await fetch("/api/runs")).json()) $("run").add(new Option(run, run));
   $("run").onchange = () => loadRun($("run").value);
-  $("dataset").onchange = $("mode").onchange = () => { refreshShow(); render(); };
   $("show").onchange = render;
   if ($("run").value) loadRun($("run").value);
 })();
