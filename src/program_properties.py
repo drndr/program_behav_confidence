@@ -12,15 +12,24 @@ import re
 import tokenize
 
 
+# RE2 names each helper on an unindented line: a dotted path, sometimes dot-prefixed or with a
+# hyphenated package ("scikit-learn.sklearn..."), or a comprehension/lambda frame ("pkg.mod.<genexpr>").
+HELPER_LABEL = re.compile(r"\.?(?:[A-Za-z_][\w-]*\.)+(?:[A-Za-z_]\w*|<(?:genexpr|listcomp|dictcomp|setcomp|lambda)>)")
+
+
 def helper_label_lines(code):
-    """RE2 includes unindented dotted helper names immediately before definitions."""
+    """Line numbers of RE2 helper labels, which are not Python.
+
+    A dotted path is a label only before a definition, since it could otherwise be code.
+    A frame name is never Python; it precedes a code fragment, which is kept.
+    """
     lines = code.splitlines()
     excluded = set()
     for i, line in enumerate(lines):
-        if not re.fullmatch(r"(?:[A-Za-z_]\w*\.)+[A-Za-z_]\w*", line):
+        if not HELPER_LABEL.fullmatch(line):
             continue
-        following = next((s for s in lines[i + 1:] if s.strip()), "")
-        if re.match(r"(?:async\s+def\s|def\s|class\s|@)", following):
+        following = next((s for s in lines[i + 1:] if s.strip()), "").lstrip()
+        if line.endswith(">") or re.match(r"(?:async\s+def\s|def\s|class\s|@)", following):
             excluded.add(i + 1)
     return excluded
 

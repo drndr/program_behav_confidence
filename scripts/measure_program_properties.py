@@ -32,7 +32,7 @@ def run(data_dir, out_dir, encoding_name="o200k_base"):
                                           ("src/program_properties.py", "scripts/measure_program_properties.py")},
                 "definitions": {
                     "tokens": "Exact code/input CSV fields using encode_ordinary; full supplied code including helpers and comments, no prompt or reference. Fixed reference encoding, not provider-specific token usage.",
-                    "executable_lines": "Physical code-token lines including headers/continuations; exclude blank/comment lines and standalone literal strings (docstrings). Exclude RE2 dotted helper labels before definitions. No execution.",
+                    "executable_lines": "Physical code-token lines including headers/continuations; exclude blank/comment lines and standalone literal strings (docstrings). Exclude RE2 helper labels: dotted names (also dot-prefixed or with a hyphenated package) before definitions, and frame names such as pkg.mod.<genexpr>. No execution.",
                     "missing": "Blank executable_lines means tokenization failed, not zero. lexical_only means tokenization succeeded but AST parsing failed; source-size count only."}}
     for name, relative in SOURCES.items():
         source = data_dir / relative

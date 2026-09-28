@@ -26,6 +26,19 @@ class SizeTests(unittest.TestCase):
         self.assertEqual(result['helper_labels_excluded'], 1)
         self.assertEqual(executable_lines(source, 'cruxeval')['executable_lines'], 3)
 
+    def test_re2_label_variants(self):
+        # Dot-prefixed, hyphenated package before a decorator, and a comprehension frame before its fragment.
+        source = ('.pkg.module.helper\n\ndef helper():\n    return 1\n'
+                  'scikit-learn.sklearn.utils.check\n@decorator\ndef check():\n    return 2\n'
+                  'pkg.module.<genexpr>\nvalues = [x for x in range(3)]\n')
+        result = executable_lines(source, 're2')
+        self.assertEqual((result['helper_labels_excluded'], result['line_status']), (3, 'ok'))
+        self.assertEqual(result['executable_lines'], 6)
+
+    def test_dotted_name_before_code_is_kept(self):
+        result = executable_lines('pkg.module.value\nx = 1\n', 're2')
+        self.assertEqual((result['helper_labels_excluded'], result['executable_lines']), (0, 2))
+
     def test_failure_is_not_zero(self):
         result = executable_lines('x = (\n', 're2')
         self.assertIsNone(result['executable_lines'])

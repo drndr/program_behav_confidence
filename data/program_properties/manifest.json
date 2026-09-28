@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-09-25T19:54:55.316348+00:00",
+  "created_at": "2026-09-26T21:42:41.827027+00:00",
   "encoding": "o200k_base",
   "tiktoken_version": "0.14.0",
   "python_version": "3.12.14",
@@ -12,7 +12,7 @@
     "re2": {
       "path": "data/raw/re2/re2_filtered.csv",
       "sha256": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
-      "output_sha256": "7fd9468bd76eea8b1a851a015febf13cc0f8deef3122baddef93bef96df48186"
+      "output_sha256": "813244a67a1a5e97a4f92c1ecb5498524f9034ce91bd4feb08b7b49ee8e0e7eb"
     }
   },
   "summary": {
@@ -43,9 +43,9 @@
     "re2": {
       "count": 446,
       "line_status": {
-        "ok": 326,
-        "lexical_only": 114,
-        "tokenization_failed": 6
+        "ok": 433,
+        "tokenization_failed": 6,
+        "lexical_only": 7
       },
       "code_token_length": {
         "available": 446,
@@ -62,18 +62,18 @@
       "executable_lines": {
         "available": 440,
         "min": 1,
-        "median": 56.5,
-        "max": 12717
+        "median": 56.0,
+        "max": 11900
       }
     }
   },
   "implementation_sha256": {
-    "src/program_properties.py": "8438e5ebf74754cdbf8d1a70259f0077ddedc17b3ea0b0b08a07fb2fc62b66c8",
-    "scripts/measure_program_properties.py": "523495cb1d2b1ef731e3f63b67d4d3e0de7e86733271988bd4a10bab142b98bd"
+    "src/program_properties.py": "f2674199496496b162fc7ef8b8636239aba21688802cc97bba9200e2ea7dd2f9",
+    "scripts/measure_program_properties.py": "70ca5ceceea70dc4ed4aef9af4b26d1f5482c753c176a6c8c41cd08e064f0948"
   },
   "definitions": {
     "tokens": "Exact code/input CSV fields using encode_ordinary; full supplied code including helpers and comments, no prompt or reference. Fixed reference encoding, not provider-specific token usage.",
-    "executable_lines": "Physical code-token lines including headers/continuations; exclude blank/comment lines and standalone literal strings (docstrings). Exclude RE2 dotted helper labels before definitions. No execution.",
+    "executable_lines": "Physical code-token lines including headers/continuations; exclude blank/comment lines and standalone literal strings (docstrings). Exclude RE2 helper labels: dotted names (also dot-prefixed or with a hyphenated package) before definitions, and frame names such as pkg.mod.<genexpr>. No execution.",
     "missing": "Blank executable_lines means tokenization failed, not zero. lexical_only means tokenization succeeded but AST parsing failed; source-size count only."
   }
 }
