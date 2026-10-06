@@ -61,13 +61,13 @@ in the runner's format (`--prompt-dir data/prompts/verification/RUN`). The
 judge wording is not final yet; each manifest records `wording_final`.
 
 ```sh
-python scripts/generate_verification_prompts.py data/predictions/gpt54-nano-pilot.jsonl
+python scripts/generate_verification_prompts.py data/predictions/RUN.jsonl
 ```
 
 Evaluate a saved run in strict, relaxed, and normalized modes:
 
 ```sh
-python scripts/evaluate_predictions.py data/predictions/gpt54-nano-pilot.jsonl
+python scripts/evaluate_predictions.py data/predictions/RUN.jsonl
 ```
 
 Every completed response is scored right or wrong in every mode; only requests
