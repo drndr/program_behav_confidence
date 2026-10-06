@@ -25,6 +25,7 @@ import math
 import re
 
 SCORING_MODES = ("strict", "relaxed", "normalized")
+LOGPROB_ROUNDING = 1e-4  # largest positive token log-probability treated as rounding of zero
 
 
 # --- responses ----------------------------------------------------------------
@@ -60,8 +61,10 @@ def prediction_logprobs(text, logprobs):
     Tokens are concatenated by their bytes and the prediction content is located in
     that stream between its tags (providers may prepend a </think> token, append an
     end marker, or drop a tag's first token). A token overlapping the content counts,
-    so tag-adjacent tokens such as ">'" are included. Returns None when the response
-    has no single prediction block or the stream does not reproduce the content exactly.
+    so tag-adjacent tokens such as ">'" are included. Providers may return log-probabilities
+    a rounding step above zero (OpenAI: 2**-17); those count as zero. Returns None when the
+    response has no single prediction block, a log-probability is clearly positive, or the
+    stream does not reproduce the content exactly.
     """
     content = logprobs.get("content") if isinstance(logprobs, dict) else None
     try:
@@ -76,9 +79,9 @@ def prediction_logprobs(text, logprobs):
     spans, offset, pieces = [], 0, []
     for token in content:
         raw = bytes(token["bytes"]) if token.get("bytes") is not None else str(token.get("token") or "").encode("utf-8")
-        if not isinstance(token.get("logprob"), (int, float)):
+        if not isinstance(token.get("logprob"), (int, float)) or token["logprob"] > LOGPROB_ROUNDING:
             return None
-        spans.append((offset, offset + len(raw), float(token["logprob"])))
+        spans.append((offset, offset + len(raw), min(float(token["logprob"]), 0.0)))
         pieces.append(raw)
         offset += len(raw)
     stream = b"".join(pieces)

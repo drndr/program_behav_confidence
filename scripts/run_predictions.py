@@ -116,9 +116,11 @@ def run(args, client=None):
         raise ValueError("max-tokens and timeout must be positive")
     if args.temperature is not None and not 0 <= args.temperature <= 2:
         raise ValueError("temperature must be between 0 and 2")
+    if args.allow_unlisted_parameters and not args.backend:
+        raise ValueError("--allow-unlisted-parameters needs --backend")
     paths = [args.prompt_dir / f"{name}_prompts.jsonl" for name in args.datasets]
     prompts = load_prompts(paths, args.limit)
-    parameters = {"max_tokens": args.max_tokens, "provider": {"require_parameters": True}}
+    parameters = {"max_tokens": args.max_tokens, "provider": {"require_parameters": not args.allow_unlisted_parameters}}
     if args.temperature is not None:
         parameters["temperature"] = args.temperature
     if args.logprobs or args.require_logprobs:
@@ -219,6 +221,9 @@ def parser():
     p.add_argument("--require-logprobs", action="store_true",
                    help="Require usable answer logprobs; retain and skip incomplete responses")
     p.add_argument("--backend", help="Restrict OpenRouter to one backend provider slug")
+    p.add_argument("--allow-unlisted-parameters", action="store_true",
+                   help="Send parameters OpenRouter does not list for the backend (it omits logprobs for some "
+                        "models); needs --backend, and --require-logprobs checks each response")
     p.add_argument("--reasoning-effort", choices=("none", "minimal", "low", "medium", "high", "xhigh"))
     p.add_argument("--retry-errors", action="store_true")
     p.add_argument("--dry-run", action="store_true")

@@ -70,6 +70,17 @@ class RunnerTests(unittest.TestCase):
         rows = read_results(self.root / "test.jsonl")
         self.assertTrue(all(r["logprob_validation"]["valid"] for r in rows))
 
+    def test_unlisted_parameters_need_a_pinned_backend(self):
+        self.args.allow_unlisted_parameters = True
+        with self.assertRaisesRegex(ValueError, "needs --backend"):
+            self.quiet_run(FakeClient())
+        self.args.backend = "openai"
+        class UnlistedClient(FakeClient):
+            def complete(self, messages, model, parameters):
+                assert parameters["provider"] == {"require_parameters": False, "only": ["openai"], "allow_fallbacks": False}
+                return super().complete(messages, model, parameters)
+        self.assertEqual(self.quiet_run(UnlistedClient()), {"completed": 2})
+
     def test_logprob_validation_rejects_malformed_or_unaligned_values(self):
         for content in ([{"token": "different", "logprob": -1}],
                         [{"token": "<prediction>4</prediction>", "logprob": float("nan")}],

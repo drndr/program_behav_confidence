@@ -100,6 +100,12 @@ class LogprobTests(unittest.TestCase):
             result = prediction_logprobs(self.TEXT, tokens(*content))
             self.assertEqual(result["token_count"], 3, content)
 
+    def test_rounding_above_zero_counts_as_zero(self):
+        rounded = [(t, 2 ** -17 if t == "4" else lp) for t, lp in self.ANSWER]
+        self.assertAlmostEqual(prediction_logprobs(self.TEXT, tokens(*rounded))["mean_logprob"], (-0.5 - 0.2) / 3)
+        broken = [(t, 0.5 if t == "4" else lp) for t, lp in self.ANSWER]
+        self.assertIsNone(prediction_logprobs(self.TEXT, tokens(*broken)))
+
     def test_refuses_streams_that_do_not_reproduce_the_answer(self):
         garbled = [("<p", -0.1), ("red", -0.1), ("iction", -0.1), (">'", -0.5), ("5", -1.0), ("'", -0.2), ("</", -0.1)]
         self.assertIsNone(prediction_logprobs(self.TEXT, tokens(*garbled)))
