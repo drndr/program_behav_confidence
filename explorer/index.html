@@ -2,45 +2,72 @@
 <meta charset="utf-8">
 <title>Results explorer</title>
 <style>
-  :root { color-scheme: light; }
-  body { margin: 0; font: 14px system-ui, sans-serif; background: #fff; color: #000;
-         display: grid; grid-template-columns: min(720px, 50vw) 1fr; height: 100vh; }
-  #list { display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid #ddd; }
-  #bar { padding: 8px; background: #fafafa; border-bottom: 1px solid #ddd; }
-  #count, .empty { color: #666; }
-  #table { flex: 1; overflow: auto; }
+  :root { color-scheme: dark;
+          --page: #0d1117; --panel: #161b22; --code: #1c2128; --line: #30363d; --row-line: #21262d;
+          --text: #e6edf3; --soft: #c9d1d9; --muted: #8b949e; --hover: #161b22; --selected: #1f3a5f;
+          --ok: #3fb950; --no: #f85149; --na: #6e7681; --bar: #4c8ed9; --mark: #5c4813; }
+  body { margin: 0; font: 14px system-ui, sans-serif; background: var(--page); color: var(--text);
+         display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+  #tabs { display: flex; gap: 2px; padding: 6px 8px 0; background: var(--panel); border-bottom: 1px solid var(--line); }
+  #tabs button { font: inherit; padding: 4px 14px; margin-bottom: -1px; border: 1px solid transparent; border-bottom: none;
+                 border-radius: 4px 4px 0 0; background: none; color: var(--muted); cursor: pointer; }
+  #tabs button.active { background: var(--page); border-color: var(--line); color: var(--text); }
+  main { display: grid; grid-template-columns: min(720px, 50vw) 1fr; min-height: 0; }
+  .list { display: flex; flex-direction: column; min-height: 0; overflow: hidden; border-right: 1px solid var(--line); }
+  .list[hidden] { display: none; }
+  .bar { padding: 8px; background: var(--panel); border-bottom: 1px solid var(--line); }
+  .muted, .empty { color: var(--muted); }
+  .scroll { flex: 1; overflow: auto; }
   #detail { overflow: auto; padding: 8px 16px; }
   table { border-collapse: collapse; width: 100%; }
-  th, td { padding: 3px 6px; text-align: left; border-bottom: 1px solid #eee; white-space: nowrap; }
-  th { position: sticky; top: 0; background: #fff; box-shadow: inset 0 -1px #ddd; cursor: pointer; user-select: none; }
+  th, td { padding: 3px 6px; text-align: left; border-bottom: 1px solid var(--row-line); white-space: nowrap; }
+  th { position: sticky; top: 0; background: var(--page); box-shadow: inset 0 -1px var(--line); cursor: pointer; user-select: none; }
   .mark { text-align: center; }
   .num { text-align: right; font-variant-numeric: tabular-nums; }
-  .ok { color: #1a7f37; }
-  .no { color: #cf222e; }
-  .na { color: #999; }
+  .ok { color: var(--ok); }
+  .no { color: var(--no); }
+  .na { color: var(--na); }
   td.id { max-width: 250px; overflow: hidden; text-overflow: ellipsis; }
   tbody tr { cursor: pointer; }
-  tbody tr:hover { background: #f4f4f4; }
-  tr.selected { background: #e3ecfb; }
+  tbody tr:hover { background: var(--hover); }
+  tr.selected { background: var(--selected); }
+  #summary { padding: 8px 8px 0; font-size: 13px; }
+  #charts { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 8px; }
+  .chart-title { font-size: 12px; color: var(--soft); margin-bottom: 2px; }
+  .chart text { font-size: 10px; fill: var(--muted); }
+  .chart rect { fill: var(--bar); }
   h3 { font-size: 15px; font-weight: 600; margin: 6px 0 4px; overflow-wrap: anywhere; }
-  .label { font-size: 12px; color: #666; margin: 14px 0 4px; }
-  pre { margin: 0; background: #f6f6f6; padding: 8px; border-radius: 4px; white-space: pre-wrap; overflow-wrap: anywhere;
+  .facts { font-size: 13px; color: var(--soft); }
+  .label { font-size: 12px; color: var(--muted); margin: 14px 0 4px; }
+  pre { margin: 0; background: var(--code); padding: 8px; border-radius: 4px; white-space: pre-wrap; overflow-wrap: anywhere;
         font: 12.5px/1.45 ui-monospace, Consolas, monospace; }
-  mark { background: #fff3b0; }
+  mark { background: var(--mark); color: inherit; }
 </style>
-<div id="list">
-  <div id="bar">
-    <select id="run"></select> Show <select id="show"></select> <span id="count"></span>
+<nav id="tabs">
+  <button data-view="results" class="active">Results</button>
+  <button data-view="dataset">Dataset</button>
+</nav>
+<main>
+  <div id="results" class="list">
+    <div class="bar">
+      <select id="run"></select> Show <select id="show"></select> <span id="count" class="muted"></span>
+    </div>
+    <div class="scroll">
+      <table><thead><tr id="results-head"></tr></thead><tbody id="results-rows"></tbody></table>
+    </div>
   </div>
-  <div id="table">
-    <table>
-      <thead><tr id="head"></tr></thead>
-      <tbody id="rows"></tbody>
-    </table>
+  <div id="dataset" class="list" hidden>
+    <div class="bar"><select id="dataset-name"></select></div>
+    <div class="scroll">
+      <div id="summary" class="muted"></div>
+      <div id="charts"></div>
+      <table><thead><tr id="dataset-head"></tr></thead><tbody id="dataset-rows"></tbody></table>
+    </div>
   </div>
-</div>
-<div id="detail"><p class="empty">Select an item.</p></div>
+  <div id="detail"><p class="empty">Select an item.</p></div>
+</main>
 <script>
+const $ = id => document.getElementById(id);
 const MODES = ["strict", "relaxed", "normalized"];
 const MARK = {true: "✓", false: "✗", null: "–"};
 const MARK_CLASS = {true: "mark ok", false: "mark no", null: "mark na"};
@@ -51,8 +78,10 @@ const FILTERS = {
   incorrect: item => item.correct.normalized === false,
   truncated: item => item.status.normalized === "request_incomplete",
 };
-const COLUMNS = [
-  {label: "#", title: "Position in the run; stays with the item when filtering or sorting", value: i => i.number, cls: "num"},
+const NUMBER = {label: "#", title: "Position in the run or dataset; stays with the item when filtering or sorting",
+                value: i => i.number, cls: "num"};
+const RESULT_COLUMNS = [
+  NUMBER,
   {label: "Dataset", value: i => i.dataset},
   {label: "Item", value: i => i.id, cls: "id"},
   ...MODES.map(m => ({label: m[0].toUpperCase() + m.slice(1), value: i => i.correct[m], show: v => MARK[v],
@@ -61,82 +90,92 @@ const COLUMNS = [
    value: i => i.logprob, show: v => v === null ? "" : v.toExponential(1), cls: "num"},
   {label: "Reasoning tokens", value: i => i.reasoning_tokens, show: v => v ?? "", cls: "num"},
 ];
-const $ = id => document.getElementById(id);
-let items = [], sortColumn = null, descending = false;
+const DATASET_COLUMNS = [
+  NUMBER,
+  {label: "Item", value: i => i.id, cls: "id"},
+  {label: "Source", value: i => i.source},
+  {label: "Code tokens", value: i => i.code_token_length, cls: "num"},
+  {label: "Input tokens", value: i => i.input_token_length, cls: "num"},
+  {label: "Lines", title: "Executable lines", value: i => i.executable_lines, show: v => v ?? "", cls: "num"},
+  {label: "Labels", title: "RE2 helper labels removed before counting lines", value: i => i.helper_labels_excluded, cls: "num"},
+  {label: "Parse", title: "ok, lexical_only (counted but not valid Python) or tokenization_failed (no line count)",
+   value: i => i.line_status},
+];
 
-// Options carry counts for the loaded run.
-function refreshShow() {
-  const keep = $("show").value || "all";
-  $("show").replaceChildren(...Object.keys(FILTERS).map(f =>
-    new Option(`${f} (${items.filter(FILTERS[f]).length})`, f)));
-  $("show").value = keep;
-}
-
-// Missing values sort last in either direction; ids compare with their numbers ("sample_2" < "sample_10").
-function compare(a, b) {
-  if (a === b) return 0;
-  if (a === null || a === undefined) return 1;
-  if (b === null || b === undefined) return -1;
-  const order = typeof a === "string" ? a.localeCompare(b, undefined, {numeric: true}) : (a < b ? -1 : 1);
-  return descending ? -order : order;
-}
-
-function renderHead() {
-  $("head").replaceChildren(...COLUMNS.map(column => {
-    const th = document.createElement("th");
-    th.textContent = column.label + (column === sortColumn ? (descending ? " ▼" : " ▲") : "");
-    th.className = column.cls ?? "";
-    if (column.title) th.title = column.title;
-    th.onclick = () => {
-      descending = column === sortColumn ? !descending : false;
-      sortColumn = column;
-      renderHead();
-      render();
-    };
-    return th;
-  }));
-}
-
-function render() {
-  const shown = items.filter(FILTERS[$("show").value]);
-  if (sortColumn) shown.sort((a, b) => compare(sortColumn.value(a), sortColumn.value(b)));
-  $("count").textContent = `${shown.length} of ${items.length} items`;
-  const rows = $("rows");
-  rows.replaceChildren();
-  for (const item of shown) {
-    const tr = rows.insertRow();
-    for (const column of COLUMNS) {
-      const cell = tr.insertCell();
-      const value = column.value(item);
-      cell.textContent = column.show ? column.show(value) : value;
-      cell.className = column.cellClass ? column.cellClass(value) : column.cls ?? "";
-    }
-    tr.cells[COLUMNS.findIndex(c => c.cls === "id")].title = item.id;
-    tr.onclick = () => {
-      rows.querySelector(".selected")?.classList.remove("selected");
-      tr.classList.add("selected");
-      showItem(item);
-    };
+// A table sorted by clicking headers; missing values sort last, ids compare with their numbers.
+function sortableTable(head, body, columns, onSelect) {
+  let sortColumn = null, descending = false, items = [];
+  const compare = (a, b) => {
+    if (a === b) return 0;
+    if (a === null || a === undefined) return 1;
+    if (b === null || b === undefined) return -1;
+    const order = typeof a === "string" ? a.localeCompare(b, undefined, {numeric: true}) : (a < b ? -1 : 1);
+    return descending ? -order : order;
+  };
+  function renderHead() {
+    head.replaceChildren(...columns.map(column => {
+      const th = document.createElement("th");
+      th.textContent = column.label + (column === sortColumn ? (descending ? " ▼" : " ▲") : "");
+      th.className = column.cls ?? "";
+      if (column.title) th.title = column.title;
+      th.onclick = () => {
+        descending = column === sortColumn ? !descending : false;
+        sortColumn = column;
+        renderHead();
+        render();
+      };
+      return th;
+    }));
   }
+  function render(newItems) {
+    if (newItems) items = newItems;
+    const shown = sortColumn ? [...items].sort((a, b) => compare(sortColumn.value(a), sortColumn.value(b))) : items;
+    body.replaceChildren();
+    for (const item of shown) {
+      const tr = body.insertRow();
+      for (const column of columns) {
+        const cell = tr.insertCell();
+        const value = column.value(item);
+        cell.textContent = column.show ? column.show(value) : value;
+        cell.className = column.cellClass ? column.cellClass(value) : column.cls ?? "";
+        if (column.cls === "id") cell.title = value;
+      }
+      tr.onclick = () => {
+        body.querySelector(".selected")?.classList.remove("selected");
+        tr.classList.add("selected");
+        onSelect(item);
+      };
+    }
+  }
+  renderHead();
+  return {render};
 }
 
-function showItem(item) {
+function showDetail(title, facts, sections) {
   const detail = $("detail");
   detail.replaceChildren();
   const heading = document.createElement("h3");
-  heading.textContent = `#${item.number}  ${item.dataset} / ${item.id}`;
+  heading.textContent = title;
   detail.append(heading);
-  for (const [label, text] of [["Code", item.code], ["Input", item.input], ["Reference", item.reference],
-                               ["Response", item.response ?? "(no response)"],
-                               ["Reasoning", item.reasoning ?? "(none)"]]) {
+  if (facts) {
+    const line = document.createElement("div");
+    line.className = "facts";
+    line.textContent = facts;
+    detail.append(line);
+  }
+  for (const [label, text, highlight] of sections) {
     const caption = document.createElement("div");
     const pre = document.createElement("pre");
     caption.className = "label";
     caption.textContent = label;
-    if (label === "Response") appendHighlighted(pre, text);
+    if (highlight) appendHighlighted(pre, text);
     else pre.textContent = text;
     detail.append(caption, pre);
   }
+}
+
+function clearDetail() {
+  $("detail").innerHTML = '<p class="empty">Select an item.</p>';
 }
 
 // Mark the <prediction> blocks so the answer stands out in long responses.
@@ -151,19 +190,120 @@ function appendHighlighted(pre, text) {
   pre.append(text.slice(last));
 }
 
+// --- results tab ---------------------------------------------------------------
+
+let results = [];
+const resultsTable = sortableTable($("results-head"), $("results-rows"), RESULT_COLUMNS, item =>
+  showDetail(`#${item.number}  ${item.dataset} / ${item.id}`, null,
+             [["Code", item.code], ["Input", item.input], ["Reference", item.reference],
+              ["Response", item.response ?? "(no response)", true], ["Reasoning", item.reasoning ?? "(none)"]]));
+
+function renderResults() {
+  const shown = results.filter(FILTERS[$("show").value]);
+  $("count").textContent = `${shown.length} of ${results.length} items`;
+  resultsTable.render(shown);
+}
+
 async function loadRun(run) {
-  items = await (await fetch("/api/runs/" + run)).json();
-  items.forEach((item, index) => item.number = index + 1);
-  refreshShow();
-  render();
-  $("detail").innerHTML = '<p class="empty">Select an item.</p>';
+  results = await (await fetch("/api/runs/" + run)).json();
+  results.forEach((item, index) => item.number = index + 1);
+  const keep = $("show").value || "all";
+  $("show").replaceChildren(...Object.keys(FILTERS).map(f =>
+    new Option(`${f} (${results.filter(FILTERS[f]).length})`, f)));
+  $("show").value = keep;
+  renderResults();
+  clearDetail();
+}
+
+// --- dataset tab ---------------------------------------------------------------
+
+const datasetTable = sortableTable($("dataset-head"), $("dataset-rows"), DATASET_COLUMNS, item => {
+  const facts = [`source ${item.source}`, `${item.code_token_length} code tokens`, `${item.input_token_length} input tokens`,
+                 `${item.executable_lines ?? "no"} executable lines`, `${item.helper_labels_excluded} helper labels removed`,
+                 `parse ${item.line_status}` + (item.line_detail ? ` (${item.line_detail})` : "")];
+  showDetail(`#${item.number}  ${item.id}`, facts.join(" · "),
+             [["Code", item.code], ["Input", item.input], ["Reference", item.reference]]);
+});
+
+const compact = n => n >= 1000 ? `${+(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n);
+
+// Bins double in width when values span more than ~50x (RE2's long tail), else ~12 equal bins.
+function histogram(title, values) {
+  values = values.filter(v => v !== null);
+  const min = Math.min(...values), max = Math.max(...values);
+  const log = max / Math.max(min, 1) > 50;
+  const edges = [];
+  if (log) {
+    if (min < 1) edges.push(0);
+    for (let e = 2 ** Math.floor(Math.log2(Math.max(min, 1))); e <= max; e *= 2) edges.push(e);
+  } else {
+    const width = Math.max(1, Math.ceil((max - min + 1) / 12));
+    for (let e = min; e <= max; e += width) edges.push(e);
+  }
+  edges.push(log ? edges.at(-1) * 2 : edges.at(-1) + (edges[1] - edges[0] || 1));
+  const counts = edges.slice(0, -1).map((low, i) => values.filter(v => v >= low && v < edges[i + 1]).length);
+  const width = 330, height = 120, top = 12, bottom = 16, step = width / counts.length, peak = Math.max(...counts);
+  const labelEvery = step < 24 ? 2 : 1;
+  const svg = [`<svg class="chart" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`];
+  counts.forEach((count, i) => {
+    const h = peak ? count / peak * (height - top - bottom) : 0, x = i * step, y = height - bottom - h;
+    const range = log ? `${compact(edges[i])}–${compact(edges[i + 1])}`
+                : edges[i + 1] - edges[i] === 1 ? `${edges[i]}` : `${edges[i]}–${edges[i + 1] - 1}`;
+    svg.push(`<rect x="${x + 1}" y="${y}" width="${step - 2}" height="${h}"><title>${range}: ${count}</title></rect>`);
+    if (count) svg.push(`<text x="${x + step / 2}" y="${y - 2}" text-anchor="middle">${count}</text>`);
+    if (i % labelEvery === 0) svg.push(`<text x="${x + step / 2}" y="${height - 4}" text-anchor="middle">${compact(edges[i])}</text>`);
+  });
+  svg.push("</svg>");
+  const chart = document.createElement("div");
+  chart.innerHTML = `<div class="chart-title">${title}${log ? " (bins double in width)" : ""}</div>${svg.join("")}`;
+  return chart;
+}
+
+function tally(values) {
+  const counts = {};
+  for (const v of values) counts[v] = (counts[v] ?? 0) + 1;
+  return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} ${n}`).join(", ");
+}
+
+async function loadDataset(name) {
+  const programs = await (await fetch("/api/datasets/" + name)).json();
+  programs.forEach((item, index) => item.number = index + 1);
+  const median = key => {
+    const v = programs.map(p => p[key]).filter(x => x !== null).sort((a, b) => a - b);
+    return v.length % 2 ? v[(v.length - 1) / 2] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2;
+  };
+  $("summary").textContent = [`${programs.length} programs`, `sources: ${tally(programs.map(p => p.source))}`,
+                              `parse: ${tally(programs.map(p => p.line_status))}`,
+                              `median ${median("code_token_length")} code tokens, ${median("executable_lines")} lines`].join(" · ");
+  $("charts").replaceChildren(histogram("Code tokens", programs.map(p => p.code_token_length)),
+                              histogram("Executable lines", programs.map(p => p.executable_lines)),
+                              histogram("Input tokens", programs.map(p => p.input_token_length)));
+  datasetTable.render(programs);
+  clearDetail();
+}
+
+// --- start ---------------------------------------------------------------------
+
+let datasetLoaded = false;
+for (const button of document.querySelectorAll("#tabs button")) {
+  button.onclick = () => {
+    for (const other of document.querySelectorAll("#tabs button")) other.classList.toggle("active", other === button);
+    $("results").hidden = button.dataset.view !== "results";
+    $("dataset").hidden = button.dataset.view !== "dataset";
+    clearDetail();
+    if (button.dataset.view === "dataset" && !datasetLoaded) {
+      datasetLoaded = true;
+      loadDataset($("dataset-name").value);
+    }
+  };
 }
 
 (async () => {
-  renderHead();
   for (const run of await (await fetch("/api/runs")).json()) $("run").add(new Option(run, run));
+  for (const name of await (await fetch("/api/datasets")).json()) $("dataset-name").add(new Option(name, name));
   $("run").onchange = () => loadRun($("run").value);
-  $("show").onchange = render;
+  $("show").onchange = renderResults;
+  $("dataset-name").onchange = () => loadDataset($("dataset-name").value);
   if ($("run").value) loadRun($("run").value);
 })();
 </script>

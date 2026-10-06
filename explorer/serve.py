@@ -1,9 +1,11 @@
-"""Browse evaluated runs on localhost. Usage: python explorer/serve.py [PORT]"""
+"""Browse evaluated runs and dataset properties on localhost. Usage: python explorer/serve.py [PORT]"""
 
+import csv
 from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,6 +16,8 @@ from runs import load_run
 PAGE = Path(__file__).resolve().parent / "index.html"
 EVALUATIONS = ROOT / "data/evaluations"
 PREDICTIONS = ROOT / "data/predictions"
+PROPERTIES = ROOT / "data/program_properties"
+PROPERTY_COUNTS = ("code_token_length", "input_token_length", "executable_lines", "helper_labels_excluded")
 
 
 @lru_cache(maxsize=None)
@@ -71,6 +75,34 @@ def items(run):
     return list(grouped.values())
 
 
+def re2_source(item_id):
+    """RE2's source_dataset label, recovered from the id (matches the RE2 export for all 446 items)."""
+    if item_id.startswith("HumanEval_"):
+        return "HumanEval"
+    if item_id.startswith("ClassEval_"):
+        return "Classeval"
+    if re.match(r"(?:atcoder|codeforces)_", item_id):
+        return "Avatar"
+    if re.match(r"[\w.-]+__[\w.-]+-\d+@@", item_id):
+        return "Swebench"
+    return "Real" if "@@" in item_id else None
+
+
+def dataset_items(name):
+    """One record per program: code, input, reference output, source and measured properties."""
+    with (PROPERTIES / f"{name}_properties.csv").open(encoding="utf-8", newline="") as stream:
+        properties = {row["id"]: row for row in csv.DictReader(stream)}
+    records = []
+    for (dataset, item_id), example in examples().items():
+        if dataset == name:
+            measured = properties[item_id]
+            records.append({"id": item_id, "source": re2_source(item_id) if name == "re2" else "CRUXEval",
+                            "code": example["code"], "input": example["input"], "reference": example["output"],
+                            **{k: int(measured[k]) if measured[k] else None for k in PROPERTY_COUNTS},
+                            "line_status": measured["line_status"], "line_detail": measured["line_detail"]})
+    return records
+
+
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/":
@@ -79,6 +111,10 @@ class Handler(BaseHTTPRequestHandler):
             self.send(json.dumps(runs()).encode(), "application/json")
         elif self.path.startswith("/api/runs/") and self.path.removeprefix("/api/runs/") in runs():
             self.send(json.dumps(items(self.path.removeprefix("/api/runs/"))).encode(), "application/json")
+        elif self.path == "/api/datasets":
+            self.send(json.dumps(list(DATASET_SOURCES)).encode(), "application/json")
+        elif self.path.startswith("/api/datasets/") and self.path.removeprefix("/api/datasets/") in DATASET_SOURCES:
+            self.send(json.dumps(dataset_items(self.path.removeprefix("/api/datasets/"))).encode(), "application/json")
         else:
             self.send_error(404)
 
