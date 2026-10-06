@@ -1,0 +1,93 @@
+{
+  "run": "data/predictions/gpt6-luna-low-16k-openai.jsonl",
+  "sha256": {
+    "data/predictions/gpt6-luna-low-16k-openai.jsonl": "449fd0104d381fc7b2282fa261b989836ba85121300aa93e4a6e63a4948c111d",
+    "data/raw/cruxeval/cruxeval.csv": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
+    "data/raw/re2/re2_filtered.csv": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
+    "src/scoring.py": "a3fab95b76de6e147ecbc5feeb95f5053352c01280e313829ef1bec91b337dcb",
+    "scripts/evaluate_predictions.py": "5c9ad8a5ecc451f82f506142de185932e466493f64d1834b08ae5adceb470538"
+  },
+  "summary": {
+    "cruxeval/strict": {
+      "total": 800,
+      "correct": 773,
+      "incorrect": 27,
+      "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
+      "statuses": {
+        "scored": 796,
+        "invalid_response": 3,
+        "invalid_prediction": 1
+      }
+    },
+    "cruxeval/relaxed": {
+      "total": 800,
+      "correct": 773,
+      "incorrect": 27,
+      "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
+      "statuses": {
+        "scored": 796,
+        "invalid_response": 3,
+        "invalid_prediction": 1
+      }
+    },
+    "cruxeval/normalized": {
+      "total": 800,
+      "correct": 773,
+      "incorrect": 27,
+      "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
+      "statuses": {
+        "scored": 796,
+        "invalid_response": 3,
+        "invalid_prediction": 1
+      }
+    },
+    "re2/strict": {
+      "total": 446,
+      "correct": 208,
+      "incorrect": 237,
+      "unscored": 1,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
+      "statuses": {
+        "scored": 337,
+        "invalid_prediction": 86,
+        "request_incomplete": 1,
+        "invalid_response": 22
+      }
+    },
+    "re2/relaxed": {
+      "total": 446,
+      "correct": 227,
+      "incorrect": 218,
+      "unscored": 1,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
+      "statuses": {
+        "scored": 356,
+        "invalid_prediction": 67,
+        "request_incomplete": 1,
+        "invalid_response": 22
+      }
+    },
+    "re2/normalized": {
+      "total": 446,
+      "correct": 247,
+      "incorrect": 198,
+      "unscored": 1,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
+      "statuses": {
+        "scored": 370,
+        "invalid_prediction": 53,
+        "request_incomplete": 1,
+        "invalid_response": 22
+      }
+    }
+  }
+}
