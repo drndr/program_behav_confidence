@@ -55,20 +55,28 @@ def parse_verdict(text):
     return verdict
 
 
-def prediction_logprobs(text, logprobs):
-    """Mean log-probability of the tokens that produced the <prediction> content.
+def parse_confidence(text):
+    """The judge's stated probability, from 0 to 100, that the candidate is correct."""
+    value = float(_single_tag(text, "confidence").strip().rstrip("%"))
+    if not 0 <= value <= 100:
+        raise ValueError(f"Confidence must be between 0 and 100, got {value!r}")
+    return value
 
-    Tokens are concatenated by their bytes and the prediction content is located in
-    that stream between its tags (providers may prepend a </think> token, append an
-    end marker, or drop a tag's first token). A token overlapping the content counts,
-    so tag-adjacent tokens such as ">'" are included. Providers may return log-probabilities
-    a rounding step above zero (OpenAI: 2**-17); those count as zero. Returns None when the
-    response has no single prediction block, a log-probability is clearly positive, or the
-    stream does not reproduce the content exactly.
+
+def _tag_token_logprobs(text, logprobs, tag):
+    """Log-probabilities of the tokens that produced the <tag> content, in order.
+
+    Tokens are concatenated by their bytes and the content is located in that stream
+    between its tags (providers may prepend a </think> token, append an end marker, or
+    drop a tag's first token). A token overlapping the content counts, so tag-adjacent
+    tokens such as ">'" are included. Providers may return log-probabilities a rounding
+    step above zero (OpenAI: 2**-17); those count as zero. Returns None when the response
+    has no single <tag> block, a log-probability is clearly positive, or the stream does
+    not reproduce the content exactly.
     """
     content = logprobs.get("content") if isinstance(logprobs, dict) else None
     try:
-        inner = _single_tag(text, "prediction")
+        inner = _single_tag(text, tag)
     except ValueError:
         return None
     if not content:
@@ -87,7 +95,8 @@ def prediction_logprobs(text, logprobs):
     stream = b"".join(pieces)
     # Anchor on tag suffixes: providers sometimes drop the first token of a tag ("<p", "</")
     # from the stream, but the content itself must be reproduced exactly.
-    pattern = rb"rediction>(" + re.escape(inner.encode("utf-8")) + rb")(?:</)?prediction>"
+    name = tag.encode("utf-8")
+    pattern = name[1:] + rb">(" + re.escape(inner.encode("utf-8")) + rb")(?:</)?" + name + rb">"
     found = list(re.finditer(pattern, stream, re.S))
     if not found:
         return None
@@ -95,11 +104,36 @@ def prediction_logprobs(text, logprobs):
     content_start = located.start(1) + len(inner[:lead].encode("utf-8"))
     content_end = located.end(1) - len(inner[len(inner) - trail:].encode("utf-8"))
     selected = [logprob for start, end, logprob in spans if start < content_end and end > content_start]
-    if not selected:
+    return selected or None
+
+
+def prediction_logprobs(text, logprobs):
+    """Mean log-probability of the tokens that produced the <prediction> content; None if unusable."""
+    selected = _tag_token_logprobs(text, logprobs, "prediction")
+    if selected is None:
         return None
     mean = sum(selected) / len(selected)
     return {"token_count": len(selected), "sum_logprob": sum(selected), "mean_logprob": mean,
             "geometric_mean_probability": math.exp(mean)}
+
+
+def verdict_probability(text, logprobs):
+    """Probability the judge gave "correct", from the first token of its <verdict>.
+
+    "correct" and "incorrect" differ from their first token on, so that token carries the
+    decision; after an "incorrect" verdict the probability of "correct" is taken as the
+    complement, which assumes the remaining mass went to the other verdict. None without
+    a valid verdict or usable log-probabilities.
+    """
+    try:
+        verdict = parse_verdict(text)
+    except ValueError:
+        return None
+    selected = _tag_token_logprobs(text, logprobs, "verdict")
+    if selected is None:
+        return None
+    first = math.exp(selected[0])
+    return first if verdict == "correct" else 1 - first
 
 
 # --- literals -----------------------------------------------------------------

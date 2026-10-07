@@ -12,11 +12,14 @@ RE2_INPUT_NOTE = (
 PREDICTION_ANSWER = ("Answer with the exact output as a Python literal inside "
                      "<prediction></prediction> tags and nothing else.")
 
-# Verification (confidence judge) wording is not decided yet. The structure is fixed:
-# the judge sees exactly what the predictor saw plus the candidate answer, never the
-# reference, and answers with <verdict>correct|incorrect</verdict> (see scoring.parse_verdict).
-VERIFICATION_HEADER = ""  # TODO: decide wording
-VERIFICATION_ANSWER = ""  # TODO: decide wording; must ask for the <verdict> tag
+# Self-verification: the judge sees exactly what the predictor saw plus the candidate answer,
+# never the reference or who produced it, and answers with a verdict and a stated probability
+# (scoring.parse_verdict, scoring.parse_confidence). Draft wording, to be confirmed by a pilot.
+VERIFICATION_HEADER = ("Below is a code-output prediction task and a candidate answer. "
+                       "Check whether the candidate is the correct output. Do not execute the code.")
+VERIFICATION_ANSWER = ("Answer with <verdict>correct</verdict> or <verdict>incorrect</verdict>, followed by "
+                       "<confidence>N</confidence>, where N from 0 to 100 is the probability that the candidate "
+                       "is correct. Write nothing else.")
 
 
 def task_sentence(example):

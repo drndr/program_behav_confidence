@@ -4,3 +4,4 @@
 *.csv -text
 /data/prompts/**/*.jsonl -text
 /data/predictions/*.jsonl -text
+/data/verifications/*.jsonl -text

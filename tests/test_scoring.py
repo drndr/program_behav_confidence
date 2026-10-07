@@ -7,7 +7,8 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from scoring import SCORING_MODES, parse_prediction, prediction_logprobs, same_value, score_prediction
+from scoring import (SCORING_MODES, parse_confidence, parse_prediction, parse_verdict, prediction_logprobs, same_value,
+                     score_prediction, verdict_probability)
 import prompt_template
 from prompt_template import (RE2_INPUT_NOTE, prediction_prompt, prediction_template_sha256, task_sentence,
                              verification_prompt, verification_template_sha256, verification_wording_final)
@@ -34,19 +35,21 @@ class PromptTests(unittest.TestCase):
         self.assertNotIn("SECRET_REFERENCE", verification_prompt(example, "'x'"))
 
     def test_verification_prompt_structure(self):
-        # Wording is not decided; the structure is: what the predictor saw, plus the candidate.
+        # What the predictor saw, plus the candidate, between the header and the answer instruction.
         prompt = verification_prompt(RE2, "(1, 1)")
+        self.assertTrue(prompt.startswith(prompt_template.VERIFICATION_HEADER + "\n\n"))
+        self.assertTrue(prompt.endswith("\n\n" + prompt_template.VERIFICATION_ANSWER))
         self.assertIn(task_sentence(RE2), prompt)
         self.assertIn("[CODE]\n" + RE2["code"] + "\n[/CODE]", prompt)
         self.assertIn(RE2_INPUT_NOTE, prompt)
         self.assertIn("[CANDIDATE]\n(1, 1)\n[/CANDIDATE]", prompt)
+        self.assertIn("<verdict>", prompt)
+        self.assertIn("<confidence>", prompt)
         self.assertNotIn("<prediction>", prompt)
-        self.assertNotIn("\n\n\n", prompt)  # empty wording slots leave no blank paragraphs
-        self.assertFalse(verification_wording_final())
-        with patch.object(prompt_template, "VERIFICATION_HEADER", "Judge."), \
-                patch.object(prompt_template, "VERIFICATION_ANSWER", "Answer in <verdict> tags."):
-            self.assertTrue(verification_wording_final())
-            self.assertTrue(verification_prompt(RE2, "(1, 1)").startswith("Judge.\n\n"))
+        self.assertTrue(verification_wording_final())
+        with patch.object(prompt_template, "VERIFICATION_HEADER", ""):
+            self.assertFalse(verification_wording_final())
+            self.assertNotIn("\n\n\n", verification_prompt(RE2, "(1, 1)"))  # an empty slot leaves no blank paragraph
 
     def test_template_hashes_are_independent(self):
         before = prediction_template_sha256(), verification_template_sha256()
@@ -63,6 +66,17 @@ class ResponseTests(unittest.TestCase):
                      "<prediction></prediction><prediction> </prediction>"):
             with self.assertRaises(ValueError):
                 parse_prediction(text)
+
+    def test_verdict_and_confidence(self):
+        text = "<verdict> Correct </verdict>\n<confidence>85</confidence>"
+        self.assertEqual((parse_verdict(text), parse_confidence(text)), ("correct", 85.0))
+        self.assertEqual(parse_confidence("<confidence>72.5%</confidence>"), 72.5)
+        for bad in ("<confidence>150</confidence>", "<confidence>-1</confidence>", "<confidence>nan</confidence>",
+                    "<confidence>high</confidence>", "no tag"):
+            with self.assertRaises(ValueError):
+                parse_confidence(bad)
+        with self.assertRaises(ValueError):
+            parse_verdict("<verdict>maybe</verdict>")
 
     def test_empty_blocks_are_ignored_beside_an_answer(self):
         # Models restate the format before answering; that empty block is not a second answer.
@@ -99,6 +113,18 @@ class LogprobTests(unittest.TestCase):
         for content in variants:
             result = prediction_logprobs(self.TEXT, tokens(*content))
             self.assertEqual(result["token_count"], 3, content)
+
+    def test_verdict_probability_from_first_verdict_token(self):
+        def verdict(word, first):
+            pieces = [("<", -0.1), ("verdict", -0.1), (">", -0.1), (word[:2], first), (word[2:], -0.01),
+                      ("</", -0.1), ("verdict", -0.1), (">", -0.1)]
+            return f"<verdict>{word}</verdict>", tokens(*pieces)
+        text, lp = verdict("correct", math.log(0.8))
+        self.assertAlmostEqual(verdict_probability(text, lp), 0.8)
+        text, lp = verdict("incorrect", math.log(0.9))
+        self.assertAlmostEqual(verdict_probability(text, lp), 0.1)
+        self.assertIsNone(verdict_probability("<verdict>maybe</verdict>", lp))
+        self.assertIsNone(verdict_probability(text, None))
 
     def test_rounding_above_zero_counts_as_zero(self):
         rounded = [(t, 2 ** -17 if t == "4" else lp) for t, lp in self.ANSWER]

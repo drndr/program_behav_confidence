@@ -39,7 +39,7 @@ class VerificationPromptTests(unittest.TestCase):
             path = write_run(directory, self.rows)
             manifests = generate(path, Path(directory) / "verification")
             record = manifests["cruxeval"]
-            self.assertEqual((record["count"], record["prompt_kind"], record["wording_final"]), (1, "verification", False))
+            self.assertEqual((record["count"], record["prompt_kind"], record["wording_final"]), (1, "verification", True))
             self.assertEqual(record["skipped"], {"no_prediction_tag": 1, "request_incomplete": 1, "request_error": 1})
             self.assertEqual(record["prediction_run"]["model"], "org/model")
             rows = [json.loads(l) for l in (Path(directory) / "verification/cruxeval_prompts.jsonl").read_text(encoding="utf-8").splitlines()]
