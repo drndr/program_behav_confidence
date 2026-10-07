@@ -1,0 +1,30 @@
+{
+  "verification_run": "data/verifications/verify-gpt6-luna-low-16k-openai.jsonl",
+  "prediction_run": "data/predictions/gpt6-luna-low-16k-openai.jsonl",
+  "summary": {
+    "cruxeval": {
+      "total": 797,
+      "statuses": {
+        "judged": 797
+      },
+      "with_p_correct": 0,
+      "verdict_correct": 776,
+      "verdict_matches_normalized": 778
+    },
+    "re2": {
+      "total": 423,
+      "statuses": {
+        "judged": 423
+      },
+      "with_p_correct": 0,
+      "verdict_correct": 390,
+      "verdict_matches_normalized": 268
+    }
+  },
+  "sha256": {
+    "data/verifications/verify-gpt6-luna-low-16k-openai.jsonl": "b279e74f57e6d6d2aa1d052f9d8534721c43fc4c34ca2e05a94fc52ec81b272f",
+    "data/evaluations/gpt6-luna-low-16k-openai_scores.jsonl": "d64a6586f405256dce777b4732db6984bffed6fcb60139c76336c39ecfed117c",
+    "src/scoring.py": "be435a7fb76b6e3a0a9aff626e587642e8f0afd4c538c76f12053b5f24426ebc",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}
