@@ -5,12 +5,11 @@ from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
-import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from datasets import DATASET_SOURCES, load_examples
+from datasets import DATASET_SOURCES, load_examples, re2_source
 from runs import load_run
 
 PAGE = Path(__file__).resolve().parent / "index.html"
@@ -101,19 +100,6 @@ def confidence_items(run):
                               "verifier_response": (responses.get(key) or {}).get("text"),
                               "verifier_reasoning_tokens": verdict["reasoning_tokens"]})
     return records
-
-
-def re2_source(item_id):
-    """RE2's source_dataset label, recovered from the id (matches the RE2 export for all 446 items)."""
-    if item_id.startswith("HumanEval_"):
-        return "HumanEval"
-    if item_id.startswith("ClassEval_"):
-        return "Classeval"
-    if re.match(r"(?:atcoder|codeforces)_", item_id):
-        return "Avatar"
-    if re.match(r"[\w.-]+__[\w.-]+-\d+@@", item_id):
-        return "Swebench"
-    return "Real" if "@@" in item_id else None
 
 
 def dataset_items(name):

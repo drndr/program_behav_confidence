@@ -4,6 +4,7 @@ import csv
 import hashlib
 import json
 from pathlib import Path
+import re
 
 
 DATASET_SOURCES = {"cruxeval": "raw/cruxeval/cruxeval.csv", "re2": "raw/re2/re2_filtered.csv"}
@@ -38,6 +39,19 @@ def load_examples(path: str | Path, dataset: str) -> list[dict]:
                 row["entrypoint"] = "f"
             examples.append(dict(row, dataset=dataset))
     return examples
+
+
+def re2_source(item_id):
+    """RE2's source_dataset label, recovered from the id (matches the RE2 export for all 446 items)."""
+    if item_id.startswith("HumanEval_"):
+        return "HumanEval"
+    if item_id.startswith("ClassEval_"):
+        return "Classeval"
+    if re.match(r"(?:atcoder|codeforces)_", item_id):
+        return "Avatar"
+    if re.match(r"[\w.-]+__[\w.-]+-\d+@@", item_id):
+        return "Swebench"
+    return "Real" if "@@" in item_id else None
 
 
 def load_re2_export(path: str | Path) -> list[dict]:

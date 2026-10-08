@@ -4,9 +4,12 @@ import sys
 import tempfile
 import unittest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
 
-from datasets import load_examples
+from datasets import load_examples, load_re2_export, re2_source
+
+RE2_EXPORT = ROOT / "data/raw/re2/re2_bench_lite_output_prediction_prompts.jsonl"
 
 
 class DatasetTests(unittest.TestCase):
@@ -51,6 +54,21 @@ class DatasetTests(unittest.TestCase):
         self.assertEqual(row["dataset"], "re2")
         self.assertEqual(row["input"], '"hello"')
         self.assertEqual(row["output"], '"hello"')
+
+    def test_re2_source_from_id(self):
+        cases = {"HumanEval_44": "HumanEval", "ClassEval_24@ComplexCalculator.multiply": "Classeval",
+                 "atcoder_ABC132_A": "Avatar", "codeforces_1_A": "Avatar",
+                 "django__django-11728@@django.contrib.admindocs.utils.py@@replace_unnamed_groups": "Swebench",
+                 "sympy@@sympy_core_exprtools.py@@_mask_nc_L1272": "Real", "sample_0": None}
+        for item_id, source in cases.items():
+            self.assertEqual(re2_source(item_id), source, item_id)
+
+    @unittest.skipUnless(RE2_EXPORT.exists(), "local RE2 export not downloaded")
+    def test_re2_source_matches_the_export_for_every_selected_item(self):
+        export = {row["id"]: row["source_dataset"] for row in load_re2_export(RE2_EXPORT)}
+        for example in load_examples(ROOT / "data/raw/re2/re2_filtered.csv", "re2"):
+            self.assertEqual(re2_source(example["id"]), export[example["id"]], example["id"])
+
 
 if __name__ == "__main__":
     unittest.main()
