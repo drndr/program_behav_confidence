@@ -26,6 +26,7 @@ from urllib.request import urlopen
 ROOT = Path(__file__).resolve().parents[1]
 
 CRUXEVAL_REPO = "cruxeval-org/cruxeval"
+CRUXEVAL_REVISION = "b96af0450242eb4da433032b90998f25588a5d0f"  # The commit data/raw/cruxeval/cruxeval.csv came from.
 RE2_REPOSITORY = "https://github.com/AnonyRepo2025/RE2-Bench"
 RE2_REVISION = "57b971f18567c879a7180bb6bd5b8e544dd9a47e"
 RE2_ORDERING_SEED = 20260806
@@ -98,7 +99,7 @@ def convert_cruxeval(raw):
     return converted, len(rows)
 
 
-def download_cruxeval(data_dir, revision="main"):
+def download_cruxeval(data_dir, revision=CRUXEVAL_REVISION):
     """Resolve a revision, download immutable JSONL, and save a compatible CSV."""
     api_url = f"https://huggingface.co/api/datasets/{CRUXEVAL_REPO}/revision/{quote(revision, safe='')}"
     with urlopen(api_url, timeout=60) as response:
@@ -251,7 +252,7 @@ def main():
     parser.add_argument("datasets", nargs="*", metavar="DATASET",
                         help=f"which to download: {', '.join(DOWNLOADS)} (default: all)")
     parser.add_argument("--data-dir", type=Path, default=ROOT / "data", help="target data directory")
-    parser.add_argument("--cruxeval-revision", default="main", help="Hugging Face revision or commit SHA")
+    parser.add_argument("--cruxeval-revision", default=CRUXEVAL_REVISION, help="Hugging Face revision or commit SHA")
     parser.add_argument("--re2-revision", default=RE2_REVISION, help="full upstream commit SHA")
     args = parser.parse_args()
     selected = args.datasets or list(DOWNLOADS)
