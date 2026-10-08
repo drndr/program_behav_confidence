@@ -44,7 +44,8 @@
   mark { background: var(--mark); color: inherit; }
 </style>
 <nav id="tabs">
-  <button data-view="results" class="active">Results</button>
+  <button data-view="results" class="active">Predictions</button>
+  <button data-view="confidence">Confidence</button>
   <button data-view="dataset">Dataset</button>
 </nav>
 <main>
@@ -54,6 +55,14 @@
     </div>
     <div class="scroll">
       <table><thead><tr id="results-head"></tr></thead><tbody id="results-rows"></tbody></table>
+    </div>
+  </div>
+  <div id="confidence" class="list" hidden>
+    <div class="bar">
+      <select id="verify-run"></select> Show <select id="verify-show"></select> <span id="verify-count" class="muted"></span>
+    </div>
+    <div class="scroll">
+      <table><thead><tr id="confidence-head"></tr></thead><tbody id="confidence-rows"></tbody></table>
     </div>
   </div>
   <div id="dataset" class="list" hidden>
@@ -89,6 +98,31 @@ const RESULT_COLUMNS = [
   {label: "Logprob", title: "Mean log-probability of the answer tokens",
    value: i => i.logprob, show: v => v === null ? "" : v.toExponential(1), cls: "num"},
   {label: "Reasoning tokens", value: i => i.reasoning_tokens, show: v => v ?? "", cls: "num"},
+];
+// The verifier's verdict against the answer's actual correctness (normalized scoring).
+const VERDICT_FILTERS = {
+  all: () => true,
+  "approved, right": i => i.verdict === "correct" && i.correct === true,
+  "approved, wrong": i => i.verdict === "correct" && i.correct === false,
+  "rejected, right": i => i.verdict === "incorrect" && i.correct === true,
+  "rejected, wrong": i => i.verdict === "incorrect" && i.correct === false,
+  "no judgment": i => i.verdict === null,
+};
+const CONFIDENCE_COLUMNS = [
+  NUMBER,
+  {label: "Dataset", value: i => i.dataset},
+  {label: "Item", value: i => i.id, cls: "id"},
+  {label: "Answer", title: "Answer correct (normalized scoring)", value: i => i.correct, show: v => MARK[v],
+   cls: "mark", cellClass: v => MARK_CLASS[v]},
+  {label: "Logprob", title: "Implicit: mean log-probability of the answer tokens",
+   value: i => i.logprob, show: v => v === null ? "" : v.toExponential(1), cls: "num"},
+  {label: "Reasoning tokens", title: "Behavioural: reasoning tokens spent on the answer",
+   value: i => i.reasoning_tokens, show: v => v ?? "", cls: "num"},
+  {label: "Verdict", title: "Explicit: the model's verdict on its own answer", value: i => i.verdict, show: v => v ?? ""},
+  {label: "Confidence", title: "Explicit: stated probability (0-100) that the answer is correct",
+   value: i => i.confidence, show: v => v ?? "", cls: "num"},
+  {label: "P(correct)", title: "Explicit: probability the model gave the verdict word \"correct\"",
+   value: i => i.p_correct, show: v => v === null ? "" : v.toFixed(3), cls: "num"},
 ];
 const DATASET_COLUMNS = [
   NUMBER,
@@ -190,7 +224,7 @@ function appendHighlighted(pre, text) {
   pre.append(text.slice(last));
 }
 
-// --- results tab ---------------------------------------------------------------
+// --- predictions tab -----------------------------------------------------------
 
 let results = [];
 const resultsTable = sortableTable($("results-head"), $("results-rows"), RESULT_COLUMNS, item =>
@@ -212,6 +246,36 @@ async function loadRun(run) {
     new Option(`${f} (${results.filter(FILTERS[f]).length})`, f)));
   $("show").value = keep;
   renderResults();
+  clearDetail();
+}
+
+// --- confidence tab ------------------------------------------------------------
+
+let judged = [];
+const confidenceTable = sortableTable($("confidence-head"), $("confidence-rows"), CONFIDENCE_COLUMNS, item => {
+  const facts = [`answer ${item.correct ? "correct" : "incorrect"}`, `verdict ${item.verdict ?? item.status}`,
+                 `confidence ${item.confidence ?? "–"}`, `P(correct) ${item.p_correct === null ? "–" : item.p_correct.toFixed(3)}`,
+                 `logprob ${item.logprob === null ? "–" : item.logprob.toExponential(2)}`,
+                 `reasoning tokens ${item.reasoning_tokens ?? "–"} (verifier ${item.verifier_reasoning_tokens ?? "–"})`];
+  showDetail(`#${item.number}  ${item.dataset} / ${item.id}`, facts.join(" · "),
+             [["Code", item.code], ["Input", item.input], ["Reference", item.reference],
+              ["Response", item.response ?? "(no response)", true], ["Verifier response", item.verifier_response ?? "(none)"]]);
+});
+
+function renderConfidence() {
+  const shown = judged.filter(VERDICT_FILTERS[$("verify-show").value]);
+  $("verify-count").textContent = `${shown.length} of ${judged.length} judged answers`;
+  confidenceTable.render(shown);
+}
+
+async function loadVerification(run) {
+  judged = await (await fetch("/api/verifications/" + run)).json();
+  judged.forEach((item, index) => item.number = index + 1);
+  const keep = $("verify-show").value || "all";
+  $("verify-show").replaceChildren(...Object.keys(VERDICT_FILTERS).map(f =>
+    new Option(`${f} (${judged.filter(VERDICT_FILTERS[f]).length})`, f)));
+  $("verify-show").value = keep;
+  renderConfidence();
   clearDetail();
 }
 
@@ -284,25 +348,29 @@ async function loadDataset(name) {
 
 // --- start ---------------------------------------------------------------------
 
-let datasetLoaded = false;
+// Tabs other than the first load their data when first opened.
+const FIRST_OPEN = {confidence: () => $("verify-run").value && loadVerification($("verify-run").value),
+                    dataset: () => loadDataset($("dataset-name").value)};
 for (const button of document.querySelectorAll("#tabs button")) {
   button.onclick = () => {
-    for (const other of document.querySelectorAll("#tabs button")) other.classList.toggle("active", other === button);
-    $("results").hidden = button.dataset.view !== "results";
-    $("dataset").hidden = button.dataset.view !== "dataset";
-    clearDetail();
-    if (button.dataset.view === "dataset" && !datasetLoaded) {
-      datasetLoaded = true;
-      loadDataset($("dataset-name").value);
+    for (const other of document.querySelectorAll("#tabs button")) {
+      other.classList.toggle("active", other === button);
+      $(other.dataset.view).hidden = other !== button;
     }
+    clearDetail();
+    FIRST_OPEN[button.dataset.view]?.();
+    delete FIRST_OPEN[button.dataset.view];
   };
 }
 
 (async () => {
   for (const run of await (await fetch("/api/runs")).json()) $("run").add(new Option(run, run));
+  for (const run of await (await fetch("/api/verifications")).json()) $("verify-run").add(new Option(run, run));
   for (const name of await (await fetch("/api/datasets")).json()) $("dataset-name").add(new Option(name, name));
   $("run").onchange = () => loadRun($("run").value);
   $("show").onchange = renderResults;
+  $("verify-run").onchange = () => loadVerification($("verify-run").value);
+  $("verify-show").onchange = renderConfidence;
   $("dataset-name").onchange = () => loadDataset($("dataset-name").value);
   if ($("run").value) loadRun($("run").value);
 })();

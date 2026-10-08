@@ -1,4 +1,4 @@
-"""Browse evaluated runs and dataset properties on localhost. Usage: python explorer/serve.py [PORT]"""
+"""Browse predictions, confidence signals and dataset properties on localhost. Usage: python explorer/serve.py [PORT]"""
 
 import csv
 from functools import lru_cache
@@ -16,6 +16,7 @@ from runs import load_run
 PAGE = Path(__file__).resolve().parent / "index.html"
 EVALUATIONS = ROOT / "data/evaluations"
 PREDICTIONS = ROOT / "data/predictions"
+VERIFICATIONS = ROOT / "data/verifications"
 PROPERTIES = ROOT / "data/program_properties"
 PROPERTY_COUNTS = ("code_token_length", "input_token_length", "executable_lines", "helper_labels_excluded")
 
@@ -75,6 +76,33 @@ def items(run):
     return list(grouped.values())
 
 
+def verification_runs():
+    return sorted(p.name.removesuffix("_verdicts.jsonl") for p in EVALUATIONS.glob("*_verdicts.jsonl"))
+
+
+def confidence_items(run):
+    """Judged answers with all three confidence signals: answer logprob, reasoning effort, self-verification.
+
+    The judged prediction run is the one the verdict summary records.
+    """
+    summary = json.loads((EVALUATIONS / f"{run}_verdicts.summary.json").read_text(encoding="utf-8"))
+    predictions = {(i["dataset"], i["id"], i["repetition"]): i for i in items(Path(summary["prediction_run"]).stem)}
+    responses = load_run(VERIFICATIONS / f"{run}.jsonl")[1] if (VERIFICATIONS / f"{run}.jsonl").exists() else {}
+    records = []
+    with (EVALUATIONS / f"{run}_verdicts.jsonl").open(encoding="utf-8") as stream:
+        for line in stream:
+            verdict = json.loads(line)
+            key = (verdict["dataset"], verdict["id"], verdict["repetition"])
+            answer = predictions[key]
+            records.append({key_: answer[key_] for key_ in ("dataset", "id", "code", "input", "reference", "response",
+                                                             "logprob", "reasoning_tokens")}
+                           | {"correct": verdict["correct_normalized"], "status": verdict["status"],
+                              "verdict": verdict["verdict"], "confidence": verdict["confidence"], "p_correct": verdict["p_correct"],
+                              "verifier_response": (responses.get(key) or {}).get("text"),
+                              "verifier_reasoning_tokens": verdict["reasoning_tokens"]})
+    return records
+
+
 def re2_source(item_id):
     """RE2's source_dataset label, recovered from the id (matches the RE2 export for all 446 items)."""
     if item_id.startswith("HumanEval_"):
@@ -111,6 +139,10 @@ class Handler(BaseHTTPRequestHandler):
             self.send(json.dumps(runs()).encode(), "application/json")
         elif self.path.startswith("/api/runs/") and self.path.removeprefix("/api/runs/") in runs():
             self.send(json.dumps(items(self.path.removeprefix("/api/runs/"))).encode(), "application/json")
+        elif self.path == "/api/verifications":
+            self.send(json.dumps(verification_runs()).encode(), "application/json")
+        elif self.path.startswith("/api/verifications/") and self.path.removeprefix("/api/verifications/") in verification_runs():
+            self.send(json.dumps(confidence_items(self.path.removeprefix("/api/verifications/"))).encode(), "application/json")
         elif self.path == "/api/datasets":
             self.send(json.dumps(list(DATASET_SOURCES)).encode(), "application/json")
         elif self.path.startswith("/api/datasets/") and self.path.removeprefix("/api/datasets/") in DATASET_SOURCES:
