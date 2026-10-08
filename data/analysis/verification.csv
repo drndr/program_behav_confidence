@@ -1,0 +1,5 @@
+model,reasoning,dataset,judged,approved_right,approved_wrong,rejected_right,rejected_wrong,approval_rate,accuracy
+GPT-6 Luna,none,cruxeval,795,486,77,77,155,0.7081761006289308,0.7081761006289308
+GPT-6 Luna,none,re2,443,180,103,30,130,0.6388261851015802,0.47404063205417607
+GPT-6 Luna,low,cruxeval,797,765,11,8,13,0.973651191969887,0.9698870765370138
+GPT-6 Luna,low,re2,423,241,149,6,27,0.9219858156028369,0.5839243498817966

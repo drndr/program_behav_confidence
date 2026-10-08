@@ -1,0 +1,13 @@
+model,reasoning,dataset,mode,items,correct,accuracy,unscored,format_failures,with_logprob
+GPT-6 Luna,none,cruxeval,strict,800,563,0.70375,0,5,795
+GPT-6 Luna,none,cruxeval,relaxed,800,563,0.70375,0,5,795
+GPT-6 Luna,none,cruxeval,normalized,800,563,0.70375,0,5,795
+GPT-6 Luna,none,re2,strict,446,162,0.3632286995515695,0,3,443
+GPT-6 Luna,none,re2,relaxed,446,187,0.4192825112107623,0,3,443
+GPT-6 Luna,none,re2,normalized,446,210,0.47085201793721976,0,3,443
+GPT-6 Luna,low,cruxeval,strict,800,773,0.96625,0,3,0
+GPT-6 Luna,low,cruxeval,relaxed,800,773,0.96625,0,3,0
+GPT-6 Luna,low,cruxeval,normalized,800,773,0.96625,0,3,0
+GPT-6 Luna,low,re2,strict,446,208,0.4663677130044843,1,22,0
+GPT-6 Luna,low,re2,relaxed,446,227,0.5089686098654709,1,22,0
+GPT-6 Luna,low,re2,normalized,446,247,0.5538116591928252,1,22,0
