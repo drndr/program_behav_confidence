@@ -41,6 +41,10 @@ def load_examples(path: str | Path, dataset: str) -> list[dict]:
     return examples
 
 
+# RE2 sources of project code with helper chains; the others are self-contained exercises.
+RE2_LIBRARY_SOURCES = frozenset({"Real", "Swebench"})
+
+
 def re2_source(item_id):
     """RE2's source_dataset label, recovered from the id (matches the RE2 export for all 446 items)."""
     if item_id.startswith("HumanEval_"):

@@ -11,8 +11,8 @@ dependencies = ["python-dotenv>=1,<2"]
 
 [project.optional-dependencies]
 notebook = ["jupyterlab>=4,<5", "ipykernel>=6,<8"]
-metrics = ["tiktoken==0.14.0"]
+properties = ["tiktoken==0.14.0"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = ["datasets", "scoring", "program_properties", "prompt_template", "model_client", "runs"]
+py-modules = ["datasets", "scoring", "program_properties", "prompt_template", "model_client", "runs", "metrics", "confidence"]
