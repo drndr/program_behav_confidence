@@ -59,7 +59,8 @@ class EvaluationTests(unittest.TestCase):
         rows[3].update(status="completed", text="no tags at all")
         answer = f"<prediction>{examples[0]['output']}</prediction>"
         logprobs = {"content": [{"token": answer, "bytes": list(answer.encode("utf-8")), "logprob": -0.25}]}
-        rows.append(dict(rows[0], attempt=2, status="completed", text=answer, logprobs=logprobs))
+        rows.append(dict(rows[0], attempt=2, status="completed", text=answer, logprobs=logprobs, finish_reason="stop",
+                         backend_provider="Together", usage={"completion_tokens": 40, "completion_tokens_details": {"reasoning_tokens": 30}}))
         with tempfile.TemporaryDirectory() as directory:
             path = write_run(directory, rows)
             with contextlib.redirect_stdout(io.StringIO()):
@@ -75,6 +76,8 @@ class EvaluationTests(unittest.TestCase):
             self.assertTrue(all("\\" not in key for key in summary["sha256"]))
             scored = [r for r in results if r["status"] == "scored"]
             self.assertEqual({r["prediction_mean_logprob"] for r in scored}, {-0.25})
+            self.assertEqual({(r["completion_tokens"], r["reasoning_tokens"], r["finish_reason"], r["backend_provider"])
+                              for r in scored}, {(40, 30, "stop", "Together")})
             self.assertEqual(summary["summary"]["cruxeval/strict"]["with_logprobs"], 1)
             self.assertTrue(all(r["prediction_mean_logprob"] is None for r in results if r["status"] != "scored"))
 

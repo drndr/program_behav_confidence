@@ -2,7 +2,8 @@
 
 Every completed response is scored right or wrong; requests that failed or were
 truncated have no answer and are counted as unscored. When the run stored token
-log-probabilities, the mean over the prediction's tokens is added per item.
+log-probabilities, the mean over the prediction's tokens is added per item, as are
+the generated and reasoning token counts, finish reason and backend provider.
 """
 
 import argparse
@@ -34,6 +35,10 @@ def evaluate(path, out_dir):
         example = examples[(ds, identifier)]
         completed = row["status"] == "completed"
         logprob = prediction_logprobs(row.get("text") or "", row.get("logprobs")) if completed else None
+        usage = row.get("usage") or {}
+        request = {"finish_reason": row.get("finish_reason"), "backend_provider": row.get("backend_provider"),
+                   "completion_tokens": usage.get("completion_tokens"),
+                   "reasoning_tokens": (usage.get("completion_tokens_details") or {}).get("reasoning_tokens")}
         for mode in SCORING_MODES:
             score = (score_prediction(example, row.get("text") or "", mode) if completed
                      else {"status": "request_" + row["status"], "correct": None})
@@ -42,7 +47,7 @@ def evaluate(path, out_dir):
                             "prediction": row.get("text"), "reference": example["output"], **score,
                             "prediction_mean_logprob": logprob["mean_logprob"] if logprob else None,
                             "prediction_geometric_mean_probability": logprob["geometric_mean_probability"] if logprob else None,
-                            "prediction_logprob_tokens": logprob["token_count"] if logprob else None})
+                            "prediction_logprob_tokens": logprob["token_count"] if logprob else None, **request})
     for ds in sorted({r["dataset"] for r in results}):
         for mode in SCORING_MODES:
             group = [r for r in results if r["dataset"] == ds and r["mode"] == mode]
