@@ -126,10 +126,10 @@ const CONFIDENCE_COLUMNS = [
    value: i => i.reasoning_tokens, show: v => v ?? "", cls: "num"},
   {label: "Tokens", title: "Behavioural: all generated tokens, including visible reasoning",
    value: i => i.completion_tokens, show: v => v ?? "", cls: "num"},
-  {label: "Verdict", title: "Explicit: the model's verdict on its own answer", value: i => i.verdict, show: v => v ?? ""},
+  {label: "Self-verdict", title: "Explicit: the model's verdict on its own answer", value: i => i.verdict, show: v => v ?? ""},
   {label: "Confidence", title: "Explicit: stated probability (0-100) that the answer is correct",
    value: i => i.confidence, show: v => v ?? "", cls: "num"},
-  {label: "P(correct)", title: "Explicit: probability the model gave the verdict word \"correct\"",
+  {label: "P(correct)", title: "Explicit: probability the model gave the self-verdict word \"correct\"",
    value: i => i.p_correct, show: v => v === null ? "" : v.toFixed(3), cls: "num"},
 ];
 const DATASET_COLUMNS = [
@@ -260,10 +260,11 @@ async function loadRun(run) {
 // --- confidence tab ------------------------------------------------------------
 
 let judged = [], confidenceRun = null;
+const SIGNAL_LABELS = {"verdict": "self-verdict", "verdict P(correct)": "self-verdict P(correct)"};
 const summaries = {};
 const answerText = v => v === true ? "correct" : v === false ? "incorrect" : "unscored";
 const confidenceTable = sortableTable($("confidence-head"), $("confidence-rows"), CONFIDENCE_COLUMNS, item => {
-  const facts = [`answer ${answerText(item.correct_normalized)}`, `verdict ${item.verdict ?? item.verification_status ?? "–"}`,
+  const facts = [`answer ${answerText(item.correct_normalized)}`, `self-verdict ${item.verdict ?? item.verification_status ?? "–"}`,
                  `confidence ${item.confidence ?? "–"}`, `P(correct) ${item.p_correct === null ? "–" : item.p_correct.toFixed(3)}`,
                  `logprob ${item.logprob === null ? "–" : item.logprob.toExponential(2)}`,
                  `reasoning tokens ${item.reasoning_tokens ?? "–"} (verifier ${item.verifier_reasoning_tokens ?? "–"})`,
@@ -328,7 +329,7 @@ async function showSummary() {
     for (const s of group.signals) {
       const tr = table.insertRow();
       const interval = s.interval ? `${fixed(s.interval[0])}–${fixed(s.interval[1])}` : "–";
-      for (const [text, cls] of [[s.signal, ""], [s.n, "num"], [fixed(s.auroc), "num"], [interval, "num"],
+      for (const [text, cls] of [[SIGNAL_LABELS[s.signal] ?? s.signal, ""], [s.n, "num"], [fixed(s.auroc), "num"], [interval, "num"],
                                  [fixed(s.selective_accuracy["0.8"]), "num"], [fixed(s.selective_accuracy["0.5"]), "num"],
                                  [fixed(s.ece), "num"]]) {
         const cell = tr.insertCell();

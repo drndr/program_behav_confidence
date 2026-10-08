@@ -9,7 +9,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from confidence import summarize
+from confidence import GROUPS, summarize
 from datasets import DATASET_SOURCES, load_examples, re2_source
 from runs import item_table, load_run
 
@@ -94,7 +94,7 @@ def confidence_items(run):
 
 @lru_cache(maxsize=None)
 def _summary(run, stamp):
-    return summarize(item_table(run, ROOT / "data"))
+    return summarize(item_table(run, ROOT / "data"), groups={name: GROUPS[name] for name in ("CRUXEval", "RE2")})
 
 
 def confidence_summary(run):

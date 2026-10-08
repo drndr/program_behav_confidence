@@ -35,11 +35,11 @@ GROUPS = {
 COVERAGES = (0.8, 0.5)
 
 
-def summarize(rows, resamples=1000):
+def summarize(rows, groups=GROUPS, resamples=1000):
     """Per group: answers, accuracy, and per signal AUROC with a 95% interval, selective
     accuracy at each coverage, and calibration error for probability signals."""
     summary = []
-    for group, member in GROUPS.items():
+    for group, member in groups.items():
         members = [row for row in rows if member(row)]
         scored = [row for row in members if row["correct_normalized"] is not None]
         if not scored:
