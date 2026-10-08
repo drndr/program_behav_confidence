@@ -24,6 +24,8 @@ from datasets import sha256_file
 from model_client import OpenRouterClient
 from scoring import parse_prediction, prediction_logprobs
 
+NETWORK_FAILURE_LIMIT = 3
+
 
 def validate_logprobs(result):
     """Keep response status intact; independently validate usable answer logprobs."""
@@ -48,7 +50,8 @@ def validate_logprobs(result):
 
 
 def logprobs_block_run(result):
-    if result["status"] == "incomplete":
+    """A completed answer without usable logprobs stops the run; failed or truncated requests do not."""
+    if result["status"] != "completed":
         return False
     validation = validate_logprobs(result)
     return not validation["valid"] and validation.get("reason") != "invalid_answer_format"
@@ -170,7 +173,7 @@ def run(args, client=None):
             key = (row["dataset"], row["id"], row["repetition"])
             latest[key] = row
             attempts[key] += 1
-        counts = Counter()
+        counts, network_failures = Counter(), 0
         with log.open("a", encoding="utf-8", newline="\n") as stream:
             for prompt in prompts:
                 for repetition in range(args.repetitions):
@@ -198,6 +201,12 @@ def run(args, client=None):
                                          + result["logprob_validation"]["reason"])
                     if result.get("http_status") in (401, 402, 403, 429):
                         print("Stopping on authentication, credit, permission or rate-limit error; see saved response.")
+                        return dict(counts)
+                    # No HTTP response at all (DNS, connection, timeout): stop rather than fail every prompt.
+                    network_failures = network_failures + 1 if result["status"] == "error" and result.get("http_status") is None else 0
+                    if network_failures >= NETWORK_FAILURE_LIMIT:
+                        print(f"Stopping after {NETWORK_FAILURE_LIMIT} consecutive network failures; "
+                              "check the connection and resume with --retry-errors.")
                         return dict(counts)
         print(json.dumps(dict(counts)))
         return dict(counts)

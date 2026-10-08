@@ -7,7 +7,6 @@ log-probabilities, the mean over the prediction's tokens is added per item.
 
 import argparse
 from collections import Counter
-import hashlib
 import json
 from pathlib import Path
 import sys

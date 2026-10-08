@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "program-behavior-reliability"
 version = "0.1.0"
 description = "Research on program output prediction, confidence, and program properties"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = ["python-dotenv>=1,<2"]
 
 [project.optional-dependencies]

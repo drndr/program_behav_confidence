@@ -13,7 +13,9 @@ explorer/   Local results browser
 
 ## Setup
 
-Python 3.10+. In an activated virtual environment:
+Python 3.12+. Program properties depend on Python's tokenizer, which changed in
+3.12; the committed ones were measured with 3.12 (see their manifest). In an
+activated virtual environment:
 
 ```sh
 python -m pip install -e ".[notebook]"
@@ -42,10 +44,11 @@ token limits, reasoning settings, provider selection, and log-probabilities.
 For a log-probability pilot, use `--require-logprobs --backend together`
 (or another tested provider). This implies `--logprobs`, pins the backend with
 fallbacks disabled, and validates that the saved answer has usable aligned
-token log-probabilities. Every response is saved before validation failure stops
-the run; its completion status is preserved separately from `logprob_validation`.
-An unresolved validation failure also blocks resume. API errors can be retried
-explicitly with `--retry-errors`; completed answers are not silently resampled.
+token log-probabilities. A completed answer without them stops the run after it
+is saved, and blocks resume until inspected; its completion status is preserved
+separately from `logprob_validation`. Failed requests do not stop the run; retry
+them with `--retry-errors`. Completed answers are not silently resampled. Any run
+stops after three consecutive network failures (no HTTP response).
 Incomplete responses (including token-limit truncations) are retained and skipped
 on resume; they do not stop collection for missing answer log-probabilities.
 Malformed answer tags also do not stop collection when provider log-probabilities

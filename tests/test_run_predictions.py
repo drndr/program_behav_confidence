@@ -70,6 +70,29 @@ class RunnerTests(unittest.TestCase):
         rows = read_results(self.root / "test.jsonl")
         self.assertTrue(all(r["logprob_validation"]["valid"] for r in rows))
 
+    def test_failed_request_does_not_stop_a_logprob_run(self):
+        self.args.require_logprobs = True
+        class LogprobClient(FakeClient):
+            def complete(self, messages, model, parameters):
+                result = super().complete(messages, model, parameters)
+                if result["status"] == "completed":
+                    result["logprobs"] = {"content": [{"token": result["text"], "logprob": -0.5}]}
+                return result
+        client = LogprobClient(fail_first=True)
+        self.assertEqual(self.quiet_run(client), {"error": 1, "completed": 1})
+        self.args.retry_errors = True
+        self.assertEqual(self.quiet_run(client), {"completed": 1, "skipped": 1})
+
+    def test_consecutive_network_failures_stop_the_run(self):
+        self.args.repetitions = 5
+        class OfflineClient(FakeClient):
+            def complete(self, messages, model, parameters):
+                self.calls += 1
+                return {"status": "error", "http_status": None, "error": "getaddrinfo failed", "raw_response": None}
+        client = OfflineClient()
+        self.assertEqual(self.quiet_run(client), {"error": 3})
+        self.assertEqual(client.calls, 3)
+
     def test_unlisted_parameters_need_a_pinned_backend(self):
         self.args.allow_unlisted_parameters = True
         with self.assertRaisesRegex(ValueError, "needs --backend"):
