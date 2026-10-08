@@ -9,8 +9,9 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+from confidence import summarize
 from datasets import DATASET_SOURCES, load_examples, re2_source
-from runs import load_run
+from runs import item_table, load_run
 
 PAGE = Path(__file__).resolve().parent / "index.html"
 EVALUATIONS = ROOT / "data/evaluations"
@@ -75,31 +76,31 @@ def items(run):
     return list(grouped.values())
 
 
-def verification_runs():
-    return sorted(p.name.removesuffix("_verdicts.jsonl") for p in EVALUATIONS.glob("*_verdicts.jsonl"))
-
-
 def confidence_items(run):
-    """Judged answers with all three confidence signals: answer logprob, reasoning effort, self-verification.
-
-    The judged prediction run is the one the verdict summary records.
-    """
-    summary = json.loads((EVALUATIONS / f"{run}_verdicts.summary.json").read_text(encoding="utf-8"))
-    predictions = {(i["dataset"], i["id"], i["repetition"]): i for i in items(Path(summary["prediction_run"]).stem)}
-    responses = load_run(VERIFICATIONS / f"{run}.jsonl")[1] if (VERIFICATIONS / f"{run}.jsonl").exists() else {}
+    """Every item of a prediction run with its confidence signals (runs.item_table), plus the
+    code, input, reference, response and verifier response for the detail pane."""
+    texts = {(i["dataset"], i["id"], i["repetition"]): i for i in items(run)}
+    table = item_table(run, ROOT / "data")
+    verification = table[0]["verification_run"] if table else None
+    log = VERIFICATIONS / f"{verification}.jsonl"
+    responses = load_run(log)[1] if verification and log.exists() else {}
     records = []
-    with (EVALUATIONS / f"{run}_verdicts.jsonl").open(encoding="utf-8") as stream:
-        for line in stream:
-            verdict = json.loads(line)
-            key = (verdict["dataset"], verdict["id"], verdict["repetition"])
-            answer = predictions[key]
-            records.append({key_: answer[key_] for key_ in ("dataset", "id", "code", "input", "reference", "response",
-                                                             "logprob", "reasoning_tokens")}
-                           | {"correct": verdict["correct_normalized"], "status": verdict["status"],
-                              "verdict": verdict["verdict"], "confidence": verdict["confidence"], "p_correct": verdict["p_correct"],
-                              "verifier_response": (responses.get(key) or {}).get("text"),
-                              "verifier_reasoning_tokens": verdict["reasoning_tokens"]})
+    for row in table:
+        key = (row["dataset"], row["id"], row["repetition"])
+        records.append(row | {field: texts[key][field] for field in ("code", "input", "reference", "response")}
+                       | {"verifier_response": (responses.get(key) or {}).get("text")})
     return records
+
+
+@lru_cache(maxsize=None)
+def _summary(run, stamp):
+    return summarize(item_table(run, ROOT / "data"))
+
+
+def confidence_summary(run):
+    """confidence.summarize for a run, cached until an evaluation file changes."""
+    stamp = tuple(sorted((p.name, p.stat().st_mtime_ns) for p in EVALUATIONS.glob("*.jsonl")))
+    return _summary(run, stamp)
 
 
 def dataset_items(name):
@@ -125,10 +126,12 @@ class Handler(BaseHTTPRequestHandler):
             self.send(json.dumps(runs()).encode(), "application/json")
         elif self.path.startswith("/api/runs/") and self.path.removeprefix("/api/runs/") in runs():
             self.send(json.dumps(items(self.path.removeprefix("/api/runs/"))).encode(), "application/json")
-        elif self.path == "/api/verifications":
-            self.send(json.dumps(verification_runs()).encode(), "application/json")
-        elif self.path.startswith("/api/verifications/") and self.path.removeprefix("/api/verifications/") in verification_runs():
-            self.send(json.dumps(confidence_items(self.path.removeprefix("/api/verifications/"))).encode(), "application/json")
+        elif self.path.startswith("/api/confidence/") and self.path.endswith("/summary") \
+                and self.path.removeprefix("/api/confidence/").removesuffix("/summary") in runs():
+            run = self.path.removeprefix("/api/confidence/").removesuffix("/summary")
+            self.send(json.dumps(confidence_summary(run)).encode(), "application/json")
+        elif self.path.startswith("/api/confidence/") and self.path.removeprefix("/api/confidence/") in runs():
+            self.send(json.dumps(confidence_items(self.path.removeprefix("/api/confidence/"))).encode(), "application/json")
         elif self.path == "/api/datasets":
             self.send(json.dumps(list(DATASET_SOURCES)).encode(), "application/json")
         elif self.path.startswith("/api/datasets/") and self.path.removeprefix("/api/datasets/") in DATASET_SOURCES:

@@ -42,6 +42,9 @@
   pre { margin: 0; background: var(--code); padding: 8px; border-radius: 4px; white-space: pre-wrap; overflow-wrap: anywhere;
         font: 12.5px/1.45 ui-monospace, Consolas, monospace; }
   mark { background: var(--mark); color: inherit; }
+  table.summary { width: auto; margin-bottom: 6px; }
+  table.summary th { position: static; cursor: default; }
+  #detail a { color: var(--bar); font-size: 13px; }
 </style>
 <nav id="tabs">
   <button data-view="results" class="active">Predictions</button>
@@ -99,25 +102,30 @@ const RESULT_COLUMNS = [
    value: i => i.logprob, show: v => v === null ? "" : v.toExponential(1), cls: "num"},
   {label: "Reasoning tokens", value: i => i.reasoning_tokens, show: v => v ?? "", cls: "num"},
 ];
-// The verifier's verdict against the answer's actual correctness (normalized scoring).
-const VERDICT_FILTERS = {
+// Answers by correctness (normalized scoring) and, for verified runs, the verdict against it.
+// Verdict filters with no answers (runs without self-verification) are not offered.
+const CONFIDENCE_FILTERS = {
   all: () => true,
-  "approved, right": i => i.verdict === "correct" && i.correct === true,
-  "approved, wrong": i => i.verdict === "correct" && i.correct === false,
-  "rejected, right": i => i.verdict === "incorrect" && i.correct === true,
-  "rejected, wrong": i => i.verdict === "incorrect" && i.correct === false,
-  "no judgment": i => i.verdict === null,
+  correct: i => i.correct_normalized === true,
+  incorrect: i => i.correct_normalized === false,
+  truncated: i => i.status_normalized === "request_incomplete",
+  "approved, right": i => i.verdict === "correct" && i.correct_normalized === true,
+  "approved, wrong": i => i.verdict === "correct" && i.correct_normalized === false,
+  "rejected, right": i => i.verdict === "incorrect" && i.correct_normalized === true,
+  "rejected, wrong": i => i.verdict === "incorrect" && i.correct_normalized === false,
 };
 const CONFIDENCE_COLUMNS = [
   NUMBER,
   {label: "Dataset", value: i => i.dataset},
   {label: "Item", value: i => i.id, cls: "id"},
-  {label: "Answer", title: "Answer correct (normalized scoring)", value: i => i.correct, show: v => MARK[v],
+  {label: "Answer", title: "Answer correct (normalized scoring)", value: i => i.correct_normalized, show: v => MARK[v],
    cls: "mark", cellClass: v => MARK_CLASS[v]},
   {label: "Logprob", title: "Implicit: mean log-probability of the answer tokens",
    value: i => i.logprob, show: v => v === null ? "" : v.toExponential(1), cls: "num"},
-  {label: "Reasoning tokens", title: "Behavioural: reasoning tokens spent on the answer",
+  {label: "Reasoning tokens", title: "Behavioural: hidden reasoning tokens spent on the answer",
    value: i => i.reasoning_tokens, show: v => v ?? "", cls: "num"},
+  {label: "Tokens", title: "Behavioural: all generated tokens, including visible reasoning",
+   value: i => i.completion_tokens, show: v => v ?? "", cls: "num"},
   {label: "Verdict", title: "Explicit: the model's verdict on its own answer", value: i => i.verdict, show: v => v ?? ""},
   {label: "Confidence", title: "Explicit: stated probability (0-100) that the answer is correct",
    value: i => i.confidence, show: v => v ?? "", cls: "num"},
@@ -251,32 +259,86 @@ async function loadRun(run) {
 
 // --- confidence tab ------------------------------------------------------------
 
-let judged = [];
+let judged = [], confidenceRun = null;
+const summaries = {};
+const answerText = v => v === true ? "correct" : v === false ? "incorrect" : "unscored";
 const confidenceTable = sortableTable($("confidence-head"), $("confidence-rows"), CONFIDENCE_COLUMNS, item => {
-  const facts = [`answer ${item.correct ? "correct" : "incorrect"}`, `verdict ${item.verdict ?? item.status}`,
+  const facts = [`answer ${answerText(item.correct_normalized)}`, `verdict ${item.verdict ?? item.verification_status ?? "–"}`,
                  `confidence ${item.confidence ?? "–"}`, `P(correct) ${item.p_correct === null ? "–" : item.p_correct.toFixed(3)}`,
                  `logprob ${item.logprob === null ? "–" : item.logprob.toExponential(2)}`,
-                 `reasoning tokens ${item.reasoning_tokens ?? "–"} (verifier ${item.verifier_reasoning_tokens ?? "–"})`];
+                 `reasoning tokens ${item.reasoning_tokens ?? "–"} (verifier ${item.verifier_reasoning_tokens ?? "–"})`,
+                 `tokens ${item.completion_tokens ?? "–"}`, `${item.code_tokens} code tokens`];
   showDetail(`#${item.number}  ${item.dataset} / ${item.id}`, facts.join(" · "),
              [["Code", item.code], ["Input", item.input], ["Reference", item.reference],
               ["Response", item.response ?? "(no response)", true], ["Verifier response", item.verifier_response ?? "(none)"]]);
+  const back = document.createElement("a");
+  back.href = "#";
+  back.textContent = "← Summary";
+  back.onclick = event => { event.preventDefault(); showSummary(); };
+  $("detail").prepend(back);
 });
 
 function renderConfidence() {
-  const shown = judged.filter(VERDICT_FILTERS[$("verify-show").value]);
-  $("verify-count").textContent = `${shown.length} of ${judged.length} judged answers`;
+  const shown = judged.filter(CONFIDENCE_FILTERS[$("verify-show").value]);
+  $("verify-count").textContent = `${shown.length} of ${judged.length} answers`;
   confidenceTable.render(shown);
 }
 
-async function loadVerification(run) {
-  judged = await (await fetch("/api/verifications/" + run)).json();
+async function loadConfidence(run) {
+  confidenceRun = run;
+  judged = await (await fetch("/api/confidence/" + run)).json();
   judged.forEach((item, index) => item.number = index + 1);
   const keep = $("verify-show").value || "all";
-  $("verify-show").replaceChildren(...Object.keys(VERDICT_FILTERS).map(f =>
-    new Option(`${f} (${judged.filter(VERDICT_FILTERS[f]).length})`, f)));
-  $("verify-show").value = keep;
+  const verdictFilter = name => name.startsWith("approved") || name.startsWith("rejected");
+  $("verify-show").replaceChildren(...Object.keys(CONFIDENCE_FILTERS)
+    .map(f => [f, judged.filter(CONFIDENCE_FILTERS[f]).length])
+    .filter(([f, count]) => count || !verdictFilter(f))
+    .map(([f, count]) => new Option(`${f} (${count})`, f)));
+  $("verify-show").value = [...$("verify-show").options].some(o => o.value === keep) ? keep : "all";
   renderConfidence();
-  clearDetail();
+  showSummary();
+}
+
+// The run summary fills the detail pane until an item is selected. It is computed on the
+// server with the analysis's own code (src/confidence.py), so the numbers match the paper.
+async function showSummary() {
+  const run = confidenceRun, detail = $("detail");
+  detail.innerHTML = '<p class="empty">Computing the summary (a few seconds the first time)…</p>';
+  summaries[run] ??= await (await fetch(`/api/confidence/${run}/summary`)).json();
+  if (run !== confidenceRun) return;
+  detail.replaceChildren();
+  const heading = document.createElement("h3");
+  heading.textContent = `Summary: ${run}`;
+  const note = document.createElement("div");
+  note.className = "facts";
+  note.textContent = "AUROC: chance that a correct answer gets more confidence than a wrong one (0.5 = chance), with a " +
+    "95% bootstrap interval. Accuracy @80% / @50%: accuracy among the most confident 80% / 50% of answers. " +
+    "ECE: calibration error of probabilities. Normalized scoring; unscored answers (truncated) are left out.";
+  detail.append(heading, note);
+  const fixed = (v, d = 2) => v === null || v === undefined ? "–" : v.toFixed(d);
+  for (const group of summaries[run]) {
+    const caption = document.createElement("div");
+    caption.className = "label";
+    caption.textContent = `${group.group}: ${group.items} answers` + (group.unscored ? `, ${group.unscored} unscored` : "") +
+      `; ${fixed(group.accuracy * 100, 1)}% of scored answers correct (${group.wrong} wrong)`;
+    const table = document.createElement("table");
+    table.className = "summary";
+    table.innerHTML = "<tr><th>Signal</th><th class='num'>n</th><th class='num'>AUROC</th><th class='num'>95% interval</th>" +
+      "<th class='num'>Acc @80%</th><th class='num'>Acc @50%</th><th class='num'>ECE</th></tr>";
+    for (const s of group.signals) {
+      const tr = table.insertRow();
+      const interval = s.interval ? `${fixed(s.interval[0])}–${fixed(s.interval[1])}` : "–";
+      for (const [text, cls] of [[s.signal, ""], [s.n, "num"], [fixed(s.auroc), "num"], [interval, "num"],
+                                 [fixed(s.selective_accuracy["0.8"]), "num"], [fixed(s.selective_accuracy["0.5"]), "num"],
+                                 [fixed(s.ece), "num"]]) {
+        const cell = tr.insertCell();
+        cell.textContent = text;
+        cell.className = cls;
+      }
+    }
+    detail.append(caption, group.signals.length ? table : Object.assign(document.createElement("p"),
+      {className: "empty", textContent: "No signal varies in this group."}));
+  }
 }
 
 // --- dataset tab ---------------------------------------------------------------
@@ -349,7 +411,7 @@ async function loadDataset(name) {
 // --- start ---------------------------------------------------------------------
 
 // Tabs other than the first load their data when first opened.
-const FIRST_OPEN = {confidence: () => $("verify-run").value && loadVerification($("verify-run").value),
+const FIRST_OPEN = {confidence: () => $("verify-run").value && loadConfidence($("verify-run").value),
                     dataset: () => loadDataset($("dataset-name").value)};
 for (const button of document.querySelectorAll("#tabs button")) {
   button.onclick = () => {
@@ -357,19 +419,22 @@ for (const button of document.querySelectorAll("#tabs button")) {
       other.classList.toggle("active", other === button);
       $(other.dataset.view).hidden = other !== button;
     }
-    clearDetail();
+    if (button.dataset.view === "confidence" && confidenceRun) showSummary();
+    else clearDetail();
     FIRST_OPEN[button.dataset.view]?.();
     delete FIRST_OPEN[button.dataset.view];
   };
 }
 
 (async () => {
-  for (const run of await (await fetch("/api/runs")).json()) $("run").add(new Option(run, run));
-  for (const run of await (await fetch("/api/verifications")).json()) $("verify-run").add(new Option(run, run));
+  for (const run of await (await fetch("/api/runs")).json()) {
+    $("run").add(new Option(run, run));
+    $("verify-run").add(new Option(run, run));
+  }
   for (const name of await (await fetch("/api/datasets")).json()) $("dataset-name").add(new Option(name, name));
   $("run").onchange = () => loadRun($("run").value);
   $("show").onchange = renderResults;
-  $("verify-run").onchange = () => loadVerification($("verify-run").value);
+  $("verify-run").onchange = () => loadConfidence($("verify-run").value);
   $("verify-show").onchange = renderConfidence;
   $("dataset-name").onchange = () => loadDataset($("dataset-name").value);
   if ($("run").value) loadRun($("run").value);
