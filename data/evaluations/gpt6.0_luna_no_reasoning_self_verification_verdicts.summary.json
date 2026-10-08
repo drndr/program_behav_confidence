@@ -1,6 +1,6 @@
 {
-  "verification_run": "data/verifications/verify-gpt6-luna-none-16k-openai-logprobs.jsonl",
-  "prediction_run": "data/predictions/gpt6-luna-none-16k-openai-logprobs.jsonl",
+  "verification_run": "data/verifications/gpt6.0_luna_no_reasoning_self_verification.jsonl",
+  "prediction_run": "data/predictions/gpt6.0_luna_no_reasoning.jsonl",
   "summary": {
     "cruxeval": {
       "total": 795,
@@ -22,8 +22,8 @@
     }
   },
   "sha256": {
-    "data/verifications/verify-gpt6-luna-none-16k-openai-logprobs.jsonl": "1cb153598f540689d3298fdd2dbf1daebc5ee0cb899e9cb2a02f2d45c41689e5",
-    "data/evaluations/gpt6-luna-none-16k-openai-logprobs_scores.jsonl": "de0bb70d3e2d328537f6e6f5d89e0b0fe3ad7399374b348375611e4e9d1c0f29",
+    "data/verifications/gpt6.0_luna_no_reasoning_self_verification.jsonl": "1cb153598f540689d3298fdd2dbf1daebc5ee0cb899e9cb2a02f2d45c41689e5",
+    "data/evaluations/gpt6.0_luna_no_reasoning_scores.jsonl": "de0bb70d3e2d328537f6e6f5d89e0b0fe3ad7399374b348375611e4e9d1c0f29",
     "src/scoring.py": "be435a7fb76b6e3a0a9aff626e587642e8f0afd4c538c76f12053b5f24426ebc",
     "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
   }

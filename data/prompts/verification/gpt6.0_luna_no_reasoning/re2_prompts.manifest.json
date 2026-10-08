@@ -1,11 +1,11 @@
 {
-  "dataset": "cruxeval",
+  "dataset": "re2",
   "prompt_kind": "verification",
-  "count": 795,
+  "count": 443,
   "wording_final": true,
   "template_sha256": "22fe84b6c2c256a58e049f621b014633f991e8eeed44cf2964bae158badd389e",
   "prediction_run": {
-    "path": "data/predictions/gpt6-luna-none-16k-openai-logprobs.jsonl",
+    "path": "data/predictions/gpt6.0_luna_no_reasoning.jsonl",
     "sha256": "d3a317857eec4f994c7166209dcc9881441512f48012f6e56f104ab8265c18d3",
     "model": "openai/gpt-6-luna",
     "parameters": {
@@ -27,7 +27,7 @@
   "skipped": {
     "no_prediction_tag": 8
   },
-  "source_path": "data/raw/cruxeval/cruxeval.csv",
-  "source_sha256": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
-  "generated_at": "2026-10-07T09:48:26.497802+00:00"
+  "source_path": "data/raw/re2/re2_filtered.csv",
+  "source_sha256": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
+  "generated_at": "2026-10-08T13:56:56.055703+00:00"
 }
