@@ -18,7 +18,9 @@ EVALUATIONS = ROOT / "data/evaluations"
 PREDICTIONS = ROOT / "data/predictions"
 VERIFICATIONS = ROOT / "data/verifications"
 PROPERTIES = ROOT / "data/program_properties"
-PROPERTY_COUNTS = ("code_token_length", "input_token_length", "executable_lines", "helper_labels_excluded")
+PROPERTY_COUNTS = ("code_token_length", "input_token_length", "executable_lines", "helper_labels_excluded",
+                   "cyclomatic_complexity", "target_cyclomatic_complexity")
+PROPERTY_MEASURES = ("halstead_volume", "halstead_difficulty", "target_halstead_volume", "target_halstead_difficulty")
 
 
 @lru_cache(maxsize=None)
@@ -114,6 +116,8 @@ def dataset_items(name):
             records.append({"id": item_id, "source": re2_source(item_id) if name == "re2" else "CRUXEval",
                             "code": example["code"], "input": example["input"], "reference": example["output"],
                             **{k: int(measured[k]) if measured[k] else None for k in PROPERTY_COUNTS},
+                            **{k: float(measured[k]) if measured[k] else None for k in PROPERTY_MEASURES},
+                            "complexity_target": measured["complexity_target"],
                             "line_status": measured["line_status"], "line_detail": measured["line_detail"]})
     return records
 

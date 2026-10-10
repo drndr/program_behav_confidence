@@ -140,6 +140,14 @@ const DATASET_COLUMNS = [
   {label: "Input tokens", value: i => i.input_token_length, cls: "num"},
   {label: "Lines", title: "Executable lines", value: i => i.executable_lines, show: v => v ?? "", cls: "num"},
   {label: "Labels", title: "RE2 helper labels removed before counting lines", value: i => i.helper_labels_excluded, cls: "num"},
+  {label: "CC", title: "Cyclomatic complexity of the whole supplied code", value: i => i.cyclomatic_complexity,
+   show: v => v ?? "", cls: "num"},
+  {label: "Target CC", title: "Cyclomatic complexity of the target function alone", value: i => i.target_cyclomatic_complexity,
+   show: v => v ?? "", cls: "num"},
+  {label: "Halstead D", title: "Halstead difficulty of the whole supplied code", value: i => i.halstead_difficulty,
+   show: v => v ?? "", cls: "num"},
+  {label: "Target D", title: "Halstead difficulty of the target function alone", value: i => i.target_halstead_difficulty,
+   show: v => v ?? "", cls: "num"},
   {label: "Parse", title: "ok, lexical_only (counted but not valid Python) or tokenization_failed (no line count)",
    value: i => i.line_status},
 ];
@@ -347,7 +355,10 @@ async function showSummary() {
 const datasetTable = sortableTable($("dataset-head"), $("dataset-rows"), DATASET_COLUMNS, item => {
   const facts = [`source ${item.source}`, `${item.code_token_length} code tokens`, `${item.input_token_length} input tokens`,
                  `${item.executable_lines ?? "no"} executable lines`, `${item.helper_labels_excluded} helper labels removed`,
-                 `parse ${item.line_status}` + (item.line_detail ? ` (${item.line_detail})` : "")];
+                 `parse ${item.line_status}` + (item.line_detail ? ` (${item.line_detail})` : ""),
+                 `complexity ${item.cyclomatic_complexity ?? "–"}, Halstead difficulty ${item.halstead_difficulty ?? "–"}`,
+                 `target ${item.complexity_target || "not identified"}: complexity ${item.target_cyclomatic_complexity ?? "–"}, ` +
+                 `Halstead difficulty ${item.target_halstead_difficulty ?? "–"}`];
   showDetail(`#${item.number}  ${item.id}`, facts.join(" · "),
              [["Code", item.code], ["Input", item.input], ["Reference", item.reference]]);
 });
@@ -357,8 +368,8 @@ const compact = n => n >= 1000 ? `${+(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` :
 // Bins double in width when values span more than ~50x (RE2's long tail), else ~12 equal bins.
 function histogram(title, values) {
   values = values.filter(v => v !== null);
-  const min = Math.min(...values), max = Math.max(...values);
-  const log = max / Math.max(min, 1) > 50;
+  const min = Math.floor(Math.min(...values)), max = Math.max(...values);
+  const log = max / Math.max(min, 1) > 50, integer = values.every(Number.isInteger);
   const edges = [];
   if (log) {
     if (min < 1) edges.push(0);
@@ -374,7 +385,8 @@ function histogram(title, values) {
   const svg = [`<svg class="chart" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`];
   counts.forEach((count, i) => {
     const h = peak ? count / peak * (height - top - bottom) : 0, x = i * step, y = height - bottom - h;
-    const range = log ? `${compact(edges[i])}–${compact(edges[i + 1])}`
+    // Integer bins name their last value; bins of fractional values are half-open [low, high).
+    const range = log || !integer ? `${compact(edges[i])}–${compact(edges[i + 1])}`
                 : edges[i + 1] - edges[i] === 1 ? `${edges[i]}` : `${edges[i]}–${edges[i + 1] - 1}`;
     svg.push(`<rect x="${x + 1}" y="${y}" width="${step - 2}" height="${h}"><title>${range}: ${count}</title></rect>`);
     if (count) svg.push(`<text x="${x + step / 2}" y="${y - 2}" text-anchor="middle">${count}</text>`);
@@ -397,14 +409,19 @@ async function loadDataset(name) {
   programs.forEach((item, index) => item.number = index + 1);
   const median = key => {
     const v = programs.map(p => p[key]).filter(x => x !== null).sort((a, b) => a - b);
-    return v.length % 2 ? v[(v.length - 1) / 2] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2;
+    return +(v.length % 2 ? v[(v.length - 1) / 2] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2).toFixed(2);
   };
   $("summary").textContent = [`${programs.length} programs`, `sources: ${tally(programs.map(p => p.source))}`,
                               `parse: ${tally(programs.map(p => p.line_status))}`,
-                              `median ${median("code_token_length")} code tokens, ${median("executable_lines")} lines`].join(" · ");
+                              `median ${median("code_token_length")} code tokens, ${median("executable_lines")} lines, ` +
+                              `complexity ${median("cyclomatic_complexity")}, Halstead difficulty ${median("halstead_difficulty")}`].join(" · ");
   $("charts").replaceChildren(histogram("Code tokens", programs.map(p => p.code_token_length)),
                               histogram("Executable lines", programs.map(p => p.executable_lines)),
-                              histogram("Input tokens", programs.map(p => p.input_token_length)));
+                              histogram("Input tokens", programs.map(p => p.input_token_length)),
+                              histogram("Cyclomatic complexity", programs.map(p => p.cyclomatic_complexity)),
+                              histogram("Target cyclomatic complexity", programs.map(p => p.target_cyclomatic_complexity)),
+                              histogram("Halstead difficulty", programs.map(p => p.halstead_difficulty)),
+                              histogram("Target Halstead difficulty", programs.map(p => p.target_halstead_difficulty)));
   datasetTable.render(programs);
   clearDetail();
 }
