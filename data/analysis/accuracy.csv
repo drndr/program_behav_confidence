@@ -11,3 +11,9 @@ GPT-6 Luna,low,cruxeval,normalized,800,773,0.96625,0,3,0
 GPT-6 Luna,low,re2,strict,446,208,0.4663677130044843,1,22,0
 GPT-6 Luna,low,re2,relaxed,446,227,0.5089686098654709,1,22,0
 GPT-6 Luna,low,re2,normalized,446,247,0.5538116591928252,1,22,0
+GPT-6 Luna,medium,cruxeval,strict,800,776,0.97,0,5,0
+GPT-6 Luna,medium,cruxeval,relaxed,800,776,0.97,0,5,0
+GPT-6 Luna,medium,cruxeval,normalized,800,776,0.97,0,5,0
+GPT-6 Luna,medium,re2,strict,446,203,0.4551569506726457,0,35,0
+GPT-6 Luna,medium,re2,relaxed,446,222,0.4977578475336323,0,35,0
+GPT-6 Luna,medium,re2,normalized,446,244,0.547085201793722,0,35,0

@@ -9,6 +9,8 @@ from confidence import summarize
 def row(dataset, correct, logprob, code_tokens, source="CRUXEval", reasoning=0, confidence=None):
     return {"dataset": dataset, "source": source, "correct_normalized": correct, "logprob": logprob,
             "reasoning_tokens": reasoning, "completion_tokens": 20, "code_tokens": code_tokens,
+            "cyclomatic_complexity": None, "target_cyclomatic_complexity": None,
+            "halstead_difficulty": None, "target_halstead_difficulty": None, "information_flow": None,
             "p_correct": None, "confidence": confidence, "verdict": None}
 
 

@@ -9,7 +9,8 @@ and program properties (runs.item_table) and writes to data/analysis/:
                     format-failure and log-probability counts
   signals.csv       per group and signal: AUROC with a 95% bootstrap interval, accuracy among
                     the most confident 80% / 50% of answers, calibration error
-  properties.csv    the same within thirds of program size, per dataset
+  properties.csv    the same within thirds of each program property (size, cyclomatic complexity,
+                    Halstead difficulty, information flow), per dataset
   verification.csv  self-verdicts against the answers' correctness
   analysis.json     all of the above, with the hashes of every input
 
@@ -30,14 +31,18 @@ from confidence import GROUPS, summarize
 from datasets import sha256_file
 from runs import item_table
 
-# The study: one prediction run per model and reasoning setting.
+# The study: the prediction runs of each model and reasoning setting. Medium was run per
+# dataset (RE2 first, CRUXEval later) with identical settings; its two runs form one condition.
 CONDITIONS = [
-    {"model": "GPT-6 Luna", "reasoning": "none", "run": "gpt6.0_luna_no_reasoning"},
-    {"model": "GPT-6 Luna", "reasoning": "low", "run": "gpt6.0_luna_low_reasoning"},
+    {"model": "GPT-6 Luna", "reasoning": "none", "runs": ["gpt6.0_luna_no_reasoning"]},
+    {"model": "GPT-6 Luna", "reasoning": "low", "runs": ["gpt6.0_luna_low_reasoning"]},
+    {"model": "GPT-6 Luna", "reasoning": "medium",
+     "runs": ["gpt6.0_luna_medium_reasoning", "gpt6.0_luna_medium_reasoning_cruxeval"]},
 ]
 MODES = ("strict", "relaxed", "normalized")
 DATASETS = ("cruxeval", "re2")
-SIZE_PROPERTIES = ("code_tokens", "executable_lines")
+PROPERTIES = ("code_tokens", "executable_lines", "cyclomatic_complexity", "target_cyclomatic_complexity",
+              "halstead_difficulty", "target_halstead_difficulty", "information_flow")
 SIGNAL_FIELDS = ["model", "reasoning", "group", "items", "unscored", "accuracy", "wrong", "signal", "n",
                  "auroc", "auroc_low", "auroc_high", "accuracy_at_80", "accuracy_at_50", "ece"]
 
@@ -45,6 +50,28 @@ SIGNAL_FIELDS = ["model", "reasoning", "group", "items", "unscored", "accuracy",
 def relative(path):
     path = Path(path).resolve()
     return path.relative_to(ROOT).as_posix() if path.is_relative_to(ROOT) else path.as_posix()
+
+
+def condition_rows(runs, data_dir, table=item_table):
+    """Items of one condition: its runs' item tables combined.
+
+    The runs must share every setting except their prompt files (datasets), and an item may
+    come from one run only.
+    """
+    settings = [json.loads((Path(data_dir) / "predictions" / f"{run}.manifest.json").read_text(encoding="utf-8"))
+                ["configuration"] for run in runs]
+    if any({k: v for k, v in s.items() if k != "prompt_files"} != {k: v for k, v in settings[0].items()
+                                                                  if k != "prompt_files"} for s in settings):
+        raise ValueError(f"runs {runs} differ in more than their datasets")
+    rows, seen = [], set()
+    for run in runs:
+        for row in table(run, data_dir):
+            key = (row["dataset"], row["id"], row["repetition"])
+            if key in seen:
+                raise ValueError(f"{key} appears in more than one run of {runs}")
+            seen.add(key)
+            rows.append(row)
+    return rows
 
 
 def accuracy_rows(condition, rows):
@@ -79,10 +106,10 @@ def thirds(values):
 
 
 def property_groups(rows):
-    """Groups per dataset, size property and third: (label, dataset, property, bounds, member test)."""
+    """Groups per dataset, property and third: (label, dataset, property, bounds, member test)."""
     groups = []
     for dataset in DATASETS:
-        for name in SIZE_PROPERTIES:
+        for name in PROPERTIES:
             values = [row[name] for row in rows if row["dataset"] == dataset and row[name] is not None]
             if len(set(values)) < 3:
                 continue
@@ -128,7 +155,7 @@ def analyze(data_dir=ROOT / "data", out_dir=None, resamples=1000):
     accuracy, signals, properties, verification, inputs = [], [], [], [], set()
     for spec in CONDITIONS:
         condition = {"model": spec["model"], "reasoning": spec["reasoning"]}
-        rows = item_table(spec["run"], data_dir)
+        rows = condition_rows(spec["runs"], data_dir)
         print(f"{spec['model']}, reasoning {spec['reasoning']}: {len(rows)} items", flush=True)
         accuracy += accuracy_rows(condition, rows)
         signals += flatten(condition, summarize(rows, GROUPS, resamples))
@@ -136,9 +163,9 @@ def analyze(data_dir=ROOT / "data", out_dir=None, resamples=1000):
             properties += flatten(condition, summarize(rows, {label: member}, resamples),
                                   dataset=dataset, property=name, low=low, high=high)
         verification += verification_rows(condition, rows)
-        inputs.add(data_dir / "evaluations" / f"{spec['run']}_scores.jsonl")
-        if rows and rows[0]["verification_run"]:
-            inputs.add(data_dir / "evaluations" / f"{rows[0]['verification_run']}_verdicts.jsonl")
+        inputs |= {data_dir / "evaluations" / f"{run}_scores.jsonl" for run in spec["runs"]}
+        inputs |= {data_dir / "evaluations" / f"{row['verification_run']}_verdicts.jsonl"
+                   for row in rows if row["verification_run"]}
     inputs |= {data_dir / "program_properties" / f"{dataset}_properties.csv" for dataset in DATASETS}
     code = [ROOT / "src" / name for name in ("confidence.py", "metrics.py", "runs.py", "datasets.py")] + [Path(__file__)]
     out_dir.mkdir(parents=True, exist_ok=True)

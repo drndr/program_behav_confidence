@@ -6,6 +6,8 @@ from pathlib import Path
 
 from datasets import re2_source
 
+HALSTEAD_FIELDS = ("halstead_volume", "halstead_difficulty", "target_halstead_volume", "target_halstead_difficulty")
+
 
 def load_run(path):
     """Return the run manifest and its latest row per (dataset, id, repetition).
@@ -67,6 +69,11 @@ def item_table(run, data_dir):
         row.update({"source": re2_source(row["id"]) if row["dataset"] == "re2" else "CRUXEval",
                     "code_tokens": int(measured["code_token_length"]), "input_tokens": int(measured["input_token_length"]),
                     "executable_lines": int(measured["executable_lines"]) if measured["executable_lines"] else None,
+                    "cyclomatic_complexity": int(measured["cyclomatic_complexity"]) if measured["cyclomatic_complexity"] else None,
+                    "target_cyclomatic_complexity": (int(measured["target_cyclomatic_complexity"])
+                                                     if measured["target_cyclomatic_complexity"] else None),
+                    **{field: float(measured[field]) if measured[field] else None for field in HALSTEAD_FIELDS},
+                    "information_flow": int(measured["information_flow"]) if measured["information_flow"] else None,
                     "parse_status": measured["line_status"], "verification_run": verification,
                     "verification_status": verdict.get("status"), "verdict": verdict.get("verdict"),
                     "confidence": verdict.get("confidence"), "p_correct": verdict.get("p_correct"),

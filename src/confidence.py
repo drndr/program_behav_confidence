@@ -22,6 +22,11 @@ SIGNALS = {
     "stated confidence": lambda row: row["confidence"],
     "verdict": lambda row: None if row["verdict"] is None else int(row["verdict"] == "correct"),
     "code tokens (baseline)": _negated("code_tokens"),
+    "complexity (baseline)": _negated("cyclomatic_complexity"),
+    "target complexity (baseline)": _negated("target_cyclomatic_complexity"),
+    "Halstead difficulty (baseline)": _negated("halstead_difficulty"),
+    "target Halstead difficulty (baseline)": _negated("target_halstead_difficulty"),
+    "information flow (baseline)": _negated("information_flow"),
 }
 # Signals that are probabilities of correctness, for calibration.
 PROBABILITIES = {"verdict P(correct)": lambda row: row["p_correct"],

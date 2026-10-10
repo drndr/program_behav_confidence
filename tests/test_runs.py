@@ -29,13 +29,18 @@ class ItemTableTests(unittest.TestCase):
         properties = self.data / "program_properties/cruxeval_properties.csv"
         properties.parent.mkdir(parents=True)
         with properties.open("w", encoding="utf-8", newline="") as stream:
+            halstead = ["halstead_volume", "halstead_difficulty", "target_halstead_volume", "target_halstead_difficulty",
+                        "information_flow"]
             writer = csv.DictWriter(stream, fieldnames=["id", "code_token_length", "input_token_length",
-                                                        "executable_lines", "line_status"])
+                                                        "executable_lines", "line_status", "cyclomatic_complexity",
+                                                        "target_cyclomatic_complexity", *halstead])
             writer.writeheader()
             writer.writerows([{"id": "sample_0", "code_token_length": 30, "input_token_length": 5, "executable_lines": 4,
-                               "line_status": "ok"},
+                               "line_status": "ok", "cyclomatic_complexity": 3, "target_cyclomatic_complexity": 2,
+                               **dict(zip(halstead, (100.5, 7.25, 80.0, 6.0, 144)))},
                               {"id": "sample_1", "code_token_length": 60, "input_token_length": 9, "executable_lines": "",
-                               "line_status": "tokenization_failed"}])
+                               "line_status": "tokenization_failed", "cyclomatic_complexity": "",
+                               "target_cyclomatic_complexity": "", **dict.fromkeys(halstead, "")}])
 
     def add_verification(self, name):
         (self.data / f"evaluations/{name}_verdicts.summary.json").write_text(
@@ -56,6 +61,11 @@ class ItemTableTests(unittest.TestCase):
                          ("CRUXEval", "correct", 95.0, 0.9))
         self.assertEqual((second["correct_normalized"], second["status_normalized"], second["executable_lines"], second["verdict"]),
                          (None, "request_incomplete", None, None))
+        self.assertEqual((first["cyclomatic_complexity"], first["target_cyclomatic_complexity"]), (3, 2))
+        self.assertEqual((second["cyclomatic_complexity"], second["target_cyclomatic_complexity"]), (None, None))
+        self.assertEqual((first["halstead_difficulty"], first["target_halstead_volume"], second["halstead_volume"]),
+                         (7.25, 80.0, None))
+        self.assertEqual((first["information_flow"], second["information_flow"]), (144, None))
 
     def test_at_most_one_verification_per_run(self):
         self.add_verification("verify-a")
