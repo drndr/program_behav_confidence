@@ -1,0 +1,21 @@
+{
+  "verification_run": "data/verifications/gpt6.0_luna_medium_reasoning_cruxeval_self_verification.jsonl",
+  "prediction_run": "data/predictions/gpt6.0_luna_medium_reasoning_cruxeval.jsonl",
+  "summary": {
+    "cruxeval": {
+      "total": 795,
+      "statuses": {
+        "judged": 795
+      },
+      "with_p_correct": 0,
+      "verdict_correct": 777,
+      "verdict_matches_normalized": 776
+    }
+  },
+  "sha256": {
+    "data/verifications/gpt6.0_luna_medium_reasoning_cruxeval_self_verification.jsonl": "2eea274e7871a7ce855ab3b41d7f9998409bca5fcf421198d3e42a5e71e2be93",
+    "data/evaluations/gpt6.0_luna_medium_reasoning_cruxeval_scores.jsonl": "b9ded1b0ed0ef249d7d0d34f1b98ffbd0251333f968f00dba44fdc3cad933deb",
+    "src/scoring.py": "be435a7fb76b6e3a0a9aff626e587642e8f0afd4c538c76f12053b5f24426ebc",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}
