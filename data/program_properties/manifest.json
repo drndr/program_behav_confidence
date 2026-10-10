@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-09-26T21:42:41.827027+00:00",
+  "created_at": "2026-10-10T12:43:51.327918+00:00",
   "encoding": "o200k_base",
   "tiktoken_version": "0.14.0",
   "python_version": "3.12.14",
@@ -7,12 +7,12 @@
     "cruxeval": {
       "path": "data/raw/cruxeval/cruxeval.csv",
       "sha256": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
-      "output_sha256": "7cd35ed27acd03a0122e4c097c9a8d48f1072a2f8ca2967ad72a0f1a8d36d103"
+      "output_sha256": "854153ba782437e9629fba26588a84758b8fdae33b08ec6cc79cbd0da65acaa3"
     },
     "re2": {
       "path": "data/raw/re2/re2_filtered.csv",
       "sha256": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
-      "output_sha256": "813244a67a1a5e97a4f92c1ecb5498524f9034ce91bd4feb08b7b49ee8e0e7eb"
+      "output_sha256": "21f4cb1505eb4039495b6137f982a992953b0f5fff26202d709ca4022171e74c"
     }
   },
   "summary": {
@@ -38,6 +38,48 @@
         "min": 2,
         "median": 5.0,
         "max": 12
+      },
+      "cyclomatic_complexity": {
+        "available": 800,
+        "min": 1,
+        "median": 2.0,
+        "max": 7
+      },
+      "target_cyclomatic_complexity": {
+        "available": 800,
+        "min": 1,
+        "median": 2.0,
+        "max": 7
+      },
+      "halstead_volume": {
+        "available": 800,
+        "min": 38.04,
+        "median": 163.43,
+        "max": 548.83
+      },
+      "halstead_difficulty": {
+        "available": 800,
+        "min": 3.12,
+        "median": 11.37,
+        "max": 37.5
+      },
+      "target_halstead_volume": {
+        "available": 800,
+        "min": 38.04,
+        "median": 163.43,
+        "max": 548.83
+      },
+      "target_halstead_difficulty": {
+        "available": 800,
+        "min": 3.12,
+        "median": 11.37,
+        "max": 37.5
+      },
+      "information_flow": {
+        "available": 800,
+        "min": 0,
+        "median": 9.0,
+        "max": 441
       }
     },
     "re2": {
@@ -64,16 +106,62 @@
         "min": 1,
         "median": 56.0,
         "max": 11900
+      },
+      "cyclomatic_complexity": {
+        "available": 433,
+        "min": 1,
+        "median": 14,
+        "max": 4638
+      },
+      "target_cyclomatic_complexity": {
+        "available": 429,
+        "min": 1,
+        "median": 3,
+        "max": 85
+      },
+      "halstead_volume": {
+        "available": 433,
+        "min": 39.86,
+        "median": 3109.35,
+        "max": 1085436.0
+      },
+      "halstead_difficulty": {
+        "available": 433,
+        "min": 1.5,
+        "median": 40.0,
+        "max": 449.24
+      },
+      "target_halstead_volume": {
+        "available": 429,
+        "min": 22.46,
+        "median": 366.8,
+        "max": 11264.77
+      },
+      "target_halstead_difficulty": {
+        "available": 429,
+        "min": 1.5,
+        "median": 16.33,
+        "max": 110.99
+      },
+      "information_flow": {
+        "available": 429,
+        "min": 0,
+        "median": 144,
+        "max": 1115136
       }
     }
   },
   "implementation_sha256": {
-    "src/program_properties.py": "f2674199496496b162fc7ef8b8636239aba21688802cc97bba9200e2ea7dd2f9",
-    "scripts/measure_program_properties.py": "70ca5ceceea70dc4ed4aef9af4b26d1f5482c753c176a6c8c41cd08e064f0948"
+    "src/program_properties.py": "26be93eb6a21cb01db54a646116063d279c0dd2873621519aa9a84486d48e56d",
+    "scripts/measure_program_properties.py": "09af508b23cd28aabced06636aa64f1584ff54e17372c42b59f20aa6c3ae5a88"
   },
   "definitions": {
     "tokens": "Exact code/input CSV fields using encode_ordinary; full supplied code including helpers and comments, no prompt or reference. Fixed reference encoding, not provider-specific token usage.",
     "executable_lines": "Physical code-token lines including headers/continuations; exclude blank/comment lines and standalone literal strings (docstrings). Exclude RE2 helper labels: dotted names (also dot-prefixed or with a hyphenated package) before definitions, and frame names such as pkg.mod.<genexpr>. No execution.",
-    "missing": "Blank executable_lines means tokenization failed, not zero. lexical_only means tokenization succeeded but AST parsing failed; source-size count only."
+    "cyclomatic_complexity": "1 + decision points of the whole supplied code (helper labels excluded): if/elif, conditional expressions, for/while loops, comprehension for-clauses and conditions, each and/or, except clauses, match cases. No execution.",
+    "target_cyclomatic_complexity": "The same for the target alone: the entry-point function (complexity_target names it; when several functions share the name, the one defined in a class), or the whole script when there is no entry point.",
+    "halstead": "From Python tokens of the whole code (helper labels excluded): operators are operator/punctuation tokens and keywords; operands are names, numbers, strings and f-string text (a docstring is one operand); layout and comments are skipped. Volume = (operators + operands) * log2(distinct operators + distinct operands); difficulty = distinct operators / 2 * operands / distinct operands. target_halstead_* use the tokens on the target's lines.",
+    "information_flow": "Henry-Kafura information flow of the target without the length term (as IF4): (fan-in * fan-out)^2. Fan-in: parameters other than self, names read from outside the target, instance attributes read. Fan-out: distinct functions called (methods by name), instance attributes written. Calls into the target are not in the supplied code, so fan-in counts data only.",
+    "missing": "Blank executable_lines means tokenization failed, not zero. lexical_only means tokenization succeeded but AST parsing failed; source-size count only, and no complexity or Halstead measures. Blank target measures with a parsed program mean the target could not be told apart."
   }
 }
