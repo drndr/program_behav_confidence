@@ -1,0 +1,64 @@
+{
+  "created_at": "2026-10-10T13:58:11.591537+00:00",
+  "python_version": "3.12.14",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "container_image": null,
+  "hash_seed": "0",
+  "timeout_seconds": 10,
+  "sources": {
+    "cruxeval": {
+      "path": "data/raw/cruxeval/cruxeval.csv",
+      "sha256": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
+      "output_sha256": "cb0182d4959e5019680c9d577e93b01b41cfaf9dc9f42c6d317d1e3faf6f9595"
+    },
+    "re2": {
+      "path": "data/raw/re2/re2_filtered.csv",
+      "sha256": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
+      "output_sha256": "9ae37d416ac15900c26bc312383ad93a18d91cf02542d9bbc1b00fcfd13d6256"
+    }
+  },
+  "summary": {
+    "cruxeval": {
+      "count": 800,
+      "execution_status": {
+        "ok": 800
+      },
+      "output_matches": {
+        "True": 800
+      },
+      "trace_length": {
+        "available": 800,
+        "min": 1,
+        "median": 5.0,
+        "max": 625
+      }
+    },
+    "re2": {
+      "count": 446,
+      "execution_status": {
+        "ok": 112,
+        "no_harness": 329,
+        "error": 5
+      },
+      "output_matches": {
+        "True": 112
+      },
+      "trace_length": {
+        "available": 112,
+        "min": 1,
+        "median": 4.0,
+        "max": 599994
+      }
+    }
+  },
+  "implementation_sha256": {
+    "src/execution.py": "0953e09d3d9be6e8185813e4873bb88d96eb6e26565e84803009160b9747a59d",
+    "scripts/measure_execution.py": "0bace3d19760b2bbd26990089c951aa5014b918eae6f0a5f07463bcc2f4c40ed"
+  },
+  "definitions": {
+    "trace_length": "Line events in the program's own code while running it once on its input: each execution of a line counts, so a loop body counts once per iteration. Functions and methods: only the call is traced, not the definitions or the setup; Avatar scripts: the whole script. Use it only where output_matches is true.",
+    "output_matches": "Whether the run reproduced the reference output: CRUXEval return values as Python values, RE2 return values as recorded JSON (other objects by repr), Avatar printed output as text or number.",
+    "decoded_inputs": "RE2 only: whether the reproducing run decoded input strings that are Python literals of another type (RE2 records e.g. complex numbers as strings).",
+    "execution_status": "ok, timeout, error (the program raised; detail has the last error line) or no_harness (not executed: RE2 library code)."
+  }
+}

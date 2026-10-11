@@ -15,4 +15,5 @@ properties = ["tiktoken==0.14.0"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = ["datasets", "scoring", "program_properties", "prompt_template", "model_client", "runs", "metrics", "confidence"]
+py-modules = ["datasets", "scoring", "program_properties", "prompt_template", "model_client", "runs", "metrics", "confidence",
+              "execution"]
