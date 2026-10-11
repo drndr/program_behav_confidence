@@ -27,6 +27,7 @@ SIGNALS = {
     "Halstead difficulty (baseline)": _negated("halstead_difficulty"),
     "target Halstead difficulty (baseline)": _negated("target_halstead_difficulty"),
     "information flow (baseline)": _negated("information_flow"),
+    "trace length (baseline)": _negated("trace_length"),
 }
 # Signals that are probabilities of correctness, for calibration.
 PROBABILITIES = {"verdict P(correct)": lambda row: row["p_correct"],

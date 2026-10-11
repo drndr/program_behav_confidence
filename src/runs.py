@@ -8,6 +8,15 @@ from datasets import re2_source
 
 HALSTEAD_FIELDS = ("halstead_volume", "halstead_difficulty", "target_halstead_volume", "target_halstead_difficulty")
 
+# The study: the prediction runs of each model and reasoning setting. Medium was run per
+# dataset (RE2 first, CRUXEval later) with identical settings; its two runs form one condition.
+CONDITIONS = [
+    {"model": "GPT-6 Luna", "reasoning": "none", "runs": ["gpt6.0_luna_no_reasoning"]},
+    {"model": "GPT-6 Luna", "reasoning": "low", "runs": ["gpt6.0_luna_low_reasoning"]},
+    {"model": "GPT-6 Luna", "reasoning": "medium",
+     "runs": ["gpt6.0_luna_medium_reasoning", "gpt6.0_luna_medium_reasoning_cruxeval"]},
+]
+
 
 def load_run(path):
     """Return the run manifest and its latest row per (dataset, id, repetition).
@@ -42,7 +51,8 @@ def item_table(run, data_dir):
     """One row per item of a prediction run, from committed files only.
 
     Joins the run's evaluation (correctness per scoring mode, answer log-probability,
-    token counts), its self-verification if there is one, and the program properties.
+    token counts), its self-verification if there is one, and the program properties,
+    including the trace length from running the program where it was measured.
     """
     data_dir = Path(data_dir)
     rows = {}
@@ -55,11 +65,17 @@ def item_table(run, data_dir):
             "finish_reason": score.get("finish_reason"), "backend_provider": score.get("backend_provider")})
         row[f"correct_{score['mode']}"] = score["correct"]
         row[f"status_{score['mode']}"] = score["status"]
-    properties = {}
+    properties, traces = {}, {}
     for dataset in sorted({dataset for dataset, _, _ in rows}):
         with (data_dir / "program_properties" / f"{dataset}_properties.csv").open(encoding="utf-8", newline="") as stream:
             for measured in csv.DictReader(stream):
                 properties[(dataset, measured["id"])] = measured
+        # Trace length counts only where running the program reproduced the reference output.
+        execution = data_dir / "program_properties" / f"{dataset}_execution.csv"
+        if execution.exists():
+            with execution.open(encoding="utf-8", newline="") as stream:
+                traces.update({(dataset, measured["id"]): int(measured["trace_length"])
+                               for measured in csv.DictReader(stream) if measured["output_matches"] == "True"})
     verification = verification_of(run, data_dir)
     verdicts = ({(v["dataset"], v["id"], v["repetition"]): v
                  for v in _read_jsonl(data_dir / "evaluations" / f"{verification}_verdicts.jsonl")} if verification else {})
@@ -74,8 +90,31 @@ def item_table(run, data_dir):
                                                      if measured["target_cyclomatic_complexity"] else None),
                     **{field: float(measured[field]) if measured[field] else None for field in HALSTEAD_FIELDS},
                     "information_flow": int(measured["information_flow"]) if measured["information_flow"] else None,
+                    "trace_length": traces.get(key[:2]),
                     "parse_status": measured["line_status"], "verification_run": verification,
                     "verification_status": verdict.get("status"), "verdict": verdict.get("verdict"),
                     "confidence": verdict.get("confidence"), "p_correct": verdict.get("p_correct"),
                     "verifier_reasoning_tokens": verdict.get("reasoning_tokens")})
     return list(rows.values())
+
+
+def condition_rows(runs, data_dir, table=item_table):
+    """Items of one condition: its runs' item tables combined.
+
+    The runs must share every setting except their prompt files (datasets), and an item may
+    come from one run only.
+    """
+    settings = [json.loads((Path(data_dir) / "predictions" / f"{run}.manifest.json").read_text(encoding="utf-8"))
+                ["configuration"] for run in runs]
+    if any({k: v for k, v in s.items() if k != "prompt_files"} != {k: v for k, v in settings[0].items()
+                                                                  if k != "prompt_files"} for s in settings):
+        raise ValueError(f"runs {runs} differ in more than their datasets")
+    rows, seen = [], set()
+    for run in runs:
+        for row in table(run, data_dir):
+            key = (row["dataset"], row["id"], row["repetition"])
+            if key in seen:
+                raise ValueError(f"{key} appears in more than one run of {runs}")
+            seen.add(key)
+            rows.append(row)
+    return rows

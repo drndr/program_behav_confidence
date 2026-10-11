@@ -11,6 +11,7 @@ def row(dataset, correct, logprob, code_tokens, source="CRUXEval", reasoning=0, 
             "reasoning_tokens": reasoning, "completion_tokens": 20, "code_tokens": code_tokens,
             "cyclomatic_complexity": None, "target_cyclomatic_complexity": None,
             "halstead_difficulty": None, "target_halstead_difficulty": None, "information_flow": None,
+            "trace_length": None,
             "p_correct": None, "confidence": confidence, "verdict": None}
 
 

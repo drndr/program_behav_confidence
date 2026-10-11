@@ -6,12 +6,44 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from runs import item_table, verification_of
+from runs import condition_rows, item_table, verification_of
 
 
 def write_jsonl(path, rows):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
+
+
+class ConditionRowsTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.data = Path(self.temp.name)
+        (self.data / "predictions").mkdir()
+        self.tables = {"part_re2": [{"dataset": "re2", "id": "a", "repetition": 0}],
+                       "part_crux": [{"dataset": "cruxeval", "id": "b", "repetition": 0}]}
+
+    def manifest(self, run, prompt_file, effort="medium"):
+        configuration = {"model": "m", "parameters": {"reasoning": {"effort": effort}}, "prompt_files": {prompt_file: "x"}}
+        (self.data / "predictions" / f"{run}.manifest.json").write_text(json.dumps({"configuration": configuration}))
+
+    def rows(self, runs):
+        return condition_rows(runs, self.data, table=lambda run, data_dir: self.tables[run])
+
+    def test_combines_runs_that_differ_only_in_datasets(self):
+        self.manifest("part_re2", "re2_prompts.jsonl")
+        self.manifest("part_crux", "cruxeval_prompts.jsonl")
+        self.assertEqual([r["id"] for r in self.rows(["part_re2", "part_crux"])], ["a", "b"])
+
+    def test_rejects_different_settings_and_repeated_items(self):
+        self.manifest("part_re2", "re2_prompts.jsonl")
+        self.manifest("part_crux", "cruxeval_prompts.jsonl", effort="low")
+        with self.assertRaises(ValueError):
+            self.rows(["part_re2", "part_crux"])
+        self.manifest("part_crux", "cruxeval_prompts.jsonl")
+        self.tables["part_crux"] = self.tables["part_re2"]
+        with self.assertRaises(ValueError):
+            self.rows(["part_re2", "part_crux"])
 
 
 class ItemTableTests(unittest.TestCase):
@@ -66,6 +98,18 @@ class ItemTableTests(unittest.TestCase):
         self.assertEqual((first["halstead_difficulty"], first["target_halstead_volume"], second["halstead_volume"]),
                          (7.25, 80.0, None))
         self.assertEqual((first["information_flow"], second["information_flow"]), (144, None))
+        self.assertEqual((first["trace_length"], second["trace_length"]), (None, None))  # not measured
+
+    def test_trace_length_only_where_the_run_reproduced_the_reference(self):
+        with (self.data / "program_properties/cruxeval_execution.csv").open("w", encoding="utf-8", newline="") as stream:
+            writer = csv.DictWriter(stream, fieldnames=["dataset", "id", "trace_length", "execution_status", "output_matches"])
+            writer.writeheader()
+            writer.writerows([{"dataset": "cruxeval", "id": "sample_0", "trace_length": 16, "execution_status": "ok",
+                               "output_matches": "True"},
+                              {"dataset": "cruxeval", "id": "sample_1", "trace_length": 9, "execution_status": "ok",
+                               "output_matches": "False"}])
+        rows = {r["id"]: r["trace_length"] for r in item_table("pred", self.data)}
+        self.assertEqual(rows, {"sample_0": 16, "sample_1": None})
 
     def test_at_most_one_verification_per_run(self):
         self.add_verification("verify-a")
