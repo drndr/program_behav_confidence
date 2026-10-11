@@ -6,12 +6,13 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 import sys
+from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from confidence import GROUPS, summarize
 from datasets import DATASET_SOURCES, load_examples, re2_source
-from runs import item_table, load_run
+from runs import CONDITIONS, condition_rows, item_table, load_run
 
 PAGE = Path(__file__).resolve().parent / "index.html"
 EVALUATIONS = ROOT / "data/evaluations"
@@ -31,6 +32,16 @@ def examples():
 
 def runs():
     return sorted(p.name.removesuffix("_scores.jsonl") for p in EVALUATIONS.glob("*_scores.jsonl"))
+
+
+def views():
+    """Menu entries and their runs: each study condition (its runs combined, as in the analysis),
+    then evaluated runs that belong to no condition, under their own name."""
+    available = set(runs())
+    entries = {f"{c['model']} · {'no' if c['reasoning'] == 'none' else c['reasoning']} reasoning": c["runs"]
+               for c in CONDITIONS if set(c["runs"]) <= available}
+    in_conditions = {run for c in CONDITIONS for run in c["runs"]}
+    return entries | {run: [run] for run in sorted(available - in_conditions)}
 
 
 def reasoning_details(run):
@@ -95,20 +106,25 @@ def confidence_items(run):
 
 
 @lru_cache(maxsize=None)
-def _summary(run, stamp):
-    return summarize(item_table(run, ROOT / "data"), groups={name: GROUPS[name] for name in ("CRUXEval", "RE2")})
+def _summary(view_runs, stamp):
+    return summarize(condition_rows(list(view_runs), ROOT / "data"),
+                     groups={name: GROUPS[name] for name in ("CRUXEval", "RE2")})
 
 
-def confidence_summary(run):
-    """confidence.summarize for a run, cached until an evaluation file changes."""
+def confidence_summary(view):
+    """confidence.summarize for a menu entry's runs combined, cached until an evaluation file changes."""
     stamp = tuple(sorted((p.name, p.stat().st_mtime_ns) for p in EVALUATIONS.glob("*.jsonl")))
-    return _summary(run, stamp)
+    return _summary(tuple(views()[view]), stamp)
 
 
 def dataset_items(name):
     """One record per program: code, input, reference output, source and measured properties."""
     with (PROPERTIES / f"{name}_properties.csv").open(encoding="utf-8", newline="") as stream:
         properties = {row["id"]: row for row in csv.DictReader(stream)}
+    executions = {}
+    if (PROPERTIES / f"{name}_execution.csv").exists():
+        with (PROPERTIES / f"{name}_execution.csv").open(encoding="utf-8", newline="") as stream:
+            executions = {row["id"]: row for row in csv.DictReader(stream)}
     records = []
     for (dataset, item_id), example in examples().items():
         if dataset == name:
@@ -118,28 +134,35 @@ def dataset_items(name):
                             **{k: int(measured[k]) if measured[k] else None for k in PROPERTY_COUNTS},
                             **{k: float(measured[k]) if measured[k] else None for k in PROPERTY_MEASURES},
                             "complexity_target": measured["complexity_target"],
+                            # Trace length counts only where the run reproduced the reference output.
+                            "trace_length": (int(executions[item_id]["trace_length"])
+                                             if executions.get(item_id, {}).get("output_matches") == "True" else None),
+                            "execution_status": executions.get(item_id, {}).get("execution_status", "not run"),
                             "line_status": measured["line_status"], "line_detail": measured["line_detail"]})
     return records
 
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == "/":
+        path, entries = unquote(self.path), views()
+        if path == "/":
             self.send(PAGE.read_bytes(), "text/html; charset=utf-8")
-        elif self.path == "/api/runs":
-            self.send(json.dumps(runs()).encode(), "application/json")
-        elif self.path.startswith("/api/runs/") and self.path.removeprefix("/api/runs/") in runs():
-            self.send(json.dumps(items(self.path.removeprefix("/api/runs/"))).encode(), "application/json")
-        elif self.path.startswith("/api/confidence/") and self.path.endswith("/summary") \
-                and self.path.removeprefix("/api/confidence/").removesuffix("/summary") in runs():
-            run = self.path.removeprefix("/api/confidence/").removesuffix("/summary")
-            self.send(json.dumps(confidence_summary(run)).encode(), "application/json")
-        elif self.path.startswith("/api/confidence/") and self.path.removeprefix("/api/confidence/") in runs():
-            self.send(json.dumps(confidence_items(self.path.removeprefix("/api/confidence/"))).encode(), "application/json")
-        elif self.path == "/api/datasets":
+        elif path == "/api/runs":
+            self.send(json.dumps(list(entries)).encode(), "application/json")
+        elif path.startswith("/api/runs/") and path.removeprefix("/api/runs/") in entries:
+            records = [item for run in entries[path.removeprefix("/api/runs/")] for item in items(run)]
+            self.send(json.dumps(records).encode(), "application/json")
+        elif path.startswith("/api/confidence/") and path.endswith("/summary") \
+                and path.removeprefix("/api/confidence/").removesuffix("/summary") in entries:
+            view = path.removeprefix("/api/confidence/").removesuffix("/summary")
+            self.send(json.dumps(confidence_summary(view)).encode(), "application/json")
+        elif path.startswith("/api/confidence/") and path.removeprefix("/api/confidence/") in entries:
+            records = [item for run in entries[path.removeprefix("/api/confidence/")] for item in confidence_items(run)]
+            self.send(json.dumps(records).encode(), "application/json")
+        elif path == "/api/datasets":
             self.send(json.dumps(list(DATASET_SOURCES)).encode(), "application/json")
-        elif self.path.startswith("/api/datasets/") and self.path.removeprefix("/api/datasets/") in DATASET_SOURCES:
-            self.send(json.dumps(dataset_items(self.path.removeprefix("/api/datasets/"))).encode(), "application/json")
+        elif path.startswith("/api/datasets/") and path.removeprefix("/api/datasets/") in DATASET_SOURCES:
+            self.send(json.dumps(dataset_items(path.removeprefix("/api/datasets/"))).encode(), "application/json")
         else:
             self.send_error(404)
 

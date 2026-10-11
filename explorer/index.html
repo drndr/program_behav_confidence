@@ -148,6 +148,8 @@ const DATASET_COLUMNS = [
    show: v => v ?? "", cls: "num"},
   {label: "Target D", title: "Halstead difficulty of the target function alone", value: i => i.target_halstead_difficulty,
    show: v => v ?? "", cls: "num"},
+  {label: "Trace", title: "Trace length: line executions when running the program once (only where the run reproduced the reference)",
+   value: i => i.trace_length, show: v => v ?? "", cls: "num"},
   {label: "Parse", title: "ok, lexical_only (counted but not valid Python) or tokenization_failed (no line count)",
    value: i => i.line_status},
 ];
@@ -255,7 +257,7 @@ function renderResults() {
 }
 
 async function loadRun(run) {
-  results = await (await fetch("/api/runs/" + run)).json();
+  results = await (await fetch("/api/runs/" + encodeURIComponent(run))).json();
   results.forEach((item, index) => item.number = index + 1);
   const keep = $("show").value || "all";
   $("show").replaceChildren(...Object.keys(FILTERS).map(f =>
@@ -295,7 +297,7 @@ function renderConfidence() {
 
 async function loadConfidence(run) {
   confidenceRun = run;
-  judged = await (await fetch("/api/confidence/" + run)).json();
+  judged = await (await fetch("/api/confidence/" + encodeURIComponent(run))).json();
   judged.forEach((item, index) => item.number = index + 1);
   const keep = $("verify-show").value || "all";
   const verdictFilter = name => name.startsWith("approved") || name.startsWith("rejected");
@@ -313,7 +315,7 @@ async function loadConfidence(run) {
 async function showSummary() {
   const run = confidenceRun, detail = $("detail");
   detail.innerHTML = '<p class="empty">Computing the summary (a few seconds the first time)…</p>';
-  summaries[run] ??= await (await fetch(`/api/confidence/${run}/summary`)).json();
+  summaries[run] ??= await (await fetch(`/api/confidence/${encodeURIComponent(run)}/summary`)).json();
   if (run !== confidenceRun) return;
   detail.replaceChildren();
   const heading = document.createElement("h3");
@@ -358,7 +360,8 @@ const datasetTable = sortableTable($("dataset-head"), $("dataset-rows"), DATASET
                  `parse ${item.line_status}` + (item.line_detail ? ` (${item.line_detail})` : ""),
                  `complexity ${item.cyclomatic_complexity ?? "–"}, Halstead difficulty ${item.halstead_difficulty ?? "–"}`,
                  `target ${item.complexity_target || "not identified"}: complexity ${item.target_cyclomatic_complexity ?? "–"}, ` +
-                 `Halstead difficulty ${item.target_halstead_difficulty ?? "–"}`];
+                 `Halstead difficulty ${item.target_halstead_difficulty ?? "–"}`,
+                 `trace length ${item.trace_length ?? "–"} (execution ${item.execution_status})`];
   showDetail(`#${item.number}  ${item.id}`, facts.join(" · "),
              [["Code", item.code], ["Input", item.input], ["Reference", item.reference]]);
 });
@@ -413,6 +416,7 @@ async function loadDataset(name) {
   };
   $("summary").textContent = [`${programs.length} programs`, `sources: ${tally(programs.map(p => p.source))}`,
                               `parse: ${tally(programs.map(p => p.line_status))}`,
+                              `execution: ${tally(programs.map(p => p.execution_status))}`,
                               `median ${median("code_token_length")} code tokens, ${median("executable_lines")} lines, ` +
                               `complexity ${median("cyclomatic_complexity")}, Halstead difficulty ${median("halstead_difficulty")}`].join(" · ");
   $("charts").replaceChildren(histogram("Code tokens", programs.map(p => p.code_token_length)),
@@ -421,7 +425,8 @@ async function loadDataset(name) {
                               histogram("Cyclomatic complexity", programs.map(p => p.cyclomatic_complexity)),
                               histogram("Target cyclomatic complexity", programs.map(p => p.target_cyclomatic_complexity)),
                               histogram("Halstead difficulty", programs.map(p => p.halstead_difficulty)),
-                              histogram("Target Halstead difficulty", programs.map(p => p.target_halstead_difficulty)));
+                              histogram("Target Halstead difficulty", programs.map(p => p.target_halstead_difficulty)),
+                              histogram("Trace length", programs.map(p => p.trace_length)));
   datasetTable.render(programs);
   clearDetail();
 }
