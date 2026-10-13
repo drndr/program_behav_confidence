@@ -15,6 +15,7 @@ CONDITIONS = [
     {"model": "GPT-6 Luna", "reasoning": "low", "runs": ["gpt6.0_luna_low_reasoning"]},
     {"model": "GPT-6 Luna", "reasoning": "medium",
      "runs": ["gpt6.0_luna_medium_reasoning", "gpt6.0_luna_medium_reasoning_cruxeval"]},
+    {"model": "GPT-6 Luna", "reasoning": "high", "runs": ["gpt6.0_luna_high_reasoning"]},
 ]
 
 
