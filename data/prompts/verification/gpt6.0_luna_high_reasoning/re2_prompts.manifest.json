@@ -1,0 +1,32 @@
+{
+  "dataset": "re2",
+  "prompt_kind": "verification",
+  "count": 414,
+  "wording_final": true,
+  "template_sha256": "22fe84b6c2c256a58e049f621b014633f991e8eeed44cf2964bae158badd389e",
+  "prediction_run": {
+    "path": "data/predictions/gpt6.0_luna_high_reasoning.jsonl",
+    "sha256": "dfa239da97da32bf15f1c4d178614420b5c453375e2fd2289e31be5cb976fe69",
+    "model": "openai/gpt-6-luna",
+    "parameters": {
+      "max_tokens": 16384,
+      "provider": {
+        "require_parameters": true,
+        "only": [
+          "openai"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    }
+  },
+  "skipped": {
+    "no_prediction_tag": 31,
+    "request_incomplete": 1
+  },
+  "source_path": "data/raw/re2/re2_filtered.csv",
+  "source_sha256": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
+  "generated_at": "2026-10-12T12:11:37.353974+00:00"
+}

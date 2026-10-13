@@ -1,0 +1,31 @@
+{
+  "verification_run": "data/verifications/gpt6.0_luna_high_reasoning_self_verification.jsonl",
+  "prediction_run": "data/predictions/gpt6.0_luna_high_reasoning.jsonl",
+  "summary": {
+    "cruxeval": {
+      "total": 800,
+      "statuses": {
+        "judged": 799,
+        "request_incomplete": 1
+      },
+      "with_p_correct": 0,
+      "verdict_correct": 777,
+      "verdict_matches_normalized": 787
+    },
+    "re2": {
+      "total": 414,
+      "statuses": {
+        "judged": 414
+      },
+      "with_p_correct": 0,
+      "verdict_correct": 383,
+      "verdict_matches_normalized": 273
+    }
+  },
+  "sha256": {
+    "data/verifications/gpt6.0_luna_high_reasoning_self_verification.jsonl": "5cd592f3854b97997a0dfd4ee5aedb6e0f32f46aaa4211604053395326249c88",
+    "data/evaluations/gpt6.0_luna_high_reasoning_scores.jsonl": "2df95f6e65195d8fb09c788dda6b7ea61279c7e747bcf11426de7f237081815d",
+    "src/scoring.py": "24d99c0ea2330ebddeaaa916b98acd201442ecaf36c486b2c52f30def4bc9828",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}
