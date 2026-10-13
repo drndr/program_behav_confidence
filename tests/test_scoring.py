@@ -195,6 +195,28 @@ class ScoringTests(unittest.TestCase):
         self.assertFalse(self.normalized("[ True False]", "array([1,0])")["correct"])
         self.assertFalse(self.normalized("array([1, ..., 4])", "array([1,2,3,4])")["correct"])
 
+    def test_numpy_scalars_stand_for_their_values(self):
+        self.assertTrue(self.normalized("np.True_", "True")["correct"])
+        self.assertFalse(self.normalized("np.True_", "False")["correct"])
+        self.assertFalse(self.normalized("np.True_", "1")["correct"])  # a bool stays a bool
+        self.assertTrue(self.normalized("np.float64(1.5)", "1.5")["correct"])
+        self.assertFalse(self.normalized("np.float64(1.5)", "1.25")["correct"])
+        self.assertTrue(self.normalized(["np.int64(3)", "np.False_"], "(3, np.False_)")["correct"])
+        relaxed = score_prediction(dict(RE2, output='"np.True_"'), "<prediction>True</prediction>", "relaxed")
+        self.assertFalse(relaxed["correct"])
+
+    def test_scripts_print_numbers_as_text(self):
+        def script(reference, prediction):
+            return score_prediction(dict(STDIN, output=json.dumps(reference)),
+                                    f"<prediction>{prediction}</prediction>", "normalized")["correct"]
+        self.assertTrue(script(2, "'2'"))
+        self.assertTrue(script(-3.5, '"-3.5"'))
+        self.assertFalse(script(2, "'2.0'"))
+        self.assertFalse(script(2, "'3'"))
+        # Functions return values, not printed text: plain values keep their type.
+        self.assertFalse(self.normalized(2, "'2'")["correct"])
+        self.assertFalse(self.normalized("4", "4")["correct"])
+
     def test_model_text_is_never_executed(self):
         call = "__import__('os').system('must not execute')"
         with patch("os.system", side_effect=AssertionError("Executed model text")) as system:

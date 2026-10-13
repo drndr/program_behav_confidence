@@ -344,9 +344,30 @@ def _tree_equal(left, right):
     return left == right
 
 
+_NUMPY_SCALAR = re.compile(r"np\.(?:(True_|False_)|(?:bool|int|uint|float|complex)\d*_?\((.+)\))", re.S)
+
+
+def _numpy_scalar(text):
+    """The value a NumPy scalar repr stands for (np.True_, np.int64(3), np.float64(1.5)), or None."""
+    match = _NUMPY_SCALAR.fullmatch(text.strip())
+    if not match:
+        return None
+    if match.group(1):
+        return match.group(1) == "True_"
+    value = literal_value(parse_literal(match.group(2)))
+    if type(value) not in (bool, int, float, complex):
+        raise ValueError("Unsupported NumPy scalar")
+    return value
+
+
 def _representation_rule(reference, source):
     """Compare a candidate's text with an object-like reference string; raises when no rule applies."""
     reference = reference.strip()
+    scalar = _numpy_scalar(reference)
+    if scalar is not None:
+        # A NumPy scalar stands for its value; as for arrays, the NumPy type is ignored (bools stay bools).
+        candidate = _numpy_scalar(source)
+        return _numeric_equal(scalar, literal_value(parse_literal(source)) if candidate is None else candidate)
     if re.match(r"^prettyForm\s*\(", reference):
         return _pretty_content(reference) == _pretty_content(source)
     if reference.startswith(("array(", "np.array(")) or (reference.startswith("[") and reference.endswith("]")):
@@ -434,6 +455,15 @@ def score_prediction(example, text, mode="strict"):
         return {"status": "scored", "correct": True, "detail": "unquoted string content"}
     if mode == "relaxed" or example["dataset"] != "re2":
         return wrong
+    if not example["entrypoint"] and parsed and isinstance(prediction, str) and type(reference) in (int, float):
+        # Scripts print text, and RE2 recorded printed numbers as numbers: compare the printed number,
+        # of the same type ("2.0" is not 2). Functions return values, so there the distinction stays.
+        try:
+            printed = literal_value(parse_literal(prediction))
+        except _RULE_ERRORS:
+            printed = None
+        if type(printed) is type(reference) and printed == reference:
+            return {"status": "scored", "correct": True, "detail": "printed number"}
     try:
         node = parse_literal(literal)
     except SyntaxError:
