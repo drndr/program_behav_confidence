@@ -18,7 +18,7 @@ from datasets import load_examples
 from scoring import SCORING_MODES, reference_value, score_prediction
 from prompt_template import prediction_prompt
 
-DATASETS = {"cruxeval": ("data/raw/cruxeval/cruxeval.csv", 800), "re2": ("data/raw/re2/re2_filtered.csv", 446)}
+DATASETS = {"cruxeval": ("data/raw/cruxeval/cruxeval.csv", 800), "re2": ("data/raw/re2/re2_filtered.csv", 456)}
 
 
 class RoundTripTests(unittest.TestCase):

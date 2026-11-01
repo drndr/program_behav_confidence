@@ -65,30 +65,16 @@ def remove_prompts(rows):
                         "input": task_input, "output": row["target_output"]})
     return cleaned
 
-PROBLEMATIC_CASES = {
-    "matplotlib@@matplotlib__api_deprecation.py@@deprecated_L97": "Unpredictable function address",
-    "matplotlib@@matplotlib__api_deprecation.py@@delete_parameter_L314": "Unpredictable function address",
-    "sympy@@sympy_multipledispatch_dispatcher.py@@register_L120": "Unpredictable function address",
-    "matplotlib@@matplotlib___init__.py@@_preprocess_data_L1432": "Unpredictable function address",
-    "matplotlib@@matplotlib_colors.py@@_repr_png__L2115": "Missing pixels in abbreviated input array",
-    "matplotlib@@matplotlib_colors.py@@_repr_html__L2140": "Missing pixels in abbreviated input array",
-    "scikit-learn@@sklearn_ensemble__bagging.py@@predict_log_proba_L1055": "Missing fitted estimator state",
-    "ClassEval_49@JobMarketplace.withdraw_resume": "Empty resume list raises an exception; reference is null",
-    "ClassEval_95@Warehouse.change_order_status": "Integer ID and string dictionary key disagree with reference",
-    "ClassEval_95@Warehouse.create_order": "Integer ID and string dictionary key disagree with reference",
-}
-
-
 def filter_re2(rows):
-    """Return retained rows and exclusions, using source tags and explicit IDs."""
+    """Return retained rows and exclusions: only the samples RE2 took from CRUXEval are removed.
+
+    Whether the remaining samples can be solved as given is judged after the model runs, by
+    the audit in data/audit/, not by excluding samples here.
+    """
     kept, excluded = [], []
     for row in rows:
-        overlap = row["source_dataset"] == "cruxeval"
-        problem = PROBLEMATIC_CASES.get(row["id"])
-        if overlap or problem:
-            excluded.append({"id": row["id"],
-                             "reason": "cruxeval_overlap" if overlap else "problematic_sample",
-                             "evidence": "CRUXEval source" if overlap else problem})
+        if row["source_dataset"] == "cruxeval":
+            excluded.append({"id": row["id"], "reason": "cruxeval_overlap", "evidence": "CRUXEval source"})
         else:
             kept.append(row)
     return kept, excluded
@@ -124,7 +110,9 @@ def prepare_re2(data_dir):
     if sha256_file(archive_path) != source["source_sha256"]:
         raise ValueError("Upstream archive hash mismatch")
     rows = load_re2_export(raw_path)
-    repairs = {c["id"]: c for c in invalid["cases"] if c["recommendation"] == "repair_candidate"}
+    # Every malformed input is restored from its upstream record, including the three the review
+    # recommended excluding for their content (abbreviated arrays, missing fitted state).
+    repairs = {c["id"]: c for c in invalid["cases"]}
     retained, excluded = filter_re2(rows)
     selected, repaired = [], []
     with zipfile.ZipFile(archive_path) as archive:
@@ -174,11 +162,9 @@ def prepare_re2(data_dir):
             selected.append(row)
     counts = dict(Counter(r["reason"] for r in excluded))
     repair_counts = dict(Counter(r["kind"] for r in repaired))
-    if repair_counts != {"malformed_json": 7, "avatar_string_decode": 27, "avatar_numeric_text": 7}:
+    if repair_counts != {"malformed_json": 10, "avatar_string_decode": 27, "avatar_numeric_text": 7}:
         raise ValueError("Unexpected input repair counts")
-    if (len(rows), len(selected), len(repaired), counts) != (500, 446, 41, {
-        "cruxeval_overlap": 44, "problematic_sample": 10
-    }):
+    if (len(rows), len(selected), len(repaired), counts) != (500, 456, 44, {"cruxeval_overlap": 44}):
         raise ValueError("Selection differs from the reviewed 500-record release")
     final = remove_prompts(selected)
     stdin_programs = sum(not r["entrypoint"] for r in final)
@@ -188,7 +174,7 @@ def prepare_re2(data_dir):
                       "excluded_count": len(excluded), "repaired_count": len(repaired),
                       "repair_counts": repair_counts, "stdin_programs": stdin_programs,
                       "exclusion_counts": counts, "excluded": excluded, "repairs": repaired,
-                      "limitations": "Screened, not fully validated. Targets unchanged. Seven malformed inputs repaired; 27 Avatar strings decoded and seven numeric stdin values verified."}
+                      "limitations": "Only CRUXEval samples removed; solvability is audited after the model runs (data/audit/). Targets unchanged. Ten malformed inputs restored from upstream records; 27 Avatar strings decoded and seven numeric stdin values verified."}
 
 
 
@@ -210,4 +196,4 @@ def build_re2(data_dir=ROOT / "data"):
 
 if __name__ == "__main__":
     rows, report = build_re2()
-    print(f"500 samples -> {len(rows)} retained; 54 excluded; 7 malformed inputs repaired; 34 Avatar inputs normalized (7 numeric values unchanged).")
+    print(f"500 samples -> {len(rows)} retained; 44 CRUXEval samples excluded; 10 malformed inputs repaired; 34 Avatar inputs normalized (7 numeric values unchanged).")

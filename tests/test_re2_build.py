@@ -51,7 +51,7 @@ class Re2BuildTests(unittest.TestCase):
 
     def test_filtered_csv_matches_script_output(self):
         final, report = prepare_re2(ROOT / "data")
-        self.assertEqual((report["retained_count"], report["stdin_programs"]), (446, 34))
+        self.assertEqual((report["retained_count"], report["stdin_programs"]), (456, 34))
         self.assert_rows_match("re2_filtered.csv", final)
 
     def test_full_csv_matches_script_output(self):

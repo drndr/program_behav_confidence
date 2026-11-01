@@ -46,7 +46,7 @@ RE2_LIBRARY_SOURCES = frozenset({"Real", "Swebench"})
 
 
 def re2_source(item_id):
-    """RE2's source_dataset label, recovered from the id (matches the RE2 export for all 446 items)."""
+    """RE2's source_dataset label, recovered from the id (matches the RE2 export for all 456 items)."""
     if item_id.startswith("HumanEval_"):
         return "HumanEval"
     if item_id.startswith("ClassEval_"):

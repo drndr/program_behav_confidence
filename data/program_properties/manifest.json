@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-10-10T12:43:51.327918+00:00",
+  "created_at": "2026-10-29T17:24:08.987459+00:00",
   "encoding": "o200k_base",
   "tiktoken_version": "0.14.0",
   "python_version": "3.12.14",
@@ -11,8 +11,8 @@
     },
     "re2": {
       "path": "data/raw/re2/re2_filtered.csv",
-      "sha256": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
-      "output_sha256": "21f4cb1505eb4039495b6137f982a992953b0f5fff26202d709ca4022171e74c"
+      "sha256": "aad27199129585d8e5b8e95e01c958572ca4fca092cb60837991aae324166801",
+      "output_sha256": "05c7a779173c59f38796c3596d0026243175dc3d6988b43ad5dcd0a2f08286fc"
     }
   },
   "summary": {
@@ -83,68 +83,68 @@
       }
     },
     "re2": {
-      "count": 446,
+      "count": 456,
       "line_status": {
-        "ok": 433,
+        "ok": 443,
         "tokenization_failed": 6,
         "lexical_only": 7
       },
       "code_token_length": {
-        "available": 446,
+        "available": 456,
         "min": 8,
-        "median": 702.5,
+        "median": 690.5,
         "max": 121594
       },
       "input_token_length": {
-        "available": 446,
+        "available": 456,
         "min": 9,
-        "median": 50.0,
+        "median": 51.5,
         "max": 10378
       },
       "executable_lines": {
-        "available": 440,
+        "available": 450,
         "min": 1,
         "median": 56.0,
         "max": 11900
       },
       "cyclomatic_complexity": {
-        "available": 433,
+        "available": 443,
         "min": 1,
         "median": 14,
         "max": 4638
       },
       "target_cyclomatic_complexity": {
-        "available": 429,
+        "available": 439,
         "min": 1,
         "median": 3,
         "max": 85
       },
       "halstead_volume": {
-        "available": 433,
+        "available": 443,
         "min": 39.86,
-        "median": 3109.35,
+        "median": 3114.56,
         "max": 1085436.0
       },
       "halstead_difficulty": {
-        "available": 433,
+        "available": 443,
         "min": 1.5,
-        "median": 40.0,
+        "median": 40.11,
         "max": 449.24
       },
       "target_halstead_volume": {
-        "available": 429,
+        "available": 439,
         "min": 22.46,
-        "median": 366.8,
+        "median": 370.88,
         "max": 11264.77
       },
       "target_halstead_difficulty": {
-        "available": 429,
+        "available": 439,
         "min": 1.5,
         "median": 16.33,
         "max": 110.99
       },
       "information_flow": {
-        "available": 429,
+        "available": 439,
         "min": 0,
         "median": 144,
         "max": 1115136

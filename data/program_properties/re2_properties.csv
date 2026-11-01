@@ -1,4 +1,5 @@
 dataset,id,tokenizer,code_token_length,input_token_length,executable_lines,line_status,line_detail,helper_labels_excluded,cyclomatic_complexity,target_cyclomatic_complexity,halstead_volume,halstead_difficulty,target_halstead_volume,target_halstead_difficulty,information_flow,complexity_target
+re2,matplotlib@@matplotlib__api_deprecation.py@@deprecated_L97,o200k_base,668,70,67,ok,,0,22,22,3732.14,56.34,3665.14,55.13,139876,deprecated
 re2,HumanEval_44,o200k_base,42,33,6,ok,,0,2,2,151.27,12.75,151.27,12.75,9,change_base
 re2,sympy@@sympy_core_exprtools.py@@_mask_nc_L1272,o200k_base,4428,37,195,ok,,12,65,18,11062.21,82.68,2055.33,40.89,6400,_mask_nc
 re2,atcoder_ABC132_A,o200k_base,48,10,5,ok,,0,4,4,224.01,10.45,224.01,10.45,0,<module>
@@ -7,6 +8,7 @@ re2,django__django-11728@@django.contrib.admindocs.utils.py@@replace_unnamed_gro
 re2,scikit-learn@@sklearn_ensemble__hist_gradient_boosting_predictor.py@@predict_binned_L85,o200k_base,191,2680,12,ok,,0,1,1,583.97,13.74,227.55,7.67,196,TreePredictor.predict_binned
 re2,scikit-learn@@sklearn_naive_bayes.py@@_partial_fit_L407,o200k_base,6990,1490,343,ok,,11,83,13,21493.67,86.23,3911.47,52.5,114244,GaussianNB._partial_fit
 re2,ClassEval_24@ComplexCalculator.multiply,o200k_base,72,43,8,ok,,0,1,1,283.28,17.82,204.33,18.86,9,ComplexCalculator.multiply
+re2,matplotlib@@matplotlib__api_deprecation.py@@delete_parameter_L314,o200k_base,661,50,44,ok,,2,24,20,3324.35,57.22,2798.81,46.71,38025,delete_parameter
 re2,HumanEval_151,o200k_base,41,24,2,ok,,0,5,5,178.81,15.0,178.81,15.0,4,double_the_difference
 re2,scikit-learn__scikit-learn-14704@@sklearn.model_selection._split.py@@_make_test_folds,o200k_base,1538,8504,116,ok,,4,50,7,8577.98,50.21,1732.44,22.59,20736,StratifiedKFold._make_test_folds
 re2,astropy__astropy-8519@@astropy.units.function.core.py@@to,o200k_base,415,221,30,ok,,0,9,6,1920.57,22.22,873.2,26.8,2304,FunctionUnitBase.to
@@ -40,11 +42,13 @@ re2,sympy__sympy-15011@@sympy.utilities.lambdify.py@@_preprocess,o200k_base,1698
 re2,atcoder_ABC178_B,o200k_base,37,23,3,ok,,0,1,1,179.85,5.45,179.85,5.45,25,<module>
 re2,sympy__sympy-13551@@sympy.concrete.products.py@@_eval_product,o200k_base,47054,66,4791,ok,,374,1789,23,386771.39,325.94,3959.74,52.93,15625,Product._eval_product
 re2,sphinx@@sphinx_environment_collectors_metadata.py@@setup_L71,o200k_base,138,34,8,ok,,1,1,1,401.69,10.78,131.77,6.05,16,setup
+re2,matplotlib@@matplotlib_colors.py@@_repr_png__L2115,o200k_base,1119,824,77,ok,,2,10,4,5486.07,54.3,1239.52,20.13,5184,BivarColormap._repr_png_
 re2,HumanEval_15,o200k_base,28,26,2,ok,,0,2,2,136.16,8.0,136.16,8.0,81,string_sequence
 re2,sympy__sympy-13265@@sympy.simplify.trigsimp.py@@exptrigsimp,o200k_base,7601,33,800,ok,,46,304,19,53879.09,142.74,3057.98,60.18,34969,exptrigsimp
 re2,codeforces_99_A,o200k_base,63,11,7,ok,,0,3,3,313.82,17.45,313.82,17.45,0,<module>
 re2,sympy__sympy-12945@@sympy.core.basic.py@@__eq__,o200k_base,2475,34,259,ok,,25,59,9,14107.21,54.12,549.84,31.54,400,Basic.__eq__
 re2,HumanEval_120,o200k_base,30,41,6,ok,,0,2,2,131.69,11.92,131.69,11.92,4,maximum
+re2,matplotlib@@matplotlib_colors.py@@_repr_html__L2140,o200k_base,1471,824,102,ok,,4,10,1,6542.08,51.58,560.8,9.0,784,BivarColormap._repr_html_
 re2,codeforces_546_A,o200k_base,57,13,8,ok,,0,3,3,286.62,13.39,286.62,13.39,36,<module>
 re2,matplotlib@@matplotlib__mathtext.py@@vpack_L1312,o200k_base,668,296,64,ok,,1,16,11,3283.23,44.61,1806.95,35.97,17424,Vlist.vpack
 re2,ClassEval_72@RegexUtils.generate_email_pattern,o200k_base,54,17,5,ok,,0,1,1,60.92,4.67,36.54,3.75,0,RegexUtils.generate_email_pattern
@@ -85,6 +89,7 @@ re2,django__django-17087@@django.db.migrations.serializer.py@@serialize,o200k_ba
 re2,sympy__sympy-13265@@sympy.simplify.simplify.py@@simplify,o200k_base,2374,53,226,ok,,10,68,34,15597.02,63.45,5429.0,50.62,1115136,simplify
 re2,sympy__sympy-13678@@sympy.functions.elementary.hyperbolic.py@@_eval_is_real,o200k_base,290,39,36,ok,,0,2,2,1252.26,17.0,70.32,6.0,0,sinh._eval_is_real
 re2,scikit-learn@@sklearn_pipeline.py@@__sklearn_tags___L1152,o200k_base,926,102,,tokenization_failed,"('unexpected EOF in multi-line statement', (104, 0))",3,,,,,,,,
+re2,scikit-learn@@sklearn_ensemble__bagging.py@@predict_log_proba_L1055,o200k_base,5249,2386,212,ok,,11,50,5,14866.04,66.61,1512.0,22.17,34969,BaggingClassifier.predict_log_proba
 re2,matplotlib@@matplotlib_transforms.py@@interval_contains_L2926,o200k_base,37,50,5,ok,,0,2,2,128.93,15.0,128.93,15.0,0,interval_contains
 re2,sympy@@sympy_core_expr.py@@as_terms_L1226,o200k_base,4476,33,249,ok,,25,55,10,15430.13,85.1,1841.62,29.65,14400,Expr.as_terms
 re2,scikit-learn@@sklearn_neural_network__base.py@@binary_log_loss_L250,o200k_base,96,2682,6,ok,,0,1,1,423.73,13.63,351.86,11.0,400,binary_log_loss
@@ -128,7 +133,9 @@ re2,sympy__sympy-18728@@sympy.core.power.py@@_eval_is_extended_real,o200k_base,6
 re2,sympy@@sympy_polys_rings.py@@cancel_L3202,o200k_base,2188,65,165,ok,,24,36,6,11369.86,71.23,1334.52,39.1,784,PolyElement.cancel
 re2,scikit-learn__scikit-learn-13960@@sklearn.decomposition.incremental_pca.py@@partial_fit,o200k_base,3315,7673,238,ok,,8,88,13,18051.69,93.36,3312.24,49.77,112896,IncrementalPCA.partial_fit
 re2,sympy__sympy-18189@@sympy.solvers.diophantine.py@@diophantine,o200k_base,121594,32,11900,ok,,817,4638,51,1085436.0,449.24,7159.31,53.31,345744,diophantine
+re2,ClassEval_49@JobMarketplace.withdraw_resume,o200k_base,40,112,6,ok,,0,1,1,154.29,8.75,55.35,4.2,4,JobMarketplace.withdraw_resume
 re2,sympy@@sympy_matrices_expressions_matmul.py@@combine_powers_L322,o200k_base,2508,28,200,ok,,19,68,18,10940.04,87.88,2292.35,50.33,5929,combine_powers
+re2,sympy@@sympy_multipledispatch_dispatcher.py@@register_L120,o200k_base,539,49,56,ok,,0,19,1,2890.08,34.03,132.0,8.36,16,Dispatcher.register
 re2,atcoder_ABC125_A,o200k_base,24,13,3,ok,,0,1,1,116.0,5.06,116.0,5.06,16,<module>
 re2,sympy__sympy-14038@@sympy.concrete.products.py@@_eval_product,o200k_base,47142,48,4796,ok,,374,1801,23,387975.68,325.06,3611.63,49.63,12100,Product._eval_product
 re2,codeforces_379_A,o200k_base,76,11,12,ok,,0,3,3,282.03,18.08,282.03,18.08,16,<module>
@@ -142,6 +149,7 @@ re2,HumanEval_7,o200k_base,36,54,3,ok,,0,3,3,158.12,15.0,133.44,13.0,0,filter_by
 re2,scikit-learn@@sklearn_compose__target.py@@predict_L300,o200k_base,2579,10378,111,ok,,9,28,6,6763.18,44.62,723.78,19.33,1600,TransformedTargetRegressor.predict
 re2,sympy__sympy-12489@@sympy.combinatorics.permutations.py@@__invert__,o200k_base,207,33,23,ok,,0,1,1,809.24,8.71,62.27,4.2,4,Permutation.__invert__
 re2,matplotlib@@matplotlib_cbook.py@@_reshape_2D_L1391,o200k_base,585,133,49,ok,,2,22,13,2009.7,50.58,1225.79,40.92,2500,_reshape_2D
+re2,ClassEval_95@Warehouse.change_order_status,o200k_base,58,102,9,ok,,0,2,2,249.12,17.94,138.3,14.0,0,Warehouse.change_order_status
 re2,sympy__sympy-13286@@sympy.calculus.util.py@@periodicity,o200k_base,15859,34,1642,ok,,95,667,30,120509.18,193.62,3615.41,60.72,61009,periodicity
 re2,matplotlib@@matplotlib_cbook.py@@pts_to_midstep_L1652,o200k_base,141,108,10,ok,,0,1,1,692.26,37.33,650.14,34.36,81,pts_to_midstep
 re2,sphinx-doc__sphinx-8264@@sphinx.util.typing.py@@_stringify_py37,o200k_base,825,44,79,ok,,2,32,21,4757.42,42.77,2295.21,38.3,4356,_stringify_py37
@@ -205,6 +213,7 @@ re2,codeforces_678_A,o200k_base,25,11,2,ok,,0,1,1,112.0,5.5,112.0,5.5,16,<module
 re2,matplotlib@@matplotlib_backends_registry.py@@is_valid_backend_L202,o200k_base,988,62,63,ok,,1,19,6,4054.34,40.15,478.22,20.81,144,BackendRegistry.is_valid_backend
 re2,sympy__sympy-17271@@sympy.functions.elementary.integers.py@@__ge__,o200k_base,30395,34,3147,ok,,193,1365,5,233144.22,297.31,244.42,15.0,16,ceiling.__ge__
 re2,matplotlib@@matplotlib_transforms.py@@update_from_data_xy_L965,o200k_base,1883,138,117,ok,,2,36,2,9115.08,116.03,239.75,11.45,144,Bbox.update_from_data_xy
+re2,ClassEval_95@Warehouse.create_order,o200k_base,157,111,18,ok,,0,4,2,682.19,34.0,267.19,15.58,64,Warehouse.create_order
 re2,sympy@@sympy_core_expr.py@@__int___L352,o200k_base,5878,21,374,ok,,9,154,13,21648.0,115.22,983.16,26.3,400,Expr.__int__
 re2,scikit-learn@@sklearn_base.py@@set_params_L338,o200k_base,2303,114,128,ok,,8,38,6,7401.7,59.62,772.09,23.42,256,BaseEstimator.set_params
 re2,sphinx@@sphinx_transforms_post_transforms_images.py@@setup_L294,o200k_base,161,34,8,ok,,1,1,1,385.5,11.81,160.54,7.0,25,setup
@@ -407,6 +416,7 @@ re2,scikit-learn@@sklearn_utils__metadata_requests.py@@get_metadata_routing_L155
 re2,HumanEval_13,o200k_base,35,33,4,ok,,0,2,2,114.22,16.25,114.22,16.25,0,greatest_common_divisor
 re2,sympy@@sympy_functions_elementary_exponential.py@@_eval_expand_log_L800,o200k_base,9227,92,627,ok,,26,257,28,42539.44,184.7,2945.5,45.71,14161,log._eval_expand_log
 re2,HumanEval_31,o200k_base,45,27,7,ok,,0,4,4,160.54,12.86,160.54,12.86,1,is_prime
+re2,matplotlib@@matplotlib___init__.py@@_preprocess_data_L1432,o200k_base,1073,59,71,ok,,1,31,24,4290.74,43.48,3225.8,43.72,67600,_preprocess_data
 re2,scikit-learn@@sklearn_ensemble__voting.py@@predict_L680,o200k_base,1046,566,34,ok,,3,11,1,1983.16,27.85,144.43,5.45,81,VotingRegressor.predict
 re2,django__django-11334@@django.template.library.py@@dec,o200k_base,887,88,89,ok,,0,24,,5004.64,59.69,,,,
 re2,atcoder_ABC151_A,o200k_base,9,9,1,ok,,0,1,1,42.0,1.5,42.0,1.5,0,<module>

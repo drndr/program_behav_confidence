@@ -62,6 +62,9 @@ python explorer/serve.py                      # browse everything at http://127.
 Step 4 runs the dataset programs (never model output), each in its own process with a
 timeout; run it in an isolated environment. The study's conditions (model, reasoning effort
 and their runs) are listed in `src/runs.py`; the analysis and the explorer read them there.
+The main runs used the RE2 prompts without the ten items in `data/prompts/re2_additions/`,
+which ran later with the same settings as `*_re2_additions` runs; the analysis combines
+each pair.
 
 Answers are scored in three nested modes: **strict** (typed Python literals), **relaxed**
 (also unquoted strings) and **normalized** (also RE2 representations such as arrays, NumPy
