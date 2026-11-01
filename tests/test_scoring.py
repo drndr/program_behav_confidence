@@ -184,6 +184,15 @@ class ScoringTests(unittest.TestCase):
         self.assertTrue(self.normalized(reference, "(2-2*cos(phi), {}, [])")["correct"])
         self.assertFalse(self.normalized(reference, "(2-3*cos(phi), {}, [])")["correct"])
 
+    def test_tuple_keys_are_recorded_as_their_text(self):
+        # RE2 wrote dict keys JSON cannot store as str(key).
+        example = dict(RE2, output=json.dumps({"(0, 2)": 1, "(1, 1)": 2}))
+        for mode in SCORING_MODES:
+            self.assertTrue(score_prediction(example, "<prediction>{(1, 1): 2, (0, 2): 1}</prediction>", mode)["correct"])
+            self.assertFalse(score_prediction(example, "<prediction>{(1, 1): 2, (0, 2): 2}</prediction>", mode)["correct"])
+        self.assertTrue(self.normalized([[{"(1,)": "1"}], ["cos(phi)"]], '([{(1,): "1"}], (cos(phi),))')["correct"])
+        self.assertFalse(self.normalized([[{"(1,)": "1"}], ["cos(phi)"]], '([{(2,): "1"}], (cos(phi),))')["correct"])
+
     def test_normalized_array_shape_values_and_exactness(self):
         self.assertTrue(self.normalized("array([1., 2.])", "array([1,2], dtype=float64)")["correct"])
         self.assertFalse(self.normalized("array([1., 2.])", "array([1,2,3])")["correct"])
@@ -217,6 +226,18 @@ class ScoringTests(unittest.TestCase):
         self.assertFalse(self.normalized(2, "'2'")["correct"])
         self.assertFalse(self.normalized("4", "4")["correct"])
 
+    def test_scripts_printed_text_ignores_the_final_newline(self):
+        # RE2 recorded printed output without surrounding whitespace: print() adds a newline the reference lacks.
+        def script(prediction, mode="normalized"):
+            return score_prediction(dict(STDIN, output=json.dumps("1 0")),
+                                    f"<prediction>{prediction}</prediction>", mode)["correct"]
+        self.assertTrue(script(r'"1 0\n"'))
+        self.assertTrue(script("'1 0'"))
+        self.assertFalse(script(r'"1 1\n"'))
+        self.assertFalse(script(r'"1 0\n"', "relaxed"))  # strict and relaxed compare the text as recorded
+        # Functions return values: a trailing newline there is part of the value.
+        self.assertFalse(self.normalized("1 0", r'"1 0\n"')["correct"])
+
     def test_model_text_is_never_executed(self):
         call = "__import__('os').system('must not execute')"
         with patch("os.system", side_effect=AssertionError("Executed model text")) as system:
@@ -243,18 +264,23 @@ class ScoringTests(unittest.TestCase):
             self.assertTrue(score_prediction(example, f"<prediction>{reference!r}</prediction>", mode)["correct"])
 
     def test_keywords_are_parameters_positionals_are_content(self):
-        # A repr omits parameters at their defaults: extra keywords in the prediction are allowed,
-        # keywords in the reference must match, positional arguments must match exactly.
-        for prediction in ("GaussianNB()", "GaussianNB(var_smoothing=100)", "'GaussianNB(priors=None)'"):
+        # A repr omits parameters at their defaults: a prediction may add a keyword only at a listed
+        # default; keywords in the reference must match, positional arguments must match exactly.
+        for prediction in ("GaussianNB()", "GaussianNB(var_smoothing=1e-09)", "'GaussianNB(priors=None)'"):
             self.assertTrue(self.normalized("GaussianNB()", prediction)["correct"])
-        for prediction in ("GaussianNB(123)", "BernoulliNB()", "GaussianNB", "other.GaussianNB()"):
-            self.assertFalse(self.normalized("GaussianNB()", prediction)["correct"])
-        self.assertTrue(self.normalized("pkg.Class()", "pkg.Class(x=1)")["correct"])
-        self.assertTrue(self.normalized("RBF(length_scale=0.112)", "RBF(length_scale=0.112, length_scale_bounds=(1e-05, 100000.0))")["correct"])
+        for prediction in ("GaussianNB(123)", "BernoulliNB()", "GaussianNB", "other.GaussianNB()",
+                           "GaussianNB(var_smoothing=100)", "GaussianNB(priors=[0.5, 0.5])", "GaussianNB(prior=None)"):
+            self.assertFalse(self.normalized("GaussianNB()", prediction)["correct"], prediction)
+        self.assertTrue(self.normalized("StandardScaler()", "StandardScaler(copy=True, with_mean=True, with_std=True)")["correct"])
+        self.assertFalse(self.normalized("StandardScaler()", "StandardScaler(copy=1)")["correct"])  # True, not 1
+        reference = "SpectralBiclustering(method='log', n_init=3, random_state=42)"
+        self.assertTrue(self.normalized(reference, "SpectralBiclustering(method='log', n_clusters=3, n_init=3, random_state=42)")["correct"])
+        self.assertFalse(self.normalized(reference, "SpectralBiclustering(method='log', n_clusters=999, n_init=3, random_state=42)")["correct"])
+        self.assertFalse(self.normalized("pkg.Class()", "pkg.Class(x=1)")["correct"])  # no listed defaults
         self.assertFalse(self.normalized("RBF(length_scale=0.112)", "RBF(length_scale=0.2)")["correct"])
         self.assertFalse(self.normalized("RBF(length_scale=0.112)", "RBF()")["correct"])
         self.assertTrue(self.normalized("RFE(estimator=SVC(kernel='linear'), step=0.1)",
-                                        "RFE(step=0.1, estimator=SVC(kernel='linear', C=1.0), verbose=0)")["correct"])
+                                        "RFE(step=0.1, estimator=SVC(kernel='linear'))")["correct"])
         self.assertFalse(self.normalized("RFE(estimator=SVC(kernel='linear'), step=0.1)",
                                          "RFE(step=0.1, estimator=SVC(kernel='rbf'))")["correct"])
         for reference, prediction in (("set()", "set([1])"), ("Counter()", "Counter({'a': 1})"),

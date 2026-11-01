@@ -4,22 +4,23 @@ Three nested scoring modes. Every completed response is scored right or wrong in
 every mode; the modes differ only in how much is normalized before comparing.
 
   strict      typed Python literal equality; RE2 predictions pass through json.dumps/loads
-              the way upstream produced its references (tuples -> lists, dict keys -> strings)
+              the way upstream produced its references (tuples -> lists, dict keys -> strings,
+              keys JSON cannot store, such as tuples, -> their str())
   relaxed     strict, plus an unquoted answer compared as string content
   normalized  relaxed, plus RE2 representation rules keyed on the reference text: numeric
               or boolean array displays (formatting and dtype ignored), prettyForm displays
               (content only), literals JSON could not store (complex, tuple, bytes), and any
               other object repr or expression compared as a syntax tree where positional
-              arguments are content and must match, while keywords the prediction adds beyond
-              the reference are taken as spelled-out defaults (never for Python builtins and
-              standard collections, whose keywords are content); applied inside lists and dicts
+              arguments and the reference's keywords must match, and a keyword the prediction
+              adds counts only as a parameter spelled out at its library default, from a list
+              checked against the library's source (SPELLED_OUT_DEFAULTS); applied inside lists
+              and dicts. Script output is compared as printed: text without surrounding
+              whitespace (RE2 dropped the final newline), numbers by value
 
 Only ast parsing and literal evaluation are used; a prediction is never executed.
 """
 
 import ast
-import builtins
-import collections
 import json
 import math
 import re
@@ -174,12 +175,25 @@ def reference_value(example):
     return json.loads(example["output"])
 
 
+def _json_round_trip(value):
+    """The value as upstream RE2 recorded it: json.dumps, with keys JSON cannot store (tuples)
+    written as their str(), as in references such as {"(0, 0, 0, 2)": 1}."""
+    def storable(item):
+        if isinstance(item, dict):
+            return {key if key is None or isinstance(key, (str, int, float, bool)) else str(key): storable(v)
+                    for key, v in item.items()}
+        if isinstance(item, (list, tuple)):
+            return [storable(v) for v in item]
+        return item
+    return json.loads(json.dumps(storable(value)))
+
+
 def prediction_value(example, literal):
     """Evaluate a predicted literal the way the dataset's references were produced."""
     value = literal_value(parse_literal(literal))
     if example["dataset"] == "re2":
         # Upstream RE2 recorded json.dumps(return value): tuples become lists, dict keys strings.
-        value = json.loads(json.dumps(value))
+        value = _json_round_trip(value)
     return value
 
 
@@ -307,18 +321,30 @@ def _pretty_content(text):
 
 _JSON_TYPES = (str, int, float, bool, type(None))
 _NOT_A_LITERAL = object()
-# Python's own constructors take content, never parameters at defaults: dict(a=1) is not dict().
-_CONTENT_CALLABLES = frozenset(name for name in dir(builtins) if not name.startswith("_")) | frozenset(
-    name for name in dir(collections) if not name.startswith("_")) | {"SimpleNamespace"}
+# Parameters at their defaults, per class, as each class's __init__ in the library's source
+# defines them. RE2's references list only the parameters that differ from their defaults
+# (scikit-learn's print_changed_only), while older reprs spell out every parameter, so a
+# prediction may add these keywords at these values. Extend only after checking the source.
+SPELLED_OUT_DEFAULTS = {
+    "CheckingClassifier": {"check_y": None, "check_y_params": None, "check_X": None, "check_X_params": None,
+                           "methods_to_check": "all", "foo_param": 0, "expected_sample_weight": None,
+                           "expected_fit_params": None, "random_state": None},
+    "GaussianNB": {"priors": None, "var_smoothing": 1e-09},
+    "SpectralBiclustering": {"n_clusters": 3, "method": "bistochastic", "n_components": 6, "n_best": 3,
+                             "svd_method": "randomized", "n_svd_vecs": None, "mini_batch": False,
+                             "init": "k-means++", "n_init": 10, "random_state": None},
+    "StandardScaler": {"copy": True, "with_mean": True, "with_std": True},
+    "_BinMapper": {"n_bins": 256, "subsample": 200000, "is_categorical": None, "known_categories": None,
+                   "random_state": None, "n_threads": None},
+}
 
 
 def _tree_equal(left, right):
     """Structural equality of expression trees.
 
-    In a call, positional arguments are content and must match. Keywords in the
-    left (reference) tree must match; keywords only the right tree has are taken
-    as parameters spelled out at their defaults, except for Python builtins and
-    standard collections, whose keywords are content and must match exactly.
+    In a call, positional arguments and the keywords of the left (reference) tree must
+    match. A keyword only the right tree has must be a parameter at its default, as
+    listed in SPELLED_OUT_DEFAULTS for the callee; any other makes the trees differ.
     """
     if isinstance(left, ast.Call) and isinstance(right, ast.Call):
         callee = ast.unparse(left.func)
@@ -329,7 +355,9 @@ def _tree_equal(left, right):
         if any(k.arg is None for k in left.keywords + right.keywords):
             return False  # ** unpacking: contents unknown
         given = {k.arg: k.value for k in right.keywords}
-        if callee.split(".")[-1] in _CONTENT_CALLABLES and set(given) != {k.arg for k in left.keywords}:
+        defaults = SPELLED_OUT_DEFAULTS.get(callee.split(".")[-1], {})
+        if not all(name in defaults and _tree_equal(ast.parse(repr(defaults[name]), mode="eval").body, value)
+                   for name, value in given.items() if name not in {k.arg for k in left.keywords}):
             return False
         return all(k.arg in given and _tree_equal(k.value, given[k.arg]) for k in left.keywords)
     if isinstance(left, ast.Constant) and isinstance(right, ast.Constant):
@@ -383,7 +411,7 @@ def _representation_rule(reference, source):
             raise ValueError("Plain value stored as text")
         # A literal JSON could not store (complex, tuple, bytes): compare values.
         return same_value(value, literal_value(parse_literal(source)))
-    # Object reprs and expressions: positional arguments are content, extra keywords are defaults.
+    # Object reprs and expressions: positional arguments are content; added keywords must be known defaults.
     return _tree_equal(expression, parse_literal(source))
 
 
@@ -408,7 +436,7 @@ def _normalized_equal(reference, node, source_text, bare_text=None):
             _normalized_equal(r, n, source_text) for r, n in zip(reference, node.elts))
     if isinstance(reference, dict) and isinstance(node, ast.Dict):
         try:
-            keys = [next(iter(json.loads(json.dumps({literal_value(k): 0})))) for k in node.keys]
+            keys = [next(iter(_json_round_trip({literal_value(k): 0}))) for k in node.keys]
         except _RULE_ERRORS:
             return False
         if len(keys) != len(set(keys)) or set(keys) != set(reference):
@@ -455,6 +483,12 @@ def score_prediction(example, text, mode="strict"):
         return {"status": "scored", "correct": True, "detail": "unquoted string content"}
     if mode == "relaxed" or example["dataset"] != "re2":
         return wrong
+    if not example["entrypoint"] and parsed and isinstance(prediction, str) and isinstance(reference, str):
+        # Scripts print text, and RE2 recorded it without surrounding whitespace, the final newline
+        # included (as measure_execution compares printed output). Functions return values, so there
+        # whitespace stays content.
+        if prediction.strip() == reference.strip():
+            return {"status": "scored", "correct": True, "detail": "printed text"}
     if not example["entrypoint"] and parsed and isinstance(prediction, str) and type(reference) in (int, float):
         # Scripts print text, and RE2 recorded printed numbers as numbers: compare the printed number,
         # of the same type ("2.0" is not 2). Functions return values, so there the distinction stays.
