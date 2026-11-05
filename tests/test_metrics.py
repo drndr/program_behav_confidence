@@ -4,7 +4,7 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from metrics import auroc, bootstrap_interval, calibration, selective_accuracy
+from metrics import auroc, bootstrap_interval, calibration, selective_accuracy, stratified_auroc
 
 
 def brute_force_auroc(scores, correct):
@@ -33,6 +33,33 @@ class AurocTests(unittest.TestCase):
             auroc([1, None], [True, False])
         with self.assertRaises(ValueError):
             auroc([1, float("nan")], [True, False])
+
+
+class StratifiedAurocTests(unittest.TestCase):
+    def test_pairs_only_within_strata_match_brute_force(self):
+        rng = random.Random(3)
+        for _ in range(30):
+            scores = [rng.choice([0, 1, 2, 3, 5]) for _ in range(60)]
+            correct = [rng.random() < 0.5 for _ in range(60)]
+            strata = [rng.randrange(3) for _ in range(60)]
+            pairs = [(p, n) for i, p in enumerate(scores) for j, n in enumerate(scores)
+                     if correct[i] and not correct[j] and strata[i] == strata[j]]
+            expected = sum((p > n) + 0.5 * (p == n) for p, n in pairs) / len(pairs)
+            self.assertAlmostEqual(stratified_auroc(scores, correct, strata), expected)
+
+    def test_a_score_that_only_tells_strata_apart_is_chance(self):
+        # Larger programs are wrong more often; a score equal to the stratum separates overall, not within.
+        strata = [0, 0, 0, 0, 1, 1, 1, 1]
+        correct = [True, True, True, False, True, False, False, False]
+        scores = [-s for s in strata]
+        self.assertGreater(auroc(scores, correct), 0.5)
+        self.assertEqual(stratified_auroc(scores, correct, strata), 0.5)
+
+    def test_one_stratum_is_plain_auroc_and_no_mixed_stratum_is_undefined(self):
+        self.assertEqual(stratified_auroc([3, 2, 1], [True, True, False], ["a"] * 3), auroc([3, 2, 1], [True, True, False]))
+        self.assertIsNone(stratified_auroc([1, 2], [True, False], ["a", "b"]))
+        with self.assertRaises(ValueError):
+            stratified_auroc([1, 2], [True, False], ["a"])
 
 
 class BootstrapTests(unittest.TestCase):

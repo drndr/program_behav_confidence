@@ -1,4 +1,4 @@
-"""Confidence metrics: AUROC, bootstrap intervals, selective accuracy and calibration.
+"""Confidence metrics: AUROC (also within strata), bootstrap intervals, selective accuracy and calibration.
 
 Standard library only. Every function takes one confidence score per answer and whether
 that answer was correct. A higher score must mean more confident that the answer is
@@ -39,6 +39,30 @@ def auroc(scores, correct):
         rank_sum += (start + end + 1) / 2 * sum(correct[i] for i in order[start:end])  # average of ranks start+1..end
         start = end
     return (rank_sum - positives * (positives + 1) / 2) / (positives * negatives)
+
+
+def stratified_auroc(scores, correct, strata):
+    """AUROC over pairs of a correct and an incorrect answer from the same stratum; ties count half.
+
+    The pooled within-stratum AUROC: each stratum's AUROC weighted by its number of such
+    pairs, so a score that only tells strata apart scores 0.5. Strata holding only correct
+    or only incorrect answers add no pairs. None when no stratum holds both.
+    """
+    scores, correct = _check(scores, correct)
+    if len(strata) != len(scores):
+        raise ValueError("strata and scores differ in length")
+    groups = {}
+    for score, right, stratum in zip(scores, correct, strata):
+        groups.setdefault(stratum, []).append((score, right))
+    total = pairs = 0
+    for members in groups.values():
+        value = auroc([s for s, _ in members], [c for _, c in members])
+        if value is not None:
+            positives = sum(c for _, c in members)
+            weight = positives * (len(members) - positives)
+            total += value * weight
+            pairs += weight
+    return total / pairs if pairs else None
 
 
 def _quantile(ordered, q):
