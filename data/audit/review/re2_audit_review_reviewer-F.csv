@@ -1,0 +1,44 @@
+id,rater,verdict,reason
+ClassEval_49@JobMarketplace.withdraw_resume,reviewer-F,input_lost,input contains no resumes to remove (maybe environment dependent of the issue?) 
+ClassEval_95@Warehouse.change_order_status,reviewer-F,input_lost,I'd argue that the int->string conversion is unthankful but jeah it should  be integer keys (or a string id)
+boto3@@boto3_session.py@@get_partition_for_region_L221,reviewer-F,input_lost,resource factory not serialized
+django__django-11170@@django.views.debug.py@@default_urlconf,reviewer-F,environment,"The luna error might even be environment/version dependent? 
+"
+django__django-15018@@django.core.management.__init__.py@@call_command,reviewer-F,environment,the file under management_dir/commands is not..  there?
+django__django-15248@@django.db.models.base.py@@delete,reviewer-F,input_lost,There is not even a signals class? How should signals.Person be derived.
+matplotlib@@matplotlib___init__.py@@_preprocess_data_L1432,reviewer-F,environment,Memory address
+matplotlib@@matplotlib_artist.py@@pprint_setters_L1607,reviewer-F,input_lost,TestArtist is msising?
+matplotlib@@matplotlib_gridspec.py@@get_grid_positions_L145,reviewer-F,environment,Looks like missing defaults? like 0.1 vs. 0.11 somethin in the figure axes probably?
+matplotlib@@matplotlib_path.py@@copy_L271,reviewer-F,solvable,I mean if we normalize the models might be even partially correct? 
+mwaskom__seaborn-3190@@seaborn._core.scales.py@@_setup,reviewer-F,reference_wrong,It looks like the output got.. stringified incorrectly
+scikit-learn@@sklearn_decomposition__pca.py@@_fit_truncated_L696,reviewer-F,solvable,Maybe I am just missing something but isn't svd_flip making this deterministic? 
+scikit-learn@@sklearn_ensemble__voting.py@@predict_L680,reviewer-F,input_lost,input X is abbreviated.
+scikit-learn@@sklearn_gaussian_process_kernels.py@@_approx_fprime_L2236,reviewer-F,input_lost,not sure how to get f from the input?
+scikit-learn__scikit-learn-11042@@sklearn.preprocessing.data.py@@transform,reviewer-F,reference_wrong,the output got converted to a json object?
+scikit-learn__scikit-learn-11235@@sklearn.preprocessing.data.py@@partial_fit,reviewer-F,reference_wrong,"As before, output got stringified to a json object."
+scikit-learn__scikit-learn-13241@@sklearn.decomposition.kernel_pca.py@@_fit_transform,reviewer-F,solvable,"I mean some come really close, it looks like it is purely a computational issue?"
+scikit-learn__scikit-learn-13302@@sklearn.linear_model.ridge.py@@ridge_regression,reviewer-F,solvable,Similarly a comutational issue
+scikit-learn__scikit-learn-13628@@sklearn.metrics.ranking.py@@precision_recall_curve,reviewer-F,input_lost,Both inputs being null feels.. .wrong. nothing can be calculated this way
+scikit-learn__scikit-learn-13960@@sklearn.decomposition.incremental_pca.py@@partial_fit,reviewer-F,reference_wrong,Not doing all of these calculations xD but it looks like the output got stringified again
+scikit-learn__scikit-learn-14544@@sklearn.compose._column_transformer.py@@transform,reviewer-F,input_lost,transformers would be needed but is .. null? there is probably something missing in the input
+scikit-learn__scikit-learn-14764@@sklearn.datasets.samples_generator.py@@make_classification,reviewer-F,environment,https://stackoverflow.com/questions/74946845/attributeerror-module-numpy-has-no-attribute-int so I'd argue they are correct(er)
+sympy@@sympy_core_operations.py@@_eval_evalf_L387,reviewer-F,solvable,"they probably got close but did not evaluate the expression? not sure whetehr something changed in the version there, found nothing"
+sympy@@sympy_matrices_expressions_blockmatrix.py@@__new___L80,reviewer-F,solvable,They got close but broke incorrectly (no padding) BlockMatrix->Matrix is as far as i can seee a stringification thing?
+sympy@@sympy_matrices_expressions_matexpr.py@@__getitem___L294,reviewer-F,input_lost,this cannot work without self? 
+sympy@@sympy_polys_polytools.py@@_symbolic_factor_list_L6611,reviewer-F,solvable,Id argue the second solution is in fact correct? just missing another layer of parentheses
+sympy@@sympy_polys_rings.py@@cancel_L3202,reviewer-F,input_lost,not sure how magical this library is but the polynomial terms appear to be missing and the models assumed them to be 0? 
+sympy__sympy-11232@@sympy.matrices.expressions.matmul.py@@args_cnc,reviewer-F,input_lost,"self is missing, no self.args/factors"
+sympy__sympy-13146@@sympy.core.operations.py@@_eval_evalf,reviewer-F,input_lost,"as before, self is empty."
+sympy__sympy-13962@@sympy.printing.str.py@@sstr,reviewer-F,input_lost,there is no array (null)
+sympy__sympy-14038@@sympy.concrete.products.py@@_eval_product,reviewer-F,input_lost,The index appears to be.. missing?
+sympy__sympy-15011@@sympy.utilities.lambdify.py@@_preprocess,reviewer-F,reference_wrong,"Maybe it has to do with the version but I agree with the empty list? So the LLMs are correct? 
+"
+sympy__sympy-17770@@sympy.functions.elementary.hyperbolic.py@@_eval_is_finite,reviewer-F,input_lost,is_finite is not there 
+sympy__sympy-18033@@sympy.combinatorics.permutations.py@@__pow__,reviewer-F,input_lost,"Maybe another version produced something different but _array_from_ and cyclic_from cannot be null both?
+Or _af_pow behaves differntly to what I expected nd it is apparntly missing?"
+sympy__sympy-18633@@sympy.tensor.toperators.py@@_expand_partial_derivative,reviewer-F,input_lost,there is no self.expr to begin with? like maybe there is a path with returns the input unchanged but it doesn't look like it? 
+sympy__sympy-21055@@sympy.assumptions.refine.py@@refine_arg,reviewer-F,input_lost,String 0 and output 0 are not the same?  there is no `args[0]` . 
+sympy__sympy-21208@@sympy.matrices.expressions.matexpr.py@@_matrix_derivative,reviewer-F,input_lost,again a case where the reference output is just the input expression unchanged but I see no way how this can.. run? Without a matrix I mean. 
+sympy__sympy-21567@@sympy.functions.elementary.hyperbolic.py@@_eval_expand_trig,reviewer-F,input_lost,again parts of the input are.. missing? this returns just the input? 
+sympy__sympy-23141@@sympy.integrals.intpoly.py@@polytope_integrate,reviewer-F,input_lost,polygon is missing
+sympy__sympy-23824@@sympy.physics.hep.gamma_matrices.py@@kahane_simplify,reviewer-F,input_lost,"reference appears to be stringified, all interesting properties of the expression are missing (null)"

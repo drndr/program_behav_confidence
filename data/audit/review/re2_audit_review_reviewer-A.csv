@@ -1,0 +1,41 @@
+id,rater,verdict,reason
+ClassEval_49@JobMarketplace.withdraw_resume,reviewer-A,input_lost,"no resume in the input, should raise error"
+ClassEval_95@Warehouse.change_order_status,reviewer-A,input_lost,dictionary key as string seems wrong
+boto3@@boto3_session.py@@get_partition_for_region_L221,reviewer-A,input_lost,resource factory lost
+django__django-11170@@django.views.debug.py@@default_urlconf,reviewer-A,reference_wrong,dont think the reference should be an attribute dict
+django__django-15018@@django.core.management.__init__.py@@call_command,reviewer-A,environment,file under /commands is probably missing
+django__django-15248@@django.db.models.base.py@@delete,reviewer-A,input_lost,where would the signals.Person come from?
+matplotlib@@matplotlib___init__.py@@_preprocess_data_L1432,reviewer-A,environment,memory address in reference...
+matplotlib@@matplotlib_artist.py@@pprint_setters_L1607,reviewer-A,input_lost,TestArtist not supplied
+matplotlib@@matplotlib_gridspec.py@@get_grid_positions_L145,reviewer-A,environment,default is overwritten somewhere?
+matplotlib@@matplotlib_path.py@@copy_L271,reviewer-A,solvable,
+mwaskom__seaborn-3190@@seaborn._core.scales.py@@_setup,reviewer-A,reference_wrong,object serialization issue?
+scikit-learn@@sklearn_decomposition__pca.py@@_fit_truncated_L696,reviewer-A,solvable,do we really expect a model to solve this without executing?
+scikit-learn@@sklearn_ensemble__voting.py@@predict_L680,reviewer-A,input_lost,array in input got abbreviated---
+scikit-learn@@sklearn_gaussian_process_kernels.py@@_approx_fprime_L2236,reviewer-A,input_lost,shouldnt be the helper function given to the input instead?
+scikit-learn__scikit-learn-11042@@sklearn.preprocessing.data.py@@transform,reviewer-A,reference_wrong,seems to be a stringification in reference
+scikit-learn__scikit-learn-11235@@sklearn.preprocessing.data.py@@partial_fit,reviewer-A,reference_wrong,return self -> object return seem right instead of dict
+scikit-learn__scikit-learn-13241@@sklearn.decomposition.kernel_pca.py@@_fit_transform,reviewer-A,solvable,again seems solvable and models only had problem with fp precision..
+scikit-learn__scikit-learn-13302@@sklearn.linear_model.ridge.py@@ridge_regression,reviewer-A,solvable,"again, mostly fp precision problem"
+scikit-learn__scikit-learn-13628@@sklearn.metrics.ranking.py@@precision_recall_curve,reviewer-A,input_lost,input probably should have none null values..
+scikit-learn__scikit-learn-13960@@sklearn.decomposition.incremental_pca.py@@partial_fit,reviewer-A,reference_wrong,"return self, reference is dict instead of object"
+scikit-learn__scikit-learn-14544@@sklearn.compose._column_transformer.py@@transform,reviewer-A,input_lost,input contained a needed object as null again
+scikit-learn__scikit-learn-14764@@sklearn.datasets.samples_generator.py@@make_classification,reviewer-A,reference_wrong,old library version..?
+sympy@@sympy_core_operations.py@@_eval_evalf_L387,reviewer-A,solvable,
+sympy@@sympy_matrices_expressions_blockmatrix.py@@__new___L80,reviewer-A,reference_wrong,return object -> string reference again
+sympy@@sympy_matrices_expressions_matexpr.py@@__getitem___L294,reviewer-A,solvable,
+sympy@@sympy_polys_polytools.py@@_symbolic_factor_list_L6611,reviewer-A,solvable,
+sympy@@sympy_polys_rings.py@@cancel_L3202,reviewer-A,input_lost,missing stuff in input? im not sure
+sympy__sympy-11232@@sympy.matrices.expressions.matmul.py@@args_cnc,reviewer-A,input_lost,definietly missing stuff input
+sympy__sympy-13146@@sympy.core.operations.py@@_eval_evalf,reviewer-A,input_lost,missing stuff in input
+sympy__sympy-13962@@sympy.printing.str.py@@sstr,reviewer-A,input_lost,
+sympy__sympy-14038@@sympy.concrete.products.py@@_eval_product,reviewer-A,solvable,
+sympy__sympy-15011@@sympy.utilities.lambdify.py@@_preprocess,reviewer-A,reference_wrong,reference recording messed up empty array with null?
+sympy__sympy-17770@@sympy.functions.elementary.hyperbolic.py@@_eval_is_finite,reviewer-A,input_lost,nothing in input
+sympy__sympy-18033@@sympy.combinatorics.permutations.py@@__pow__,reviewer-A,solvable,not completely sure
+sympy__sympy-18633@@sympy.tensor.toperators.py@@_expand_partial_derivative,reviewer-A,input_lost,fully empty input
+sympy__sympy-21055@@sympy.assumptions.refine.py@@refine_arg,reviewer-A,solvable,only formatting issue in models
+sympy__sympy-21208@@sympy.matrices.expressions.matexpr.py@@_matrix_derivative,reviewer-A,reference_wrong,
+sympy__sympy-21567@@sympy.functions.elementary.hyperbolic.py@@_eval_expand_trig,reviewer-A,input_lost,return same as input? probably missing stuff
+sympy__sympy-23141@@sympy.integrals.intpoly.py@@polytope_integrate,reviewer-A,input_lost,poly missing
+sympy__sympy-23824@@sympy.physics.hep.gamma_matrices.py@@kahane_simplify,reviewer-A,reference_wrong,
