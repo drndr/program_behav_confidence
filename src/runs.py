@@ -7,6 +7,10 @@ from pathlib import Path
 from datasets import re2_source
 
 HALSTEAD_FIELDS = ("halstead_volume", "halstead_difficulty", "target_halstead_volume", "target_halstead_difficulty")
+# Hand audit of the RE2 items that no condition with reasoning answered correctly (25 Oct 2026,
+# updated 1 Nov 2026 for the ten added items): whether each can be solved from the code and
+# input as given, and why not.
+AUDIT = Path("audit") / "re2_audit.csv"
 
 # The study: the prediction runs of each model and reasoning setting. GPT-6 Luna medium was run
 # per dataset (RE2 first, CRUXEval later) with identical settings; its two runs form one condition.
@@ -57,12 +61,22 @@ def verification_of(run, data_dir):
     return names[0] if names else None
 
 
+def unsolvable_items(data_dir):
+    """Ids of the RE2 items the audit found not solvable as given; None without an audit."""
+    path = Path(data_dir) / AUDIT
+    if not path.exists():
+        return None
+    with path.open(encoding="utf-8", newline="") as stream:
+        return {row["id"] for row in csv.DictReader(stream) if row["solvable"] == "False"}
+
+
 def item_table(run, data_dir):
     """One row per item of a prediction run, from committed files only.
 
     Joins the run's evaluation (correctness per scoring mode, answer log-probability,
     token counts), its self-verification if there is one, and the program properties,
-    including the trace length from running the program where it was measured.
+    including the trace length from running the program where it was measured. RE2 items
+    are solvable unless the audit found otherwise (None for CRUXEval or without an audit).
     """
     data_dir = Path(data_dir)
     rows = {}
@@ -86,6 +100,7 @@ def item_table(run, data_dir):
             with execution.open(encoding="utf-8", newline="") as stream:
                 traces.update({(dataset, measured["id"]): int(measured["trace_length"])
                                for measured in csv.DictReader(stream) if measured["output_matches"] == "True"})
+    unsolvable = unsolvable_items(data_dir)
     verification = verification_of(run, data_dir)
     verdicts = ({(v["dataset"], v["id"], v["repetition"]): v
                  for v in _read_jsonl(data_dir / "evaluations" / f"{verification}_verdicts.jsonl")} if verification else {})
@@ -101,6 +116,7 @@ def item_table(run, data_dir):
                     **{field: float(measured[field]) if measured[field] else None for field in HALSTEAD_FIELDS},
                     "information_flow": int(measured["information_flow"]) if measured["information_flow"] else None,
                     "trace_length": traces.get(key[:2]),
+                    "solvable": (key[1] not in unsolvable) if row["dataset"] == "re2" and unsolvable is not None else None,
                     "parse_status": measured["line_status"], "verification_run": verification,
                     "verification_status": verdict.get("status"), "verdict": verdict.get("verdict"),
                     "confidence": verdict.get("confidence"), "p_correct": verdict.get("p_correct"),

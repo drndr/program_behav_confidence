@@ -1,7 +1,10 @@
 """Confidence signals per answer and their summary, shared by the analysis and the explorer.
 
 Rows come from runs.item_table. Correctness is normalized scoring; answers without a score
-(truncated or failed requests) are left out of every metric and counted separately. Each
+(truncated or failed requests) are left out of every metric and counted separately. Groups
+cover each dataset, RE2's exercises and repository code, and RE2 again without the items an
+audit found not solvable as given (lost input state, random or environment-dependent
+output, a wrong or differently recorded reference; see runs.AUDIT). Each
 signal is oriented so that a higher value means more confident that the answer is correct.
 A signal is summarised only where it varies, so e.g. zero reasoning tokens are skipped.
 
@@ -77,6 +80,10 @@ GROUPS = {
     "RE2": lambda row: row["dataset"] == "re2",
     "RE2 exercises": lambda row: row["dataset"] == "re2" and row["source"] not in RE2_LIBRARY_SOURCES,
     "RE2 library code": lambda row: row["dataset"] == "re2" and row["source"] in RE2_LIBRARY_SOURCES,
+    # The same without the items the audit found not solvable as given (runs.AUDIT).
+    "RE2 solvable": lambda row: row["dataset"] == "re2" and row["solvable"] is True,
+    "RE2 library code solvable": lambda row: (row["dataset"] == "re2" and row["source"] in RE2_LIBRARY_SOURCES
+                                              and row["solvable"] is True),
 }
 COVERAGES = (0.8, 0.5)
 

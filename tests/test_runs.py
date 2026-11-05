@@ -100,6 +100,28 @@ class ItemTableTests(unittest.TestCase):
         self.assertEqual((first["information_flow"], second["information_flow"]), (144, None))
         self.assertEqual((first["trace_length"], second["trace_length"]), (None, None))  # not measured
 
+    def test_re2_items_are_solvable_unless_the_audit_says_otherwise(self):
+        write_jsonl(self.data / "evaluations/re2pred_scores.jsonl",
+                    [{"dataset": "re2", "id": item_id, "repetition": 0, "attempt": 1, "mode": mode, "correct": False,
+                      "status": "scored", "prediction_mean_logprob": None, "completion_tokens": 9, "reasoning_tokens": 0,
+                      "finish_reason": "stop", "backend_provider": "X"}
+                     for item_id in ("HumanEval_1", "HumanEval_2") for mode in ("strict", "relaxed", "normalized")])
+        fields = ["id", "code_token_length", "input_token_length", "executable_lines", "line_status",
+                  "cyclomatic_complexity", "target_cyclomatic_complexity", "halstead_volume", "halstead_difficulty",
+                  "target_halstead_volume", "target_halstead_difficulty", "information_flow"]
+        with (self.data / "program_properties/re2_properties.csv").open("w", encoding="utf-8", newline="") as stream:
+            writer = csv.DictWriter(stream, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows([{**dict.fromkeys(fields, ""), "id": item_id, "code_token_length": 10, "input_token_length": 3,
+                               "line_status": "ok"} for item_id in ("HumanEval_1", "HumanEval_2")])
+        self.assertEqual({r["solvable"] for r in item_table("re2pred", self.data)}, {None})  # no audit
+        (self.data / "audit").mkdir()
+        (self.data / "audit/re2_audit.csv").write_text(
+            "id,solvable,category,note\nHumanEval_2,False,input_lost,x\n", encoding="utf-8")
+        self.assertEqual({r["id"]: r["solvable"] for r in item_table("re2pred", self.data)},
+                         {"HumanEval_1": True, "HumanEval_2": False})
+        self.assertEqual({r["solvable"] for r in item_table("pred", self.data)}, {None})  # CRUXEval is not audited
+
     def test_trace_length_only_where_the_run_reproduced_the_reference(self):
         with (self.data / "program_properties/cruxeval_execution.csv").open("w", encoding="utf-8", newline="") as stream:
             writer = csv.DictWriter(stream, fieldnames=["dataset", "id", "trace_length", "execution_status", "output_matches"])

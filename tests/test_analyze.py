@@ -21,10 +21,22 @@ class SizeThirdsTests(unittest.TestCase):
         self.assertEqual([round(bound, 2) for bound in thirds(sizes)[0]], [1, 2.0])
 
     def test_skips_properties_without_enough_distinct_values(self):
-        rows = [{"dataset": "re2", "code_tokens": 5, "input_tokens": 8, "executable_lines": 3,
+        rows = [{"dataset": "re2", "solvable": True, "code_tokens": 5, "input_tokens": 8, "executable_lines": 3,
                  "cyclomatic_complexity": 2, "target_cyclomatic_complexity": 1, "halstead_difficulty": 4.5,
                  "target_halstead_difficulty": 2.0, "information_flow": 4, "trace_length": 9} for _ in range(6)]
         self.assertEqual(property_groups(rows), [])
+
+    def test_solvable_items_get_their_own_thirds(self):
+        empty = dict.fromkeys(("input_tokens", "executable_lines", "cyclomatic_complexity", "target_cyclomatic_complexity",
+                               "halstead_difficulty", "target_halstead_difficulty", "information_flow", "trace_length"))
+        rows = [{"dataset": "re2", "solvable": size <= 6, "code_tokens": size, **empty} for size in range(1, 10)]
+        groups = property_groups(rows)
+        self.assertEqual({g[1] for g in groups}, {"re2", "re2 solvable"})
+        solvable = [g for g in groups if g[1] == "re2 solvable"]
+        members = [[row["code_tokens"] for row in rows if member(row)] for *_, member in solvable]
+        self.assertEqual(sorted(sum(members, [])), [1, 2, 3, 4, 5, 6])
+        self.assertTrue(all(members))
+        self.assertEqual(solvable[-1][3][1], 6)
 
 
 if __name__ == "__main__":

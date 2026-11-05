@@ -6,8 +6,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from confidence import stated_correctness, summarize
 
 
-def row(dataset, correct, logprob, code_tokens, source="CRUXEval", reasoning=0, confidence=None, verdict=None):
-    return {"dataset": dataset, "source": source, "correct_normalized": correct, "logprob": logprob,
+def row(dataset, correct, logprob, code_tokens, source="CRUXEval", reasoning=0, confidence=None, verdict=None,
+        solvable=None):
+    return {"dataset": dataset, "source": source, "solvable": solvable, "correct_normalized": correct, "logprob": logprob,
             "reasoning_tokens": reasoning, "completion_tokens": 20, "code_tokens": code_tokens, "input_tokens": 7,
             "cyclomatic_complexity": None, "target_cyclomatic_complexity": None,
             "halstead_difficulty": None, "target_halstead_difficulty": None, "information_flow": None,
@@ -49,6 +50,19 @@ class SummaryTests(unittest.TestCase):
         self.assertAlmostEqual(signals["stated confidence"]["ece"], (2 * 0.01 + 0.10) / 3)
         self.assertAlmostEqual(signals["stated confidence (as written)"]["ece"], abs(2 / 3 - (0.99 + 0.99 + 0.90) / 3))
         self.assertIsNone(signals["answer logprob"]["ece"])
+
+    def test_solvable_groups_leave_out_items_the_audit_found_not_solvable(self):
+        rows = [row("re2", True, -0.1, 10, source="Real", solvable=True),
+                row("re2", False, -0.9, 20, source="Real", solvable=True),
+                row("re2", False, -0.5, 30, source="Real", solvable=False),
+                row("re2", True, -0.2, 40, source="HumanEval", solvable=True)]
+        summary = {entry["group"]: entry for entry in summarize(rows, resamples=50)}
+        self.assertEqual((summary["RE2 library code"]["items"], summary["RE2 library code solvable"]["items"]), (3, 2))
+        self.assertEqual(summary["RE2 solvable"]["items"], 3)
+        self.assertAlmostEqual(summary["RE2 library code solvable"]["accuracy"], 1 / 2)
+        # Without an audit (solvable None) the solvable groups are empty and left out.
+        unaudited = summarize([dict(r, solvable=None) for r in rows], resamples=50)
+        self.assertNotIn("RE2 solvable", {entry["group"] for entry in unaudited})
 
     def test_auroc_within_code_size_tertiles(self):
         # Sizes 1-9 fall into tertiles {1-3}, {4-6}, {7-9}; the log-probability only tells the tertiles apart.

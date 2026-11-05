@@ -5,8 +5,9 @@
 For every study condition (model x reasoning setting) it joins answers, confidence signals
 and program properties (runs.item_table) and writes to data/analysis/:
 
-  accuracy.csv      accuracy per group (CRUXEval, RE2, RE2 exercises, RE2 library code) and
-                    scoring mode over all items, with unscored,
+  accuracy.csv      accuracy per group (CRUXEval, RE2, RE2 exercises, RE2 library code, and
+                    RE2 and its library code without the items the audit in data/audit/ found
+                    not solvable as given) and scoring mode over all items, with unscored,
                     format-failure and log-probability counts
   signals.csv       per group and signal, on every answer that has the signal: AUROC with a
                     95% bootstrap interval, the same within code-size tertiles and within source
@@ -20,8 +21,9 @@ and program properties (runs.item_table) and writes to data/analysis/:
                           traces exist for the exercises only)
   properties.csv    the same within thirds of each program property (size, input size,
                     cyclomatic complexity, Halstead difficulty, information flow, trace length),
-                    per dataset, without the AUROC within size tertiles
-  verification.csv  self-verdicts against the answers' correctness
+                    per dataset and on RE2's solvable items, without the AUROC within size tertiles
+  verification.csv  self-verdicts against the answers' correctness, per dataset and on RE2's
+                    solvable items
   analysis.json     all of the above, with the hashes of every input
 
 Metrics follow src/confidence.py: normalized scoring; unscored answers are left out except in
@@ -42,7 +44,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from confidence import CONFIDENCE_SIGNALS, GROUPS, STATIC_PROPERTIES, summarize
 from datasets import sha256_file
-from runs import CONDITIONS, condition_rows
+from runs import AUDIT, CONDITIONS, condition_rows
 
 MODES = ("strict", "relaxed", "normalized")
 DATASETS = ("cruxeval", "re2")
@@ -111,34 +113,40 @@ def thirds(values):
 
 
 def property_groups(rows):
-    """Groups per dataset, property and third: (label, dataset, property, bounds, member test)."""
+    """Groups per dataset, and on RE2's solvable items, per property and third, with thirds cut on those items:
+    (label, dataset or "re2 solvable", property, bounds, member test)."""
+    scopes = [(dataset, lambda row, dataset=dataset: row["dataset"] == dataset) for dataset in DATASETS]
+    scopes.append(("re2 solvable", GROUPS["RE2 solvable"]))
     groups = []
-    for dataset in DATASETS:
+    for scope, in_scope in scopes:
         for name in PROPERTIES:
-            values = [row[name] for row in rows if row["dataset"] == dataset and row[name] is not None]
+            values = [row[name] for row in rows if in_scope(row) and row[name] is not None]
             if len(set(values)) < 3:
                 continue
             bounds = thirds(values)
             for index, (low, high) in enumerate(bounds):
-                def member(row, dataset=dataset, name=name, index=index, bounds=bounds):
+                def member(row, in_scope=in_scope, name=name, index=index, bounds=bounds):
                     value = row[name]
-                    return (row["dataset"] == dataset and value is not None
+                    return (in_scope(row) and value is not None
                             and (index == 0 or value > bounds[index - 1][1]) and (index == 2 or value <= bounds[index][1]))
-                groups.append((f"{dataset} {name} third {index + 1}", dataset, name, (low, high), member))
+                groups.append((f"{scope} {name} third {index + 1}", scope, name, (low, high), member))
             sizes = [sum(member(row) for row in rows) for *_, member in groups[-3:]]
             if sum(sizes) != len(values) or 0 in sizes:
-                raise ValueError(f"{dataset} {name}: thirds of sizes {sizes} do not partition {len(values)} items")
+                raise ValueError(f"{scope} {name}: thirds of sizes {sizes} do not partition {len(values)} items")
     return groups
 
 
 def verification_rows(condition, rows):
+    """Self-verdicts against correctness per dataset ("all"), and on RE2's solvable items."""
+    subsets = [(dataset, "all", lambda row, dataset=dataset: row["dataset"] == dataset) for dataset in DATASETS]
+    subsets.append(("re2", "solvable", GROUPS["RE2 solvable"]))
     result = []
-    for dataset in DATASETS:
-        judged = [row for row in rows if row["dataset"] == dataset and row["verdict"] is not None]
+    for dataset, subset, member in subsets:
+        judged = [row for row in rows if member(row) and row["verdict"] is not None]
         if not judged:
             continue
         count = lambda verdict, correct: sum(row["verdict"] == verdict and row["correct_normalized"] is correct for row in judged)
-        result.append({**condition, "dataset": dataset, "judged": len(judged),
+        result.append({**condition, "dataset": dataset, "subset": subset, "judged": len(judged),
                        "approved_right": count("correct", True), "approved_wrong": count("correct", False),
                        "rejected_right": count("incorrect", True), "rejected_wrong": count("incorrect", False),
                        "approval_rate": sum(row["verdict"] == "correct" for row in judged) / len(judged),
@@ -198,6 +206,7 @@ def analyze(data_dir=ROOT / "data", out_dir=None, resamples=1000, workers=None):
     inputs = set().union(*(files for _, files in results))
     inputs |= {data_dir / "program_properties" / f"{dataset}_{kind}.csv" for dataset in DATASETS
                for kind in ("properties", "execution") if (data_dir / "program_properties" / f"{dataset}_{kind}.csv").exists()}
+    inputs |= {data_dir / AUDIT} if (data_dir / AUDIT).exists() else set()
     code = [ROOT / "src" / name for name in ("confidence.py", "metrics.py", "runs.py", "datasets.py")] + [Path(__file__)]
     out_dir.mkdir(parents=True, exist_ok=True)
     write_csv(out_dir / "accuracy.csv", accuracy)
