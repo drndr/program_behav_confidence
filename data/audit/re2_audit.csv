@@ -1,0 +1,152 @@
+id,solvable,category,note
+ClassEval_49@JobMarketplace.withdraw_resume,False,input_lost,"resumes recorded empty (the state after the call); list.remove then raises ValueError, while the reference None means the removal succeeded"
+ClassEval_95@Warehouse.change_order_status,False,input_lost,"JSON turned the integer dict keys into strings, so order_id 1 is not found and the code returns False; the reference None fits the original keys"
+ClassEval_95@Warehouse.create_order,False,input_lost,"JSON turned the integer dict keys into strings, so product 1 is not found and the code returns False; the reference None fits the original keys"
+Pillow@@src_PIL_ImageMorph.py@@build_lut_L142,True,missed_computation,512-entry lookup table from two patterns with rotations; deterministic but laborious
+astropy__astropy-12057@@astropy.nddata.nduncertainty.py@@_convert_to_variance,False,reference_wrong,"returns self; reference is an attribute dict, not a repr"
+astropy__astropy-13579@@astropy.wcs.wcsapi.wrappers.sliced_wcs.py@@world_to_pixel_values,False,input_lost,wrapped WCS and pixel slices serialized as nulls
+astropy__astropy-14253@@astropy.units.quantity.py@@_result_as_quantity,False,reference_wrong,returns a Quantity; reference is a partial attribute dict (units lossy too)
+astropy__astropy-8339@@astropy.stats.bayesian_blocks.py@@fit,False,input_lost,"fitness subclass of self not given (only p0, gamma, ncp_prior); 20-point dynamic program"
+astropy__astropy-8519@@astropy.units.function.core.py@@to,False,input_lost,physical and function units serialized as lossy attribute dicts
+attrs@@src_attr__make.py@@add_attrs_init_L1111,False,input_lost,"reference repr needs the class name A, not in input"
+attrs@@src_attr__make.py@@add_hash_L1058,False,input_lost,"reference repr needs the class name A, not in input"
+attrs@@src_attr__make.py@@add_order_L1150,False,input_lost,"reference repr needs the class name A, not in input"
+attrs@@src_attr__make.py@@build_class_L788,False,input_lost,returns the built class __main__.A; class not in input
+boto3@@boto3_session.py@@get_partition_for_region_L221,False,input_lost,"session is a Mock whose configured return value (""baz"") is not in input"
+django__django-11170@@django.views.debug.py@@default_urlconf,False,reference_wrong,HttpResponse recorded as attribute dict
+django__django-11334@@django.template.library.py@@dec,False,reference_wrong,returns the function; reference is its attribute dict
+django__django-11334@@django.template.library.py@@simple_tag,False,input_lost,function serialized as {}; every model faithfully predicts the ValueError
+django__django-15018@@django.core.management.__init__.py@@call_command,False,input_lost,test-only management command not given
+django__django-15248@@django.db.models.base.py@@delete,False,input_lost,test model signals.Person not in input
+django__django-15731@@django.db.models.manager.py@@create_method,False,reference_wrong,returns a function; reference is {__wrapped__: {}}
+django__django-15752@@django.contrib.auth.base_user.py@@make_random_password,False,environment,random password
+django__django-16662@@django.db.migrations.writer.py@@as_string,False,reference_wrong,reference quoting corrupted; DeepSeek and Qwen give the true output (operations also null in input)
+matplotlib@@matplotlib___init__.py@@_preprocess_data_L1432,False,environment,returns the decorated function; reference is a function repr with a memory address
+matplotlib@@matplotlib__api_deprecation.py@@delete_parameter_L314,False,environment,returns the decorated function; reference is a function repr with a memory address
+matplotlib@@matplotlib__api_deprecation.py@@deprecated_L97,False,environment,returns the inner decorator; reference is a function repr with a memory address
+matplotlib@@matplotlib_artist.py@@pprint_setters_L1607,False,input_lost,test-only TestArtist class not given
+matplotlib@@matplotlib_backends_registry.py@@resolve_gui_or_backend_L373,False,reference_wrong,call raises RuntimeError (every model's answer); reference null
+matplotlib@@matplotlib_cbook.py@@_reshape_2D_L1391,False,input_lost,"X printed as a nested list; reference shows it was an array (transposed), not inferable"
+matplotlib@@matplotlib_colors.py@@__call___L755,False,input_lost,colormap subclass lost (only attributes); exact interpolated RGBA values
+matplotlib@@matplotlib_colors.py@@_repr_html__L2140,False,input_lost,"HTML embeds the colormap's PNG; the input patch array is abbreviated with ..., so the pixels are unknown"
+matplotlib@@matplotlib_colors.py@@_repr_png__L2115,False,input_lost,"PNG bytes of the colormap; the input patch array is abbreviated with ..., so the pixels are unknown"
+matplotlib@@matplotlib_font_manager.py@@__hash___L704,False,environment,hash of a tuple of strings: randomized per process (Luna and Haiku say so)
+matplotlib@@matplotlib_gridspec.py@@__getitem___L213,False,input_lost,"tuple key serialized as JSON list; with a list the code raises TypeError (Luna, Haiku)"
+matplotlib@@matplotlib_gridspec.py@@get_grid_positions_L145,False,environment,"figure subplot parameters come from the test style (bottom 0.1, top 0.9), not the defaults models use (0.11, 0.88)"
+matplotlib@@matplotlib_gridspec.py@@get_topmost_subplotspec_L674,True,missed_library,SubplotSpec repr not shown
+matplotlib@@matplotlib_mathtext.py@@math_to_image_L108,False,environment,depth depends on font metrics of the rendering
+matplotlib@@matplotlib_path.py@@copy_L271,True,missed_library,Path repr not shown
+matplotlib@@matplotlib_transforms.py@@splitx_L562,False,input_lost,input rounded 0.09999999999999998 to 0.1; models are right for the input as printed
+mwaskom__seaborn-3010@@seaborn._stats.regression.py@@__call__,False,input_lost,DataFrame serialized as attribute dict
+mwaskom__seaborn-3187@@seaborn._core.scales.py@@_setup,False,reference_wrong,object recorded as attribute dict
+mwaskom__seaborn-3190@@seaborn._core.scales.py@@_setup,False,reference_wrong,object recorded as attribute dict
+psf__requests-1766@@requests.auth.py@@build_digest_header,False,environment,cnonce from time and os.urandom (Luna and DeepSeek say so)
+pydata__xarray-4758@@xarray.coding.times.py@@decode_cf_datetime,False,input_lost,num_dates recorded as null
+pydata__xarray-6135@@xarray.coding.cftime_offsets.py@@__mul__,False,reference_wrong,object recorded as attribute dict
+requests@@src_requests_cookies.py@@morsel_to_cookie_L492,False,reference_wrong,strptime raises ValueError (every model's answer); reference null
+scikit-learn@@sklearn_compose__target.py@@predict_L300,False,input_lost,fitted regressor coefficients and test-local transformer lambdas not given
+scikit-learn@@sklearn_decomposition__nmf.py@@_minibatch_step_L2065,True,missed_computation,one multiplicative NMF update and cost; exact float (Haiku 1.29753 vs 1.29757)
+scikit-learn@@sklearn_decomposition__nmf.py@@transform_L1728,True,missed_computation,NMF coordinate-descent solve to convergence; exact floats (Haiku close to 3-4 decimals)
+scikit-learn@@sklearn_decomposition__nmf.py@@transform_L2316,True,missed_computation,"mini-batch NMF solve up to 200 iterations; exact floats (Luna, Haiku close to 2-3 decimals)"
+scikit-learn@@sklearn_decomposition__pca.py@@_fit_full_L544,False,input_lost,X printed with ellipsis: 6 of 1000 rows given; reference also has a machine-specific module path
+scikit-learn@@sklearn_decomposition__pca.py@@_fit_truncated_L696,False,environment,random_state=None (global RNG); Luna says so
+scikit-learn@@sklearn_ensemble__bagging.py@@get_metadata_routing_L625,False,input_lost,metadata requests of a test-local estimator not given
+scikit-learn@@sklearn_ensemble__bagging.py@@predict_log_proba_L1055,False,input_lost,fitted estimators recorded as constructor reprs only; their learned parameters are missing
+scikit-learn@@sklearn_ensemble__forest.py@@_compute_oob_predictions_L558,False,input_lost,fitted trees of the 40 estimators not given (and bootstrap sampling)
+scikit-learn@@sklearn_ensemble__forest.py@@_generate_unsampled_indices_L136,False,environment,requires reproducing NumPy's random stream for a given seed
+scikit-learn@@sklearn_ensemble__voting.py@@predict_L680,False,input_lost,fitted pipelines not given; X printed with ellipsis (442 rows)
+scikit-learn@@sklearn_gaussian_process_kernels.py@@__eq___L382,False,input_lost,"b printed as RBF(length_scale=1), whose repr hides the bounds; models reasonably answer False"
+scikit-learn@@sklearn_gaussian_process_kernels.py@@_approx_fprime_L2236,False,input_lost,test-local function f not given
+scikit-learn@@sklearn_impute__base.py@@_sparse_fit_L472,False,input_lost,"sparse matrix X printed as ""[]"""
+scikit-learn@@sklearn_metrics__scorer.py@@__call___L137,False,input_lost,fitted estimator state lost (printed as EmpiricalCovariance()); scorer given as a string
+scikit-learn@@sklearn_neural_network__base.py@@binary_log_loss_L250,True,missed_computation,mean binary log loss over 100x3 entries; exact float (Luna 3.408 vs 3.422)
+scikit-learn__scikit-learn-10306@@sklearn.cross_decomposition.pls_.py@@_nipals_twoblocks_inner_loop,True,missed_computation,iterative PLS weights; exact floats (Luna close to 4 decimals)
+scikit-learn__scikit-learn-10577@@sklearn.datasets.samples_generator.py@@make_blobs,False,environment,random stream and shuffle for seed 0; code also imports collections.Iterable (fails on Python >= 3.10)
+scikit-learn__scikit-learn-11042@@sklearn.preprocessing.data.py@@transform,False,reference_wrong,sparse matrix recorded as attribute dict (dtype also lossy); Luna and Haiku give the right sparse-matrix repr
+scikit-learn__scikit-learn-11235@@sklearn.preprocessing.data.py@@partial_fit,False,reference_wrong,returns self; reference attribute dict with updated statistics
+scikit-learn__scikit-learn-11333@@sklearn.utils.metaestimators.py@@_set_params,False,input_lost,transformers recorded as null (returns self as attribute dict)
+scikit-learn__scikit-learn-12682@@sklearn.decomposition.dict_learning.py@@dict_learning,False,environment,iterative dictionary learning with a RandomState whose state is not given
+scikit-learn__scikit-learn-12758@@sklearn.metrics.classification.py@@classification_report,True,missed_tracing,Luna computes the whole report right except one leading space in the header
+scikit-learn__scikit-learn-13143@@sklearn.metrics.classification.py@@precision_score,False,input_lost,y_true and y_pred recorded as null
+scikit-learn__scikit-learn-13143@@sklearn.metrics.classification.py@@recall_score,False,input_lost,y_true and y_pred recorded as null
+scikit-learn__scikit-learn-13241@@sklearn.decomposition.kernel_pca.py@@_fit_transform,True,missed_computation,centered kernel matrix; Luna and DeepSeek match to 8 digits except two last digits (unquoted)
+scikit-learn__scikit-learn-13302@@sklearn.linear_model.ridge.py@@ridge_regression,True,missed_computation,ridge solve by Cholesky; models right to 3-4 decimals
+scikit-learn__scikit-learn-13618@@sklearn.linear_model.bayes.py@@fit,False,reference_wrong,returns self; reference attribute dict with fitted values
+scikit-learn__scikit-learn-13628@@sklearn.metrics.ranking.py@@precision_recall_curve,False,input_lost,y_true and probas_pred recorded as null
+scikit-learn__scikit-learn-13779@@sklearn.ensemble.voting.py@@fit,False,input_lost,estimators recorded as null; every model faithfully predicts the AttributeError
+scikit-learn__scikit-learn-13780@@sklearn.ensemble.voting.py@@_parallel_fit_estimator,False,reference_wrong,returns the fitted estimator; reference attribute dict (estimator itself serialized as bare params)
+scikit-learn__scikit-learn-13915@@sklearn.metrics.pairwise.py@@_euclidean_distances_upcast,True,missed_computation,10x20 float32 distance matrix
+scikit-learn__scikit-learn-13960@@sklearn.decomposition.incremental_pca.py@@fit,False,reference_wrong,returns self; reference attribute dict with fitted values
+scikit-learn__scikit-learn-13960@@sklearn.decomposition.incremental_pca.py@@partial_fit,False,reference_wrong,returns self; reference attribute dict with fitted values
+scikit-learn__scikit-learn-14237@@sklearn.compose._column_transformer.py@@transform,False,input_lost,transformers and X recorded as null
+scikit-learn__scikit-learn-14544@@sklearn.compose._column_transformer.py@@fit_transform,False,input_lost,transformers recorded as null; DataFrame as attribute dict
+scikit-learn__scikit-learn-14544@@sklearn.compose._column_transformer.py@@transform,False,input_lost,transformers recorded as null
+scikit-learn__scikit-learn-14704@@sklearn.model_selection._split.py@@_make_test_folds,True,missed_tracing,stratified fold allocation over 150 labels; Luna and Qwen close but differ in places (unquoted)
+scikit-learn__scikit-learn-14764@@sklearn.datasets.samples_generator.py@@make_classification,False,environment,"code uses np.int, removed in NumPy 1.24 (Luna and DeepSeek predict that AttributeError); also random stream"
+scikit-learn__scikit-learn-15119@@sklearn.pipeline.py@@fit,False,input_lost,transformer_list recorded as null
+scikit-learn__scikit-learn-25102@@sklearn.feature_selection._base.py@@transform,False,input_lost,X recorded as null
+scikit-learn__scikit-learn-25570@@sklearn.compose._column_transformer.py@@_hstack,False,input_lost,Xs and transformers recorded as null
+scikit-learn__scikit-learn-25589@@sklearn.preprocessing._encoders.py@@transform,False,input_lost,X and categories_ recorded as null; every model faithfully predicts the no-features error
+scikit-learn__scikit-learn-26323@@sklearn.compose._column_transformer.py@@set_output,False,input_lost,transformers recorded as null
+sphinx-doc__sphinx-8264@@sphinx.util.typing.py@@_stringify_py37,False,input_lost,"annotation class serialized as {__module__, __doc__}; class name lost (reference quoting also corrupted)"
+sphinx-doc__sphinx-9015@@sphinx.util.typing.py@@restify,False,input_lost,"class serialized as {__module__, __doc__}; class name lost"
+sphinx-doc__sphinx-9658@@sphinx.ext.autodoc.mock.py@@_make_subclass,False,reference_wrong,returns a new class; reference attribute dict (models give its true repr)
+sphinx@@sphinx_ext_mathjax.py@@setup_L142,False,environment,returns the installed Sphinx version string (9.0.2+/7926051f6)
+sympy@@sympy_algebras_quaternion.py@@to_euler_L465,False,input_lost,quaternion components missing from self
+sympy@@sympy_algebras_quaternion.py@@vector_part_L1340,False,input_lost,quaternion components missing from self
+sympy@@sympy_concrete_expr_with_limits.py@@_common_new_L22,True,scored_wrong_unquoted,"(1, [(x,)], 1) right in substance, unquoted (DeepSeek; others write Tuple(x))"
+sympy@@sympy_core_expr.py@@__int___L352,False,reference_wrong,call raises TypeError (models' answer); reference null
+sympy@@sympy_core_expr.py@@as_content_primitive_L2171,False,input_lost,self serialized as {nargs}; the expression cos(phi) is lost
+sympy@@sympy_core_function.py@@_eval_evalf_L534,False,input_lost,self serialized as {nargs}; the function (cosh(1)) is lost
+sympy@@sympy_core_mul.py@@as_real_imag_L870,True,scored_wrong_unquoted,"(2*pi, 0) right in substance; three models unquoted, Haiku quotes the whole tuple as one string"
+sympy@@sympy_core_mul.py@@matches_L1047,True,scored_wrong_unquoted,"{a_: 1, m_: 1, n_: 0} right in substance, unquoted (Luna, Qwen)"
+sympy@@sympy_core_numbers.py@@__lt___L1999,True,scored_wrong_representation,"sympy false recorded as ""False""; DeepSeek and Qwen answer the Python bool False"
+sympy@@sympy_core_operations.py@@_eval_evalf_L387,True,missed_library,evalf at 2-bit precision gives a Float printed as -0.e-1; models return the unevaluated expression
+sympy@@sympy_core_operations.py@@_matches_commutative_L202,True,scored_wrong_unquoted,"{a_: 1, n_: 1, m_: 0} right in substance, unquoted (Luna)"
+sympy@@sympy_core_power.py@@as_content_primitive_L1725,True,scored_wrong_unquoted,"(1, sqrt(2)) right in substance, unquoted (DeepSeek, Qwen; Haiku quotes the whole tuple)"
+sympy@@sympy_functions_elementary_exponential.py@@_eval_expand_log_L800,False,input_lost,self serialized as {nargs}; the argument (5) is lost
+sympy@@sympy_matrices_determinant.py@@_find_reasonable_pivot_L30,True,scored_wrong_representation,sympy Integer -9 written as int (three models)
+sympy@@sympy_matrices_expressions_blockmatrix.py@@__new___L80,True,missed_library,BlockMatrix printing (shows as a Matrix of blocks) not shown
+sympy@@sympy_matrices_expressions_matexpr.py@@__getitem___L294,False,input_lost,self (MatrixSymbol X) serialized as {}
+sympy@@sympy_matrices_reductions.py@@_row_reduce_list_L24,True,scored_wrong_representation,sympy integers written as ints (three models)
+sympy@@sympy_multipledispatch_dispatcher.py@@register_L120,False,environment,returns the inner decorator; reference is a function repr with a memory address
+sympy@@sympy_polys_matrices_sdm.py@@extract_L136,False,input_lost,sparse-matrix entries missing from self
+sympy@@sympy_polys_polyoptions.py@@clone_L206,False,input_lost,options dict content of self lost (fraction=True); Qwen and Haiku right for the input as given
+sympy@@sympy_polys_polytools.py@@_symbolic_factor_list_L6611,True,missed_library,"Poly repr with parenthesized generator; Haiku close (single parentheses, unquoted)"
+sympy@@sympy_polys_rings.py@@cancel_L3202,False,input_lost,polynomial terms of self lost
+sympy__sympy-11232@@sympy.matrices.expressions.matmul.py@@args_cnc,False,input_lost,self serialized as {}; the matrix expression is lost
+sympy__sympy-11822@@sympy.printing.conventions.py@@split_super_sub,False,reference_wrong,reference records empty lists as null; all four models give the true output
+sympy__sympy-12088@@sympy.polys.rings.py@@__eq__,False,input_lost,PolyElement serialized as {_hash}
+sympy__sympy-12088@@sympy.simplify.simplify.py@@nsimplify,False,input_lost,expr serialized as {nargs}; reference quoting corrupted
+sympy__sympy-12489@@sympy.combinatorics.permutations.py@@__invert__,False,input_lost,_array_form recorded as null; reference attribute dict
+sympy__sympy-12945@@sympy.core.basic.py@@__eq__,False,input_lost,self serialized as {}; other has corrupted quoting
+sympy__sympy-13146@@sympy.core.operations.py@@_eval_evalf,False,input_lost,self serialized as {}
+sympy__sympy-13177@@sympy.core.mod.py@@doit,False,input_lost,argument p missing from the input (only q given)
+sympy__sympy-13259@@sympy.simplify.fu.py@@_osborne,False,input_lost,argument d missing; input quoting corrupted; reference contains a numbered Dummy
+sympy__sympy-13259@@sympy.simplify.fu.py@@_osbornei,False,input_lost,e serialized as {nargs}; argument d missing
+sympy__sympy-13265@@sympy.simplify.simplify.py@@simplify,False,input_lost,input expression has corrupted quoting; models read the parts as strings
+sympy__sympy-13265@@sympy.simplify.trigsimp.py@@exptrigsimp,False,reference_wrong,returns exp(x) (every model's answer); reference is exp's attribute dict {nargs}
+sympy__sympy-13369@@sympy.polys.polyroots.py@@roots,False,input_lost,argument f missing from the input
+sympy__sympy-13551@@sympy.concrete.products.py@@_eval_product,False,reference_wrong,DeepSeek gives the true output; reference quoting corrupted (limits also lost the variable)
+sympy__sympy-13615@@sympy.sets.sets.py@@_complement,False,input_lost,self serialized as {}
+sympy__sympy-13678@@sympy.functions.elementary.hyperbolic.py@@_eval_is_real,False,input_lost,self serialized as {nargs}; the argument is lost
+sympy__sympy-13962@@sympy.printing.str.py@@sstr,False,input_lost,"Permutation serialized as {_array_form: null, _size}"
+sympy__sympy-14038@@sympy.concrete.products.py@@_eval_product,False,input_lost,limits lost the variable (two of three elements); the code would fail to unpack
+sympy__sympy-15011@@sympy.utilities.lambdify.py@@_preprocess,False,reference_wrong,reference records an empty list as null; three models give the true output
+sympy__sympy-15017@@sympy.tensor.array.dense_ndim_array.py@@_new,False,input_lost,cls and iterable serialized as lossy attribute dicts; shape null
+sympy__sympy-15232@@sympy.core.exprtools.py@@_mask_nc,False,reference_wrong,reference records an empty list as null; DeepSeek and Qwen right in substance (unquoted); input quoting corrupted
+sympy__sympy-15599@@sympy.core.mod.py@@doit,True,scored_wrong_representation,"sympy Zero recorded as ""0""; all four models answer 0"
+sympy__sympy-17770@@sympy.functions.elementary.hyperbolic.py@@_eval_is_finite,False,input_lost,self serialized as {nargs}; the argument is lost
+sympy__sympy-18033@@sympy.combinatorics.permutations.py@@__pow__,False,reference_wrong,returns a Permutation; reference attribute dict (_array_form null in input too)
+sympy__sympy-18189@@sympy.solvers.diophantine.py@@diophantine,True,missed_computation,diophantine solver over 120k tokens of code; deterministic but laborious parametrization
+sympy__sympy-18633@@sympy.tensor.toperators.py@@_expand_partial_derivative,False,input_lost,self serialized with nulls; the derivative expression is lost
+sympy__sympy-18728@@sympy.core.power.py@@_eval_is_extended_real,False,input_lost,self serialized as {}
+sympy__sympy-21055@@sympy.assumptions.refine.py@@refine_arg,True,scored_wrong_representation,"sympy Zero recorded as ""0""; all four models answer 0"
+sympy__sympy-21208@@sympy.matrices.expressions.matexpr.py@@_matrix_derivative,False,input_lost,"matrix serialized as {_rows, _cols, _mat: null}; reference attribute dict"
+sympy__sympy-21260@@sympy.core.symbol.py@@__getnewargs_ex__,False,input_lost,self serialized as {} (Dummy symbol lost)
+sympy__sympy-21527@@sympy.polys.constructor.py@@_construct_simple,False,input_lost,coeffs recorded as null; opt as {}
+sympy__sympy-21567@@sympy.functions.elementary.hyperbolic.py@@_eval_expand_trig,False,input_lost,self serialized as {nargs} (returns self)
+sympy__sympy-23117@@sympy.tensor.array.ndim_array.py@@f,False,input_lost,"corrupted quoting in input; reference [null, []]"
+sympy__sympy-23141@@sympy.integrals.intpoly.py@@_polynomial_integrate,False,input_lost,facets and hp_params recorded as null
+sympy__sympy-23141@@sympy.integrals.intpoly.py@@polytope_integrate,False,input_lost,polygon serialized as {}; every model faithfully predicts the TypeError
+sympy__sympy-23824@@sympy.physics.hep.gamma_matrices.py@@kahane_simplify,False,input_lost,tensor expression serialized with nulls (returns it unchanged)
