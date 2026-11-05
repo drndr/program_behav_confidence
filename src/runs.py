@@ -8,14 +8,23 @@ from datasets import re2_source
 
 HALSTEAD_FIELDS = ("halstead_volume", "halstead_difficulty", "target_halstead_volume", "target_halstead_difficulty")
 
-# The study: the prediction runs of each model and reasoning setting. Medium was run per
-# dataset (RE2 first, CRUXEval later) with identical settings; its two runs form one condition.
+# The study: the prediction runs of each model and reasoning setting. GPT-6 Luna medium was run
+# per dataset (RE2 first, CRUXEval later) with identical settings; its two runs form one condition.
+# The ten RE2 items kept once only CRUXEval samples were removed ran later with the same settings
+# (data/prompts/re2_additions/); each condition's *_re2_additions run joins its main run.
 CONDITIONS = [
-    {"model": "GPT-6 Luna", "reasoning": "none", "runs": ["gpt6.0_luna_no_reasoning"]},
-    {"model": "GPT-6 Luna", "reasoning": "low", "runs": ["gpt6.0_luna_low_reasoning"]},
+    {"model": "GPT-6 Luna", "reasoning": "none", "runs": ["gpt6.0_luna_no_reasoning", "gpt6.0_luna_no_reasoning_re2_additions"]},
+    {"model": "GPT-6 Luna", "reasoning": "low", "runs": ["gpt6.0_luna_low_reasoning", "gpt6.0_luna_low_reasoning_re2_additions"]},
     {"model": "GPT-6 Luna", "reasoning": "medium",
-     "runs": ["gpt6.0_luna_medium_reasoning", "gpt6.0_luna_medium_reasoning_cruxeval"]},
-    {"model": "GPT-6 Luna", "reasoning": "high", "runs": ["gpt6.0_luna_high_reasoning"]},
+     "runs": ["gpt6.0_luna_medium_reasoning", "gpt6.0_luna_medium_reasoning_cruxeval",
+              "gpt6.0_luna_medium_reasoning_re2_additions"]},
+    {"model": "GPT-6 Luna", "reasoning": "high", "runs": ["gpt6.0_luna_high_reasoning", "gpt6.0_luna_high_reasoning_re2_additions"]},
+    {"model": "DeepSeek V4.1 Flash", "reasoning": "low",
+     "runs": ["deepseek_v4.1_flash_1017_low_reasoning", "deepseek_v4.1_flash_1017_low_reasoning_re2_additions"]},
+    {"model": "Qwen 3.8 27B", "reasoning": "low",
+     "runs": ["qwen3.8_27b_low_reasoning", "qwen3.8_27b_low_reasoning_re2_additions"]},
+    {"model": "Claude Haiku 5.5", "reasoning": "low",
+     "runs": ["claude_haiku_5.5_low_reasoning", "claude_haiku_5.5_low_reasoning_re2_additions"]},
 ]
 
 
