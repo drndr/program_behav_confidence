@@ -30,3 +30,6 @@ __pycache__/
 
 # Local literature search notes.
 /literature/
+
+# Local inspection notebooks.
+/notebook/

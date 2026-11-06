@@ -6,7 +6,6 @@
 src/        Reusable Python code
 scripts/    Research scripts, one per pipeline step
 tests/      Unit tests
-notebook/   Jupyter notebooks
 explorer/   Local results browser
 server/     Notebook and instructions for the Qwen runs on a GPU server
 data/       Datasets and results:
@@ -27,7 +26,7 @@ Python 3.12+ (program properties depend on its tokenizer). Put `OPENROUTER_API_K
 `.env` (see `.env.example`) to make model calls.
 
 ```sh
-python -m pip install -e ".[properties,notebook]"
+python -m pip install -e ".[properties]"
 ```
 
 ## Pipeline
