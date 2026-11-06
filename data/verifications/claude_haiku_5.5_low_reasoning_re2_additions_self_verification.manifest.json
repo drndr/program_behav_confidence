@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-10-29T17:43:11.105833+00:00",
+  "configuration": {
+    "provider": "openrouter",
+    "model": "anthropic/claude-haiku-5.5",
+    "parameters": {
+      "max_tokens": 16384,
+      "provider": {
+        "require_parameters": true,
+        "only": [
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "low"
+      }
+    },
+    "timeout": 600.0,
+    "repetitions": 1,
+    "limit_per_dataset": null,
+    "prompt_files": {
+      "re2_prompts.jsonl": "651ef7da8075b7643872c93d33c0261dd57bc0fed163cdff1fde14a1d5bf9176"
+    }
+  },
+  "planned_requests": 10
+}

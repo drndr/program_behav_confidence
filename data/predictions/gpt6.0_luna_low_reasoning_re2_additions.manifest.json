@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-10-29T17:28:45.983083+00:00",
+  "configuration": {
+    "provider": "openrouter",
+    "model": "openai/gpt-6-luna",
+    "parameters": {
+      "max_tokens": 16384,
+      "provider": {
+        "require_parameters": true,
+        "only": [
+          "openai"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "low"
+      }
+    },
+    "timeout": 120.0,
+    "repetitions": 1,
+    "limit_per_dataset": null,
+    "prompt_files": {
+      "re2_prompts.jsonl": "97415467eda622d688252df50154895ec76db2a56f76ccc201665c7a6a42c357"
+    }
+  },
+  "planned_requests": 10
+}

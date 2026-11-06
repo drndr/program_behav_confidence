@@ -3,8 +3,8 @@
   "sha256": {
     "data/predictions/gpt6.0_luna_low_reasoning.jsonl": "449fd0104d381fc7b2282fa261b989836ba85121300aa93e4a6e63a4948c111d",
     "data/raw/cruxeval/cruxeval.csv": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
-    "data/raw/re2/re2_filtered.csv": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
-    "src/scoring.py": "24d99c0ea2330ebddeaaa916b98acd201442ecaf36c486b2c52f30def4bc9828",
+    "data/raw/re2/re2_filtered.csv": "aad27199129585d8e5b8e95e01c958572ca4fca092cb60837991aae324166801",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
     "scripts/evaluate_predictions.py": "9114d0436d20f94ee6b5c4172b1adb9d767ddbee1c19f06fe4c9a1e5d6b44834"
   },
   "summary": {
@@ -49,42 +49,42 @@
     },
     "re2/strict": {
       "total": 446,
-      "correct": 208,
-      "incorrect": 237,
+      "correct": 209,
+      "incorrect": 236,
       "unscored": 1,
       "with_logprobs": 0,
       "mean_prediction_logprob": null,
       "statuses": {
-        "scored": 337,
-        "invalid_prediction": 86,
+        "scored": 338,
+        "invalid_prediction": 85,
         "request_incomplete": 1,
         "invalid_response": 22
       }
     },
     "re2/relaxed": {
       "total": 446,
-      "correct": 227,
-      "incorrect": 218,
+      "correct": 228,
+      "incorrect": 217,
       "unscored": 1,
       "with_logprobs": 0,
       "mean_prediction_logprob": null,
       "statuses": {
-        "scored": 356,
-        "invalid_prediction": 67,
+        "scored": 357,
+        "invalid_prediction": 66,
         "request_incomplete": 1,
         "invalid_response": 22
       }
     },
     "re2/normalized": {
       "total": 446,
-      "correct": 253,
-      "incorrect": 192,
+      "correct": 257,
+      "incorrect": 188,
       "unscored": 1,
       "with_logprobs": 0,
       "mean_prediction_logprob": null,
       "statuses": {
-        "scored": 370,
-        "invalid_prediction": 53,
+        "scored": 371,
+        "invalid_prediction": 52,
         "request_incomplete": 1,
         "invalid_response": 22
       }

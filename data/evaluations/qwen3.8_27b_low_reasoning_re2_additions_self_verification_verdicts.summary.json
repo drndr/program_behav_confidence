@@ -1,0 +1,21 @@
+{
+  "verification_run": "data/verifications/qwen3.8_27b_low_reasoning_re2_additions_self_verification.jsonl",
+  "prediction_run": "data/predictions/qwen3.8_27b_low_reasoning_re2_additions.jsonl",
+  "summary": {
+    "re2": {
+      "total": 10,
+      "statuses": {
+        "judged": 10
+      },
+      "with_p_correct": 10,
+      "verdict_correct": 9,
+      "verdict_matches_normalized": 1
+    }
+  },
+  "sha256": {
+    "data/verifications/qwen3.8_27b_low_reasoning_re2_additions_self_verification.jsonl": "e40df7f42805915ac0b11e7cef38306879874e35b0298cd7aaf23ecd7a46db48",
+    "data/evaluations/qwen3.8_27b_low_reasoning_re2_additions_scores.jsonl": "7ec89e0ced30e2932f13b4c868b0e705683302971a0d0aa46ea4915e21df1da1",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}

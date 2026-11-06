@@ -1,0 +1,28 @@
+{
+  "created_at": "2026-10-29T17:41:52.875592+00:00",
+  "configuration": {
+    "provider": "openrouter",
+    "model": "deepseek/deepseek-v4.1-flash-1017",
+    "parameters": {
+      "max_tokens": 16384,
+      "provider": {
+        "require_parameters": true,
+        "only": [
+          "together"
+        ],
+        "allow_fallbacks": false
+      },
+      "logprobs": true,
+      "reasoning": {
+        "effort": "low"
+      }
+    },
+    "timeout": 600.0,
+    "repetitions": 1,
+    "limit_per_dataset": null,
+    "prompt_files": {
+      "re2_prompts.jsonl": "13ce0df059dbf08a3990a6049330d21d291b81f0cc8d0fffa368249ecf77be21"
+    }
+  },
+  "planned_requests": 7
+}

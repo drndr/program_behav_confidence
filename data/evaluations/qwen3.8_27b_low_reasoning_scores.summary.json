@@ -1,0 +1,93 @@
+{
+  "run": "data/predictions/qwen3.8_27b_low_reasoning.jsonl",
+  "sha256": {
+    "data/predictions/qwen3.8_27b_low_reasoning.jsonl": "53445e9c480c0893cd31cf0dea99c8eb1422126ca0413e6db412637d51f32b0a",
+    "data/raw/cruxeval/cruxeval.csv": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
+    "data/raw/re2/re2_filtered.csv": "aad27199129585d8e5b8e95e01c958572ca4fca092cb60837991aae324166801",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
+    "scripts/evaluate_predictions.py": "9114d0436d20f94ee6b5c4172b1adb9d767ddbee1c19f06fe4c9a1e5d6b44834"
+  },
+  "summary": {
+    "cruxeval/strict": {
+      "total": 800,
+      "correct": 750,
+      "incorrect": 49,
+      "unscored": 1,
+      "with_logprobs": 799,
+      "mean_prediction_logprob": -0.006288872283117786,
+      "statuses": {
+        "scored": 785,
+        "invalid_prediction": 14,
+        "request_incomplete": 1
+      }
+    },
+    "cruxeval/relaxed": {
+      "total": 800,
+      "correct": 760,
+      "incorrect": 39,
+      "unscored": 1,
+      "with_logprobs": 799,
+      "mean_prediction_logprob": -0.006288872283117786,
+      "statuses": {
+        "scored": 795,
+        "request_incomplete": 1,
+        "invalid_prediction": 4
+      }
+    },
+    "cruxeval/normalized": {
+      "total": 800,
+      "correct": 760,
+      "incorrect": 39,
+      "unscored": 1,
+      "with_logprobs": 799,
+      "mean_prediction_logprob": -0.006288872283117786,
+      "statuses": {
+        "scored": 795,
+        "request_incomplete": 1,
+        "invalid_prediction": 4
+      }
+    },
+    "re2/strict": {
+      "total": 446,
+      "correct": 184,
+      "incorrect": 239,
+      "unscored": 23,
+      "with_logprobs": 422,
+      "mean_prediction_logprob": -0.025816531369519623,
+      "statuses": {
+        "scored": 261,
+        "invalid_prediction": 161,
+        "request_incomplete": 23,
+        "invalid_response": 1
+      }
+    },
+    "re2/relaxed": {
+      "total": 446,
+      "correct": 220,
+      "incorrect": 203,
+      "unscored": 23,
+      "with_logprobs": 422,
+      "mean_prediction_logprob": -0.025816531369519623,
+      "statuses": {
+        "scored": 297,
+        "invalid_prediction": 125,
+        "request_incomplete": 23,
+        "invalid_response": 1
+      }
+    },
+    "re2/normalized": {
+      "total": 446,
+      "correct": 253,
+      "incorrect": 170,
+      "unscored": 23,
+      "with_logprobs": 422,
+      "mean_prediction_logprob": -0.025816531369519623,
+      "statuses": {
+        "scored": 316,
+        "request_incomplete": 23,
+        "invalid_prediction": 106,
+        "invalid_response": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "verification_run": "data/verifications/claude_haiku_5.5_low_reasoning_self_verification.jsonl",
+  "prediction_run": "data/predictions/claude_haiku_5.5_low_reasoning.jsonl",
+  "summary": {
+    "cruxeval": {
+      "total": 798,
+      "statuses": {
+        "judged": 798
+      },
+      "with_p_correct": 0,
+      "verdict_correct": 786,
+      "verdict_matches_normalized": 790
+    },
+    "re2": {
+      "total": 445,
+      "statuses": {
+        "judged": 445
+      },
+      "with_p_correct": 0,
+      "verdict_correct": 366,
+      "verdict_matches_normalized": 311
+    }
+  },
+  "sha256": {
+    "data/verifications/claude_haiku_5.5_low_reasoning_self_verification.jsonl": "f03333936337399c0e686ca34ed462ad8a55a5d8008d8d77389f07772b425fbe",
+    "data/evaluations/claude_haiku_5.5_low_reasoning_scores.jsonl": "7e44c985aeb38f3dbc19e07f8dec31be09bbc4381efc5e1189b7d1569454c63a",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}

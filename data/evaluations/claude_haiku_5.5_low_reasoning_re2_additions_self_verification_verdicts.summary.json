@@ -1,0 +1,21 @@
+{
+  "verification_run": "data/verifications/claude_haiku_5.5_low_reasoning_re2_additions_self_verification.jsonl",
+  "prediction_run": "data/predictions/claude_haiku_5.5_low_reasoning_re2_additions.jsonl",
+  "summary": {
+    "re2": {
+      "total": 10,
+      "statuses": {
+        "judged": 10
+      },
+      "with_p_correct": 0,
+      "verdict_correct": 6,
+      "verdict_matches_normalized": 4
+    }
+  },
+  "sha256": {
+    "data/verifications/claude_haiku_5.5_low_reasoning_re2_additions_self_verification.jsonl": "eda344a07bf64f24b6f6374ed30bc1bfc9f8c164311cf9b3a69ac826ad3a20c8",
+    "data/evaluations/claude_haiku_5.5_low_reasoning_re2_additions_scores.jsonl": "2fc993c11d948ee849a2b104afbd91ea2bd5cf521fec3b1ece28c493af9bbf2d",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}

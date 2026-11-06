@@ -1,0 +1,31 @@
+{
+  "verification_run": "data/verifications/qwen3.8_27b_low_reasoning_self_verification.jsonl",
+  "prediction_run": "data/predictions/qwen3.8_27b_low_reasoning.jsonl",
+  "summary": {
+    "cruxeval": {
+      "total": 799,
+      "statuses": {
+        "judged": 799
+      },
+      "with_p_correct": 799,
+      "verdict_correct": 776,
+      "verdict_matches_normalized": 777
+    },
+    "re2": {
+      "total": 422,
+      "statuses": {
+        "judged": 420,
+        "request_incomplete": 2
+      },
+      "with_p_correct": 420,
+      "verdict_correct": 398,
+      "verdict_matches_normalized": 267
+    }
+  },
+  "sha256": {
+    "data/verifications/qwen3.8_27b_low_reasoning_self_verification.jsonl": "ee467f49a6eaa267ab5bfdb6fa016c237dfb7e822e60312192e058074b8f679d",
+    "data/evaluations/qwen3.8_27b_low_reasoning_scores.jsonl": "393b0a0f8dd741bda9a162c6c1769da8cf0bbd7530784f7427a474670b3a560f",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}

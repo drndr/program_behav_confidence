@@ -1,0 +1,31 @@
+{
+  "verification_run": "data/verifications/deepseek_v4.1_flash_1017_low_reasoning_self_verification.jsonl",
+  "prediction_run": "data/predictions/deepseek_v4.1_flash_1017_low_reasoning.jsonl",
+  "summary": {
+    "cruxeval": {
+      "total": 800,
+      "statuses": {
+        "judged": 800
+      },
+      "with_p_correct": 800,
+      "verdict_correct": 799,
+      "verdict_matches_normalized": 800
+    },
+    "re2": {
+      "total": 386,
+      "statuses": {
+        "judged": 385,
+        "request_incomplete": 1
+      },
+      "with_p_correct": 385,
+      "verdict_correct": 358,
+      "verdict_matches_normalized": 282
+    }
+  },
+  "sha256": {
+    "data/verifications/deepseek_v4.1_flash_1017_low_reasoning_self_verification.jsonl": "4c04aa44324965f7a1609aff19f1090e96d66b6bc003cdd7b825503d1af04ae9",
+    "data/evaluations/deepseek_v4.1_flash_1017_low_reasoning_scores.jsonl": "368ea7af6ef55570907915e6e3fbcd431baaa50a36102ce1c8001b82f471b5c1",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}

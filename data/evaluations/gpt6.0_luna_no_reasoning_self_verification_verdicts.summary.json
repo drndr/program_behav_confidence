@@ -18,13 +18,13 @@
       },
       "with_p_correct": 443,
       "verdict_correct": 283,
-      "verdict_matches_normalized": 318
+      "verdict_matches_normalized": 321
     }
   },
   "sha256": {
     "data/verifications/gpt6.0_luna_no_reasoning_self_verification.jsonl": "1cb153598f540689d3298fdd2dbf1daebc5ee0cb899e9cb2a02f2d45c41689e5",
-    "data/evaluations/gpt6.0_luna_no_reasoning_scores.jsonl": "736ebd2437c54830e974df3a5af2d8b646d95232ae3c88306d6ba5c19e97589e",
-    "src/scoring.py": "24d99c0ea2330ebddeaaa916b98acd201442ecaf36c486b2c52f30def4bc9828",
+    "data/evaluations/gpt6.0_luna_no_reasoning_scores.jsonl": "a1defb289c43d9b4c764246fda130deaa973ca8879551766396237594521ad89",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
     "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
   }
 }

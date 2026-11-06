@@ -1,0 +1,51 @@
+{
+  "run": "data/predictions/gpt6.0_luna_low_reasoning_re2_additions.jsonl",
+  "sha256": {
+    "data/predictions/gpt6.0_luna_low_reasoning_re2_additions.jsonl": "9ada053e0a833dd419d6609f4874051557b3cedda27c19b9d5b8b645018cf67e",
+    "data/raw/cruxeval/cruxeval.csv": "2111770657fa8c2110456dc50a119759b129cf061fd119f893834a67ac16f9de",
+    "data/raw/re2/re2_filtered.csv": "aad27199129585d8e5b8e95e01c958572ca4fca092cb60837991aae324166801",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
+    "scripts/evaluate_predictions.py": "9114d0436d20f94ee6b5c4172b1adb9d767ddbee1c19f06fe4c9a1e5d6b44834"
+  },
+  "summary": {
+    "re2/strict": {
+      "total": 10,
+      "correct": 0,
+      "incorrect": 10,
+      "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
+      "statuses": {
+        "scored": 7,
+        "invalid_response": 2,
+        "invalid_prediction": 1
+      }
+    },
+    "re2/relaxed": {
+      "total": 10,
+      "correct": 0,
+      "incorrect": 10,
+      "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
+      "statuses": {
+        "scored": 7,
+        "invalid_response": 2,
+        "invalid_prediction": 1
+      }
+    },
+    "re2/normalized": {
+      "total": 10,
+      "correct": 0,
+      "incorrect": 10,
+      "unscored": 0,
+      "with_logprobs": 0,
+      "mean_prediction_logprob": null,
+      "statuses": {
+        "scored": 7,
+        "invalid_response": 2,
+        "invalid_prediction": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "dataset": "re2",
+  "prompt_kind": "verification",
+  "count": 445,
+  "wording_final": true,
+  "template_sha256": "22fe84b6c2c256a58e049f621b014633f991e8eeed44cf2964bae158badd389e",
+  "prediction_run": {
+    "path": "data/predictions/claude_haiku_5.5_low_reasoning.jsonl",
+    "sha256": "1b836cffe91e532ebc3efe3f97b6ee2803bcd5d72dd4010e92f6720170dbf840",
+    "model": "anthropic/claude-haiku-5.5",
+    "parameters": {
+      "max_tokens": 16384,
+      "provider": {
+        "require_parameters": true,
+        "only": [
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "low"
+      }
+    }
+  },
+  "skipped": {
+    "no_prediction_tag": 2,
+    "request_incomplete": 1
+  },
+  "source_path": "data/raw/re2/re2_filtered.csv",
+  "source_sha256": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
+  "generated_at": "2026-10-25T20:50:30.337205+00:00"
+}

@@ -1,0 +1,21 @@
+{
+  "verification_run": "data/verifications/gpt6.0_luna_no_reasoning_re2_additions_self_verification.jsonl",
+  "prediction_run": "data/predictions/gpt6.0_luna_no_reasoning_re2_additions.jsonl",
+  "summary": {
+    "re2": {
+      "total": 10,
+      "statuses": {
+        "judged": 10
+      },
+      "with_p_correct": 10,
+      "verdict_correct": 2,
+      "verdict_matches_normalized": 6
+    }
+  },
+  "sha256": {
+    "data/verifications/gpt6.0_luna_no_reasoning_re2_additions_self_verification.jsonl": "6f71336deb63e60b833b52db2e12d20e5b5b371c67a48890edfc6c02eb06e3a0",
+    "data/evaluations/gpt6.0_luna_no_reasoning_re2_additions_scores.jsonl": "b62f09b8589002565a72f68fef1836b8de3c3f67a14707730f7d0d8de1eba61e",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}

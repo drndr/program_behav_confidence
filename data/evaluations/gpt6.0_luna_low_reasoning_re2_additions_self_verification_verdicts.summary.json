@@ -1,0 +1,21 @@
+{
+  "verification_run": "data/verifications/gpt6.0_luna_low_reasoning_re2_additions_self_verification.jsonl",
+  "prediction_run": "data/predictions/gpt6.0_luna_low_reasoning_re2_additions.jsonl",
+  "summary": {
+    "re2": {
+      "total": 8,
+      "statuses": {
+        "judged": 8
+      },
+      "with_p_correct": 0,
+      "verdict_correct": 8,
+      "verdict_matches_normalized": 0
+    }
+  },
+  "sha256": {
+    "data/verifications/gpt6.0_luna_low_reasoning_re2_additions_self_verification.jsonl": "ba7db625a9d950bc42148d612ad23b3f9ff8f049eb8cc035a8b3abb86cd3f803",
+    "data/evaluations/gpt6.0_luna_low_reasoning_re2_additions_scores.jsonl": "7ecadef213530a3f8467f59a2b58d674d61d4fd8d0dae47740dab9dad6c92ed6",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}

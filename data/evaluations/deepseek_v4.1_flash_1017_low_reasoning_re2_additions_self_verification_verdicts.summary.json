@@ -1,0 +1,21 @@
+{
+  "verification_run": "data/verifications/deepseek_v4.1_flash_1017_low_reasoning_re2_additions_self_verification.jsonl",
+  "prediction_run": "data/predictions/deepseek_v4.1_flash_1017_low_reasoning_re2_additions.jsonl",
+  "summary": {
+    "re2": {
+      "total": 7,
+      "statuses": {
+        "judged": 7
+      },
+      "with_p_correct": 7,
+      "verdict_correct": 6,
+      "verdict_matches_normalized": 1
+    }
+  },
+  "sha256": {
+    "data/verifications/deepseek_v4.1_flash_1017_low_reasoning_re2_additions_self_verification.jsonl": "2bb50d48e2ca31ab115ceef4351dfc2f8591eda34630ca6ccec01d93b25401ea",
+    "data/evaluations/deepseek_v4.1_flash_1017_low_reasoning_re2_additions_scores.jsonl": "d59a60696aed0699f664b77d761588fa997b1e58918c7dfda81eae694f3608e1",
+    "src/scoring.py": "674080efc63ede034d934f1018a23d8406fa857ec89e562037683edbafbb3246",
+    "scripts/evaluate_verifications.py": "d7dd1df6d3a300199ad183ab24d6a90ca41f43465224a888e979c15e9b0b274c"
+  }
+}

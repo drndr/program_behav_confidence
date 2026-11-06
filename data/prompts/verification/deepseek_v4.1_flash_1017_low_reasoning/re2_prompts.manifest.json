@@ -1,0 +1,32 @@
+{
+  "dataset": "re2",
+  "prompt_kind": "verification",
+  "count": 386,
+  "wording_final": true,
+  "template_sha256": "22fe84b6c2c256a58e049f621b014633f991e8eeed44cf2964bae158badd389e",
+  "prediction_run": {
+    "path": "data/predictions/deepseek_v4.1_flash_1017_low_reasoning.jsonl",
+    "sha256": "3c638b318808b4ecae7fa98acbfa4fa6f4cc0c622b7df52b174464d671089217",
+    "model": "deepseek/deepseek-v4.1-flash-1017",
+    "parameters": {
+      "max_tokens": 16384,
+      "provider": {
+        "require_parameters": true,
+        "only": [
+          "together"
+        ],
+        "allow_fallbacks": false
+      },
+      "logprobs": true,
+      "reasoning": {
+        "effort": "low"
+      }
+    }
+  },
+  "skipped": {
+    "request_incomplete": 60
+  },
+  "source_path": "data/raw/re2/re2_filtered.csv",
+  "source_sha256": "4698328cb3a8a9da2cbf5af05e74d9f5dae3500823fedb95c23bb1887dcee519",
+  "generated_at": "2026-10-19T21:58:09.412773+00:00"
+}
