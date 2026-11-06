@@ -1,25 +1,127 @@
-model,reasoning,dataset,mode,items,correct,accuracy,unscored,format_failures,with_logprob
-GPT-6 Luna,none,cruxeval,strict,800,563,0.70375,0,5,795
-GPT-6 Luna,none,cruxeval,relaxed,800,563,0.70375,0,5,795
-GPT-6 Luna,none,cruxeval,normalized,800,563,0.70375,0,5,795
-GPT-6 Luna,none,re2,strict,446,162,0.3632286995515695,0,3,443
-GPT-6 Luna,none,re2,relaxed,446,187,0.4192825112107623,0,3,443
-GPT-6 Luna,none,re2,normalized,446,218,0.48878923766816146,0,3,443
-GPT-6 Luna,low,cruxeval,strict,800,773,0.96625,0,3,0
-GPT-6 Luna,low,cruxeval,relaxed,800,773,0.96625,0,3,0
-GPT-6 Luna,low,cruxeval,normalized,800,773,0.96625,0,3,0
-GPT-6 Luna,low,re2,strict,446,208,0.4663677130044843,1,22,0
-GPT-6 Luna,low,re2,relaxed,446,227,0.5089686098654709,1,22,0
-GPT-6 Luna,low,re2,normalized,446,253,0.5672645739910314,1,22,0
-GPT-6 Luna,medium,cruxeval,strict,800,776,0.97,0,5,0
-GPT-6 Luna,medium,cruxeval,relaxed,800,776,0.97,0,5,0
-GPT-6 Luna,medium,cruxeval,normalized,800,776,0.97,0,5,0
-GPT-6 Luna,medium,re2,strict,446,203,0.4551569506726457,0,35,0
-GPT-6 Luna,medium,re2,relaxed,446,222,0.4977578475336323,0,35,0
-GPT-6 Luna,medium,re2,normalized,446,251,0.5627802690582959,0,35,0
-GPT-6 Luna,high,cruxeval,strict,800,775,0.96875,0,0,0
-GPT-6 Luna,high,cruxeval,relaxed,800,775,0.96875,0,0,0
-GPT-6 Luna,high,cruxeval,normalized,800,775,0.96875,0,0,0
-GPT-6 Luna,high,re2,strict,446,211,0.4730941704035874,1,31,0
-GPT-6 Luna,high,re2,relaxed,446,228,0.5112107623318386,1,31,0
-GPT-6 Luna,high,re2,normalized,446,260,0.5829596412556054,1,31,0
+model,reasoning,group,mode,items,correct,accuracy,unscored,format_failures,with_logprob
+GPT-6 Luna,none,CRUXEval,strict,800,563,0.70375,0,5,795
+GPT-6 Luna,none,CRUXEval,relaxed,800,563,0.70375,0,5,795
+GPT-6 Luna,none,CRUXEval,normalized,800,563,0.70375,0,5,795
+GPT-6 Luna,none,RE2,strict,456,165,0.3618421052631579,0,3,453
+GPT-6 Luna,none,RE2,relaxed,456,190,0.4166666666666667,0,3,453
+GPT-6 Luna,none,RE2,normalized,456,223,0.48903508771929827,0,3,453
+GPT-6 Luna,none,RE2 exercises,strict,120,87,0.725,0,1,119
+GPT-6 Luna,none,RE2 exercises,relaxed,120,89,0.7416666666666667,0,1,119
+GPT-6 Luna,none,RE2 exercises,normalized,120,99,0.825,0,1,119
+GPT-6 Luna,none,RE2 library code,strict,336,78,0.23214285714285715,0,2,334
+GPT-6 Luna,none,RE2 library code,relaxed,336,101,0.3005952380952381,0,2,334
+GPT-6 Luna,none,RE2 library code,normalized,336,124,0.36904761904761907,0,2,334
+GPT-6 Luna,none,RE2 solvable,strict,332,162,0.4879518072289157,0,2,330
+GPT-6 Luna,none,RE2 solvable,relaxed,332,187,0.5632530120481928,0,2,330
+GPT-6 Luna,none,RE2 solvable,normalized,332,219,0.6596385542168675,0,2,330
+GPT-6 Luna,none,RE2 library code solvable,strict,215,77,0.3581395348837209,0,1,214
+GPT-6 Luna,none,RE2 library code solvable,relaxed,215,100,0.46511627906976744,0,1,214
+GPT-6 Luna,none,RE2 library code solvable,normalized,215,122,0.5674418604651162,0,1,214
+GPT-6 Luna,low,CRUXEval,strict,800,773,0.96625,0,3,0
+GPT-6 Luna,low,CRUXEval,relaxed,800,773,0.96625,0,3,0
+GPT-6 Luna,low,CRUXEval,normalized,800,773,0.96625,0,3,0
+GPT-6 Luna,low,RE2,strict,456,209,0.4583333333333333,1,24,0
+GPT-6 Luna,low,RE2,relaxed,456,228,0.5,1,24,0
+GPT-6 Luna,low,RE2,normalized,456,257,0.5635964912280702,1,24,0
+GPT-6 Luna,low,RE2 exercises,strict,120,105,0.875,0,1,0
+GPT-6 Luna,low,RE2 exercises,relaxed,120,107,0.8916666666666667,0,1,0
+GPT-6 Luna,low,RE2 exercises,normalized,120,113,0.9416666666666667,0,1,0
+GPT-6 Luna,low,RE2 library code,strict,336,104,0.30952380952380953,1,23,0
+GPT-6 Luna,low,RE2 library code,relaxed,336,121,0.3601190476190476,1,23,0
+GPT-6 Luna,low,RE2 library code,normalized,336,144,0.42857142857142855,1,23,0
+GPT-6 Luna,low,RE2 solvable,strict,332,209,0.6295180722891566,1,12,0
+GPT-6 Luna,low,RE2 solvable,relaxed,332,228,0.6867469879518072,1,12,0
+GPT-6 Luna,low,RE2 solvable,normalized,332,257,0.7740963855421686,1,12,0
+GPT-6 Luna,low,RE2 library code solvable,strict,215,104,0.48372093023255813,1,12,0
+GPT-6 Luna,low,RE2 library code solvable,relaxed,215,121,0.5627906976744186,1,12,0
+GPT-6 Luna,low,RE2 library code solvable,normalized,215,144,0.6697674418604651,1,12,0
+GPT-6 Luna,medium,CRUXEval,strict,800,776,0.97,0,5,0
+GPT-6 Luna,medium,CRUXEval,relaxed,800,776,0.97,0,5,0
+GPT-6 Luna,medium,CRUXEval,normalized,800,776,0.97,0,5,0
+GPT-6 Luna,medium,RE2,strict,456,204,0.4473684210526316,0,36,0
+GPT-6 Luna,medium,RE2,relaxed,456,223,0.48903508771929827,0,36,0
+GPT-6 Luna,medium,RE2,normalized,456,255,0.5592105263157895,0,36,0
+GPT-6 Luna,medium,RE2 exercises,strict,120,97,0.8083333333333333,0,4,0
+GPT-6 Luna,medium,RE2 exercises,relaxed,120,99,0.825,0,4,0
+GPT-6 Luna,medium,RE2 exercises,normalized,120,108,0.9,0,4,0
+GPT-6 Luna,medium,RE2 library code,strict,336,107,0.31845238095238093,0,32,0
+GPT-6 Luna,medium,RE2 library code,relaxed,336,124,0.36904761904761907,0,32,0
+GPT-6 Luna,medium,RE2 library code,normalized,336,147,0.4375,0,32,0
+GPT-6 Luna,medium,RE2 solvable,strict,332,204,0.6144578313253012,0,16,0
+GPT-6 Luna,medium,RE2 solvable,relaxed,332,223,0.6716867469879518,0,16,0
+GPT-6 Luna,medium,RE2 solvable,normalized,332,255,0.7680722891566265,0,16,0
+GPT-6 Luna,medium,RE2 library code solvable,strict,215,107,0.49767441860465117,0,13,0
+GPT-6 Luna,medium,RE2 library code solvable,relaxed,215,124,0.5767441860465117,0,13,0
+GPT-6 Luna,medium,RE2 library code solvable,normalized,215,147,0.6837209302325581,0,13,0
+GPT-6 Luna,high,CRUXEval,strict,800,775,0.96875,0,0,0
+GPT-6 Luna,high,CRUXEval,relaxed,800,775,0.96875,0,0,0
+GPT-6 Luna,high,CRUXEval,normalized,800,775,0.96875,0,0,0
+GPT-6 Luna,high,RE2,strict,456,212,0.4649122807017544,1,32,0
+GPT-6 Luna,high,RE2,relaxed,456,229,0.5021929824561403,1,32,0
+GPT-6 Luna,high,RE2,normalized,456,265,0.581140350877193,1,32,0
+GPT-6 Luna,high,RE2 exercises,strict,120,96,0.8,0,1,0
+GPT-6 Luna,high,RE2 exercises,relaxed,120,98,0.8166666666666667,0,1,0
+GPT-6 Luna,high,RE2 exercises,normalized,120,111,0.925,0,1,0
+GPT-6 Luna,high,RE2 library code,strict,336,116,0.34523809523809523,1,31,0
+GPT-6 Luna,high,RE2 library code,relaxed,336,131,0.3898809523809524,1,31,0
+GPT-6 Luna,high,RE2 library code,normalized,336,154,0.4583333333333333,1,31,0
+GPT-6 Luna,high,RE2 solvable,strict,332,212,0.6385542168674698,1,11,0
+GPT-6 Luna,high,RE2 solvable,relaxed,332,229,0.6897590361445783,1,11,0
+GPT-6 Luna,high,RE2 solvable,normalized,332,265,0.7981927710843374,1,11,0
+GPT-6 Luna,high,RE2 library code solvable,strict,215,116,0.5395348837209303,1,10,0
+GPT-6 Luna,high,RE2 library code solvable,relaxed,215,131,0.6093023255813953,1,10,0
+GPT-6 Luna,high,RE2 library code solvable,normalized,215,154,0.7162790697674418,1,10,0
+DeepSeek V4.1 Flash,low,CRUXEval,strict,800,799,0.99875,0,0,800
+DeepSeek V4.1 Flash,low,CRUXEval,relaxed,800,799,0.99875,0,0,800
+DeepSeek V4.1 Flash,low,CRUXEval,normalized,800,799,0.99875,0,0,800
+DeepSeek V4.1 Flash,low,RE2,strict,456,222,0.4868421052631579,63,0,393
+DeepSeek V4.1 Flash,low,RE2,relaxed,456,239,0.5241228070175439,63,0,393
+DeepSeek V4.1 Flash,low,RE2,normalized,456,271,0.5942982456140351,63,0,393
+DeepSeek V4.1 Flash,low,RE2 exercises,strict,120,102,0.85,2,0,118
+DeepSeek V4.1 Flash,low,RE2 exercises,relaxed,120,106,0.8833333333333333,2,0,118
+DeepSeek V4.1 Flash,low,RE2 exercises,normalized,120,113,0.9416666666666667,2,0,118
+DeepSeek V4.1 Flash,low,RE2 library code,strict,336,120,0.35714285714285715,61,0,275
+DeepSeek V4.1 Flash,low,RE2 library code,relaxed,336,133,0.3958333333333333,61,0,275
+DeepSeek V4.1 Flash,low,RE2 library code,normalized,336,158,0.47023809523809523,61,0,275
+DeepSeek V4.1 Flash,low,RE2 solvable,strict,332,222,0.6686746987951807,28,0,304
+DeepSeek V4.1 Flash,low,RE2 solvable,relaxed,332,239,0.7198795180722891,28,0,304
+DeepSeek V4.1 Flash,low,RE2 solvable,normalized,332,271,0.8162650602409639,28,0,304
+DeepSeek V4.1 Flash,low,RE2 library code solvable,strict,215,120,0.5581395348837209,26,0,189
+DeepSeek V4.1 Flash,low,RE2 library code solvable,relaxed,215,133,0.6186046511627907,26,0,189
+DeepSeek V4.1 Flash,low,RE2 library code solvable,normalized,215,158,0.7348837209302326,26,0,189
+Qwen 3.8 27B,low,CRUXEval,strict,800,750,0.9375,1,0,799
+Qwen 3.8 27B,low,CRUXEval,relaxed,800,760,0.95,1,0,799
+Qwen 3.8 27B,low,CRUXEval,normalized,800,760,0.95,1,0,799
+Qwen 3.8 27B,low,RE2,strict,456,184,0.40350877192982454,23,1,432
+Qwen 3.8 27B,low,RE2,relaxed,456,220,0.4824561403508772,23,1,432
+Qwen 3.8 27B,low,RE2,normalized,456,253,0.5548245614035088,23,1,432
+Qwen 3.8 27B,low,RE2 exercises,strict,120,100,0.8333333333333334,2,0,118
+Qwen 3.8 27B,low,RE2 exercises,relaxed,120,103,0.8583333333333333,2,0,118
+Qwen 3.8 27B,low,RE2 exercises,normalized,120,113,0.9416666666666667,2,0,118
+Qwen 3.8 27B,low,RE2 library code,strict,336,84,0.25,21,1,314
+Qwen 3.8 27B,low,RE2 library code,relaxed,336,117,0.3482142857142857,21,1,314
+Qwen 3.8 27B,low,RE2 library code,normalized,336,140,0.4166666666666667,21,1,314
+Qwen 3.8 27B,low,RE2 solvable,strict,332,184,0.5542168674698795,18,1,313
+Qwen 3.8 27B,low,RE2 solvable,relaxed,332,220,0.6626506024096386,18,1,313
+Qwen 3.8 27B,low,RE2 solvable,normalized,332,253,0.7620481927710844,18,1,313
+Qwen 3.8 27B,low,RE2 library code solvable,strict,215,84,0.39069767441860465,16,1,198
+Qwen 3.8 27B,low,RE2 library code solvable,relaxed,215,117,0.5441860465116279,16,1,198
+Qwen 3.8 27B,low,RE2 library code solvable,normalized,215,140,0.6511627906976745,16,1,198
+Claude Haiku 5.5,low,CRUXEval,strict,800,784,0.98,0,2,0
+Claude Haiku 5.5,low,CRUXEval,relaxed,800,784,0.98,0,2,0
+Claude Haiku 5.5,low,CRUXEval,normalized,800,784,0.98,0,2,0
+Claude Haiku 5.5,low,RE2,strict,456,207,0.45394736842105265,1,0,0
+Claude Haiku 5.5,low,RE2,relaxed,456,227,0.49780701754385964,1,0,0
+Claude Haiku 5.5,low,RE2,normalized,456,248,0.543859649122807,1,0,0
+Claude Haiku 5.5,low,RE2 exercises,strict,120,106,0.8833333333333333,0,0,0
+Claude Haiku 5.5,low,RE2 exercises,relaxed,120,113,0.9416666666666667,0,0,0
+Claude Haiku 5.5,low,RE2 exercises,normalized,120,114,0.95,0,0,0
+Claude Haiku 5.5,low,RE2 library code,strict,336,101,0.3005952380952381,1,0,0
+Claude Haiku 5.5,low,RE2 library code,relaxed,336,114,0.3392857142857143,1,0,0
+Claude Haiku 5.5,low,RE2 library code,normalized,336,134,0.39880952380952384,1,0,0
+Claude Haiku 5.5,low,RE2 solvable,strict,332,207,0.6234939759036144,1,0,0
+Claude Haiku 5.5,low,RE2 solvable,relaxed,332,227,0.6837349397590361,1,0,0
+Claude Haiku 5.5,low,RE2 solvable,normalized,332,248,0.7469879518072289,1,0,0
+Claude Haiku 5.5,low,RE2 library code solvable,strict,215,101,0.4697674418604651,1,0,0
+Claude Haiku 5.5,low,RE2 library code solvable,relaxed,215,114,0.5302325581395348,1,0,0
+Claude Haiku 5.5,low,RE2 library code solvable,normalized,215,134,0.6232558139534884,1,0,0
