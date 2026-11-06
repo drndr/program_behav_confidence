@@ -27,3 +27,6 @@ __pycache__/
 *.egg-info/
 /build/
 /dist/
+
+# Local literature search notes.
+/literature/
