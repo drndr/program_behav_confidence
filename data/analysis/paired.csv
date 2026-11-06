@@ -1,0 +1,44 @@
+model,reasoning,comparison,signal,baseline,answers,wrong,difference,low,high,excludes_zero
+GPT-6 Luna,none,properties,complexity (baseline),code tokens (baseline),321,106,-0.058618012422360255,-0.1261032206792195,0.005799000840370517,False
+GPT-6 Luna,none,properties,Halstead difficulty (baseline),code tokens (baseline),321,106,-0.05020703933747417,-0.11820314526478817,0.022819879096623346,False
+GPT-6 Luna,none,properties,information flow (baseline),code tokens (baseline),321,106,-0.02083333333333337,-0.12214859728789872,0.07525656654943812,False
+GPT-6 Luna,none,signals,stated confidence,code tokens (baseline),330,111,0.17679425837320573,0.09218324444910796,0.2666124173036355,True
+GPT-6 Luna,none,signals,answer logprob,code tokens (baseline),330,111,0.24533492822966507,0.16117282537704367,0.3364223490614271,True
+GPT-6 Luna,low,properties,complexity (baseline),code tokens (baseline),320,69,-0.055244985202236085,-0.1255632530064375,0.019656916315092067,False
+GPT-6 Luna,low,properties,Halstead difficulty (baseline),code tokens (baseline),320,69,-0.025649457415323873,-0.10300590925019924,0.05831624430874668,False
+GPT-6 Luna,low,properties,information flow (baseline),code tokens (baseline),320,69,-0.03781650772772116,-0.1440857877539898,0.08376237845884227,False
+GPT-6 Luna,low,signals,reasoning tokens,code tokens (baseline),319,62,0.1618981158408932,0.03358584742106718,0.2767883006935944,True
+GPT-6 Luna,low,signals,stated confidence,code tokens (baseline),319,62,0.10833914863921845,-0.008884432022075244,0.22851825389147087,False
+GPT-6 Luna,low,signals,reasoning tokens,stated confidence,319,62,0.053558967201674745,-0.030919609448634252,0.13535441490288702,False
+GPT-6 Luna,medium,properties,complexity (baseline),code tokens (baseline),321,75,-0.02676399026763987,-0.0995907719472412,0.046439344819111085,False
+GPT-6 Luna,medium,properties,Halstead difficulty (baseline),code tokens (baseline),321,75,-0.0041058394160583545,-0.08470227330952271,0.07968876127806103,False
+GPT-6 Luna,medium,properties,information flow (baseline),code tokens (baseline),321,75,0.011861313868613221,-0.10052562544030251,0.12248492348766207,False
+GPT-6 Luna,medium,signals,reasoning tokens,code tokens (baseline),316,61,0.21748477248298093,0.09384759364152866,0.32507968586908337,True
+GPT-6 Luna,medium,signals,stated confidence,code tokens (baseline),316,61,0.1332855607309208,0.020009892334818247,0.2509396652836992,True
+GPT-6 Luna,medium,signals,reasoning tokens,stated confidence,316,61,0.08419921175206013,0.0006874630412741864,0.1700582528970651,True
+GPT-6 Luna,high,properties,complexity (baseline),code tokens (baseline),320,61,-0.04906380027739243,-0.12415554110797306,0.027768136149677623,False
+GPT-6 Luna,high,properties,Halstead difficulty (baseline),code tokens (baseline),320,61,-0.014909847434119272,-0.09411615411672683,0.06386831196429364,False
+GPT-6 Luna,high,properties,information flow (baseline),code tokens (baseline),320,61,-0.05357142857142849,-0.1798115476653112,0.062342385495932726,False
+GPT-6 Luna,high,signals,reasoning tokens,code tokens (baseline),320,55,0.24506885001860812,0.11233297886716448,0.36554687799905305,True
+GPT-6 Luna,high,signals,stated confidence,code tokens (baseline),320,55,0.16133234090063264,0.04722838235153153,0.28509102129675173,True
+GPT-6 Luna,high,signals,reasoning tokens,stated confidence,320,55,0.08373650911797548,-0.014061017966038572,0.17080917365101111,False
+DeepSeek V4.1 Flash,low,properties,complexity (baseline),code tokens (baseline),296,30,-0.04495912806539509,-0.16889254043066473,0.07167976529160737,False
+DeepSeek V4.1 Flash,low,properties,Halstead difficulty (baseline),code tokens (baseline),296,30,0.014645776566757474,-0.11635796706102018,0.12421148818745158,False
+DeepSeek V4.1 Flash,low,properties,information flow (baseline),code tokens (baseline),296,30,0.008514986376021771,-0.136156512973352,0.1366077202506886,False
+DeepSeek V4.1 Flash,low,signals,reasoning tokens,code tokens (baseline),304,33,0.2988609112709832,0.14408941475883164,0.430917728704437,True
+DeepSeek V4.1 Flash,low,signals,stated confidence,code tokens (baseline),304,33,0.2137290167865708,0.06292884333066236,0.3576719350326379,True
+DeepSeek V4.1 Flash,low,signals,answer logprob,code tokens (baseline),304,33,0.03597122302158273,-0.10987840241462746,0.18455987242239044,False
+DeepSeek V4.1 Flash,low,signals,reasoning tokens,stated confidence,304,33,0.08513189448441238,-0.015691805931071848,0.1929421699731158,False
+Qwen 3.8 27B,low,properties,complexity (baseline),code tokens (baseline),305,55,-0.03808553971486761,-0.10899088015670125,0.02732900823763341,False
+Qwen 3.8 27B,low,properties,Halstead difficulty (baseline),code tokens (baseline),305,55,-0.045010183299388995,-0.12149325272697428,0.03755399117900631,False
+Qwen 3.8 27B,low,properties,information flow (baseline),code tokens (baseline),305,55,-0.09735234215885952,-0.20860680521200206,0.014991321368075709,False
+Qwen 3.8 27B,low,signals,reasoning tokens,code tokens (baseline),311,58,0.1367602427921093,0.02304167205185199,0.2475273453670386,True
+Qwen 3.8 27B,low,signals,stated confidence,code tokens (baseline),311,58,0.1671092564491654,0.055705076085260576,0.28523157809054445,True
+Qwen 3.8 27B,low,signals,answer logprob,code tokens (baseline),311,58,0.1094461305007588,-0.02737701319921974,0.2379234015887351,False
+Qwen 3.8 27B,low,signals,reasoning tokens,stated confidence,311,58,-0.030349013657056112,-0.12581560763959457,0.05478787316348847,False
+Claude Haiku 5.5,low,properties,complexity (baseline),code tokens (baseline),320,76,-0.043082149474984455,-0.11061061336250748,0.023550817541011015,False
+Claude Haiku 5.5,low,properties,Halstead difficulty (baseline),code tokens (baseline),320,76,-0.04879555281037673,-0.12364503598301872,0.02268865337787534,False
+Claude Haiku 5.5,low,properties,information flow (baseline),code tokens (baseline),320,76,-0.047251389746757244,-0.14950277903705897,0.061215889610544506,False
+Claude Haiku 5.5,low,signals,reasoning tokens,code tokens (baseline),331,83,0.12116648411829145,0.0017572796644305228,0.23548937788515695,True
+Claude Haiku 5.5,low,signals,stated confidence,code tokens (baseline),331,83,0.24027929901423883,0.12621140558033755,0.35264638412556093,True
+Claude Haiku 5.5,low,signals,reasoning tokens,stated confidence,331,83,-0.11911281489594738,-0.20775406699885296,-0.029640388647670463,True
