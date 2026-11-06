@@ -10,9 +10,9 @@ from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from confidence import GROUPS, summarize
+from confidence import GROUPS, stated_correctness, summarize
 from datasets import DATASET_SOURCES, load_examples, re2_source
-from runs import CONDITIONS, condition_rows, item_table, load_run
+from runs import AUDIT, CONDITIONS, condition_rows, item_table, load_run
 
 PAGE = Path(__file__).resolve().parent / "index.html"
 EVALUATIONS = ROOT / "data/evaluations"
@@ -67,10 +67,24 @@ def reasoning_details(run):
     return details
 
 
+def audit():
+    """The RE2 audit (runs.AUDIT) by item id: whether the item is solvable as given, its category and note.
+
+    Read on every request, so edits to the audit show on reload.
+    """
+    path = ROOT / "data" / AUDIT
+    if not path.exists():
+        return {}
+    with path.open(encoding="utf-8", newline="") as stream:
+        return {row["id"]: {"solvable": row["solvable"] == "True", "category": row["category"], "note": row["note"]}
+                for row in csv.DictReader(stream)}
+
+
 def items(run):
     """One record per item: code, input, reference, response, reasoning, answer logprob,
-    reasoning tokens, and correct and status per scoring mode."""
+    reasoning tokens, correct and status per scoring mode, and the audit entry of RE2 items."""
     details = reasoning_details(run)
+    audited = audit()
     grouped = {}
     with (EVALUATIONS / f"{run}_scores.jsonl").open(encoding="utf-8") as stream:
         for line in stream:
@@ -83,6 +97,7 @@ def items(run):
                                 "reference": row["reference"], "response": row["prediction"],
                                 "logprob": row["prediction_mean_logprob"],
                                 "reasoning": None, "reasoning_tokens": None, **details.get(key, {}),
+                                "audit": audited.get(row["id"]) if row["dataset"] == "re2" else None,
                                 "correct": {}, "status": {}}
             grouped[key]["correct"][row["mode"]] = row["correct"]
             grouped[key]["status"][row["mode"]] = row["status"]
@@ -90,8 +105,9 @@ def items(run):
 
 
 def confidence_items(run):
-    """Every item of a prediction run with its confidence signals (runs.item_table), plus the
-    code, input, reference, response and verifier response for the detail pane."""
+    """Every item of a prediction run with its confidence signals (runs.item_table) and the stated
+    confidence as the probability that the answer is correct, plus the code, input, reference,
+    response and verifier response for the detail pane."""
     texts = {(i["dataset"], i["id"], i["repetition"]): i for i in items(run)}
     table = item_table(run, ROOT / "data")
     verification = table[0]["verification_run"] if table else None
@@ -101,7 +117,8 @@ def confidence_items(run):
     for row in table:
         key = (row["dataset"], row["id"], row["repetition"])
         records.append(row | {field: texts[key][field] for field in ("code", "input", "reference", "response")}
-                       | {"verifier_response": (responses.get(key) or {}).get("text")})
+                       | {"stated_correctness": stated_correctness(row),
+                          "verifier_response": (responses.get(key) or {}).get("text")})
     return records
 
 

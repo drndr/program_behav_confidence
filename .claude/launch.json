@@ -3,9 +3,15 @@
   "configurations": [
     {
       "name": "explorer",
-      "runtimeExecutable": "python",
+      "runtimeExecutable": ".venv/Scripts/python.exe",
       "runtimeArgs": ["explorer/serve.py", "8000"],
       "port": 8000
+    },
+    {
+      "name": "audit-review",
+      "runtimeExecutable": ".venv/Scripts/python.exe",
+      "runtimeArgs": ["-m", "http.server", "8010", "--bind", "127.0.0.1", "--directory", "data/audit/review"],
+      "port": 8010
     }
   ]
 }

@@ -83,12 +83,19 @@ const $ = id => document.getElementById(id);
 const MODES = ["strict", "relaxed", "normalized"];
 const MARK = {true: "✓", false: "✗", null: "–"};
 const MARK_CLASS = {true: "mark ok", false: "mark no", null: "mark na"};
+// The audit covers the RE2 items no condition with reasoning answered correctly (data/audit/re2_audit.csv).
+const AUDIT_LABELS = {input_lost: "input lost", reference_wrong: "reference misrecorded",
+                      environment: "environment-dependent"};
+const auditLabel = audit => audit.solvable ? "solvable, missed" : AUDIT_LABELS[audit.category] ?? audit.category;
 // Filters use normalized scoring. Truncated: the response ended before an answer (token limit).
 const FILTERS = {
   all: () => true,
   correct: item => item.correct.normalized === true,
   incorrect: item => item.correct.normalized === false,
   truncated: item => item.status.normalized === "request_incomplete",
+  "audit: all": item => item.audit != null,
+  ...Object.fromEntries(["input lost", "reference misrecorded", "environment-dependent", "solvable, missed"]
+    .map(label => [`audit: ${label}`, item => item.audit != null && auditLabel(item.audit) === label])),
 };
 const NUMBER = {label: "#", title: "Position in the run or dataset; stays with the item when filtering or sorting",
                 value: i => i.number, cls: "num"};
@@ -101,6 +108,8 @@ const RESULT_COLUMNS = [
   {label: "Logprob", title: "Mean log-probability of the answer tokens",
    value: i => i.logprob, show: v => v === null ? "" : v.toExponential(1), cls: "num"},
   {label: "Reasoning tokens", value: i => i.reasoning_tokens, show: v => v ?? "", cls: "num"},
+  {label: "Audit", title: "Why no condition with reasoning answered this RE2 item correctly (audit drafted with an LLM)",
+   value: i => i.audit ? auditLabel(i.audit) : null, show: v => v ?? ""},
 ];
 // Answers by correctness (normalized scoring) and, for verified runs, the verdict against it.
 // Verdict filters with no answers (runs without self-verification) are not offered.
@@ -127,7 +136,10 @@ const CONFIDENCE_COLUMNS = [
   {label: "Tokens", title: "Behavioural: all generated tokens, including visible reasoning",
    value: i => i.completion_tokens, show: v => v ?? "", cls: "num"},
   {label: "Self-verdict", title: "Explicit: the model's verdict on its own answer", value: i => i.verdict, show: v => v ?? ""},
-  {label: "Confidence", title: "Explicit: stated probability (0-100) that the answer is correct",
+  {label: "Confidence", title: "Explicit: stated probability (0-100) that the answer is correct; the judge states its " +
+   "confidence in its verdict, so this is that number after \"correct\" and 100 minus it after \"incorrect\"",
+   value: i => i.stated_correctness, show: v => v ?? "", cls: "num"},
+  {label: "As written", title: "The stated confidence as the judge wrote it: confidence in its own verdict",
    value: i => i.confidence, show: v => v ?? "", cls: "num"},
   {label: "P(correct)", title: "Explicit: probability the model gave the self-verdict word \"correct\"",
    value: i => i.p_correct, show: v => v === null ? "" : v.toFixed(3), cls: "num"},
@@ -246,7 +258,8 @@ function appendHighlighted(pre, text) {
 
 let results = [];
 const resultsTable = sortableTable($("results-head"), $("results-rows"), RESULT_COLUMNS, item =>
-  showDetail(`#${item.number}  ${item.dataset} / ${item.id}`, null,
+  showDetail(`#${item.number}  ${item.dataset} / ${item.id}`,
+             item.audit ? `audit: ${auditLabel(item.audit)} · ${item.audit.note}` : null,
              [["Code", item.code], ["Input", item.input], ["Reference", item.reference],
               ["Response", item.response ?? "(no response)", true], ["Reasoning", item.reasoning ?? "(none)"]]));
 
@@ -275,7 +288,8 @@ const summaries = {};
 const answerText = v => v === true ? "correct" : v === false ? "incorrect" : "unscored";
 const confidenceTable = sortableTable($("confidence-head"), $("confidence-rows"), CONFIDENCE_COLUMNS, item => {
   const facts = [`answer ${answerText(item.correct_normalized)}`, `self-verdict ${item.verdict ?? item.verification_status ?? "–"}`,
-                 `confidence ${item.confidence ?? "–"}`, `P(correct) ${item.p_correct === null ? "–" : item.p_correct.toFixed(3)}`,
+                 `confidence ${item.stated_correctness ?? "–"} (as written ${item.confidence ?? "–"})`,
+                 `P(correct) ${item.p_correct === null ? "–" : item.p_correct.toFixed(3)}`,
                  `logprob ${item.logprob === null ? "–" : item.logprob.toExponential(2)}`,
                  `reasoning tokens ${item.reasoning_tokens ?? "–"} (verifier ${item.verifier_reasoning_tokens ?? "–"})`,
                  `tokens ${item.completion_tokens ?? "–"}`, `${item.code_tokens} code tokens`];
