@@ -1,0 +1,38 @@
+{
+ "id": "matplotlib@@matplotlib_gridspec.py@@get_grid_positions_L145",
+ "source": "Projects",
+ "label": "environment",
+ "evidence": "rerun outcome",
+ "method": "library tests",
+ "observation": "Of 41 calls with the recorded input, 40 return the reference (test style: 0.1, 0.9) and 1 under default settings returns 0.11, 0.88.",
+ "re2_record": {
+  "inputs": "{\"self\": {\"left\": null, \"bottom\": null, \"right\": null, \"top\": null, \"wspace\": null, \"hspace\": null, \"figure\": \"<Figure size 640x480 with 0 Axes>\", \"_nrows\": 1, \"_ncols\": 1, \"_row_height_ratios\": [1], \"_col_width_ratios\": [1]}, \"args\": {\"fig\": \"<Figure size 640x480 with 0 Axes>\"}, \"kwargs\": {}}",
+  "return": "[\"array([0.1])\", \"array([0.9])\", \"array([0.125])\", \"array([0.9])\"]"
+ },
+ "runs": 2,
+ "matching_calls": 82,
+ "outputs": [
+  {
+   "count": 80,
+   "status": "returned",
+   "repr": "(array([0.1]), array([0.9]), array([0.125]), array([0.9]))",
+   "return": "[\"array([0.1])\", \"array([0.9])\", \"array([0.125])\", \"array([0.9])\"]",
+   "tests": [
+    "matplotlib/tests/test_figure.py::test_figure[png]",
+    "matplotlib/tests/test_figure.py::test_add_subplot_subclass",
+    "matplotlib/tests/test_figure.py::test_add_subplot_invalid"
+   ],
+   "raw_reprs": []
+  },
+  {
+   "count": 2,
+   "status": "returned",
+   "repr": "(array([0.11]), array([0.88]), array([0.125]), array([0.9]))",
+   "return": "[\"array([0.11])\", \"array([0.88])\", \"array([0.125])\", \"array([0.9])\"]",
+   "tests": [
+    "matplotlib/tests/test_figure.py::test_picking_does_not_stale"
+   ],
+   "raw_reprs": []
+  }
+ ]
+}

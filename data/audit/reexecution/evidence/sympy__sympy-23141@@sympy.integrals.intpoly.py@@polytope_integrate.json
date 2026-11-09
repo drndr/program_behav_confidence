@@ -1,0 +1,27 @@
+{
+ "id": "sympy__sympy-23141@@sympy.integrals.intpoly.py@@polytope_integrate",
+ "source": "SWE-bench",
+ "label": "input_lost",
+ "evidence": "verified omission",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "The call reproduces the reference (1/8); the polygon is recorded as {}.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"poly\": {}, \"expr\": \"x*y\"}, \"kwargs\": {\"clockwise\": true}}",
+  "return": "1/8"
+ },
+ "re2_records_matched": "3 of 3",
+ "runs": 1,
+ "matching_calls": 1,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "1/8",
+   "return_as_re2_records_it": "1/8",
+   "return_with_list_bug_fixed": "1/8",
+   "input_with_list_bug_fixed": "{\"self\": {}, \"args\": {\"poly\": {}, \"expr\": \"x*y\"}, \"kwargs\": {\"clockwise\": true}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}

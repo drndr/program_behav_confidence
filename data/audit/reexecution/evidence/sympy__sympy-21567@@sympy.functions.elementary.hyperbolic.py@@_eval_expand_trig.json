@@ -1,0 +1,37 @@
+{
+ "id": "sympy__sympy-21567@@sympy.functions.elementary.hyperbolic.py@@_eval_expand_trig",
+ "source": "SWE-bench",
+ "label": "input_lost",
+ "evidence": "rerun outcome",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "2 calls with the recorded input return coth(y) and coth(x).",
+ "re2_record": {
+  "inputs": "{\"self\": {\"nargs\": {\"_args_set\": [\"1\"]}}, \"args\": {}, \"kwargs\": {}}",
+  "return": "{\"nargs\": {\"_args_set\": [\"1\"]}}"
+ },
+ "re2_records_matched": "1 of 2",
+ "runs": 1,
+ "matching_calls": 2,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "coth(y)",
+   "return_as_re2_records_it": "{\"nargs\": {\"_args_set\": [\"1\"]}}",
+   "return_with_list_bug_fixed": "{\"nargs\": {\"_args_set\": [\"1\"]}}",
+   "input_with_list_bug_fixed": "{\"self\": {\"nargs\": {\"_args_set\": [\"1\"]}}, \"args\": {}, \"kwargs\": {}}",
+   "tests": [],
+   "raw_reprs": []
+  },
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "coth(x)",
+   "return_as_re2_records_it": "{\"nargs\": {\"_args_set\": [\"1\"]}}",
+   "return_with_list_bug_fixed": "{\"nargs\": {\"_args_set\": [\"1\"]}}",
+   "input_with_list_bug_fixed": "{\"self\": {\"nargs\": {\"_args_set\": [\"1\"]}}, \"args\": {}, \"kwargs\": {}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}

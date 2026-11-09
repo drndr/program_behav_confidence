@@ -1,0 +1,28 @@
+{
+ "id": "matplotlib@@matplotlib___init__.py@@_preprocess_data_L1432",
+ "source": "Projects",
+ "label": "environment",
+ "evidence": "rerun outcome",
+ "method": "library tests",
+ "observation": "The output is a function repr whose memory address changes in every run; otherwise it matches.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"func\": \"<function test_compiletime_checks.<locals>.func_kwargs at 0x71b98961aca0>\", \"replace_names\": [\"x\", \"y\"], \"label_namer\": null}, \"kwargs\": {}}",
+  "return": "<function test_compiletime_checks.<locals>.func_kwargs at 0x71b989c0c720>"
+ },
+ "runs": 2,
+ "matching_calls": 2,
+ "outputs": [
+  {
+   "count": 2,
+   "status": "returned",
+   "repr": "<function test_compiletime_checks.<locals>.func_kwargs at 0x0000025E7F38A980>",
+   "return": "<function test_compiletime_checks.<locals>.func_kwargs at 0x0000025E7F38A980>",
+   "tests": [
+    "matplotlib/tests/test_preprocess_data.py::test_compiletime_checks"
+   ],
+   "raw_reprs": [
+    "<function test_compiletime_checks.<locals>.func_kwargs at 0x00000218CAB368E0>"
+   ]
+  }
+ ]
+}

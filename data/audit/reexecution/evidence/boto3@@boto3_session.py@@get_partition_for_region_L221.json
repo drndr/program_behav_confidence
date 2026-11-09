@@ -1,0 +1,16 @@
+{
+ "id": "boto3@@boto3_session.py@@get_partition_for_region_L221",
+ "source": "Projects",
+ "label": "input_lost",
+ "evidence": "verified omission",
+ "method": "library tests",
+ "observation": "The test configures the mocked session to return 'baz'; the record shows only the mock's repr.",
+ "re2_record": {
+  "inputs": "{\"self\": {\"_session\": \"Session(region_name=<Mock name='mock.get_config_variable()' id='127141585996944'>)\", \"resource_factory\": \"\", \"_loader\": \"\"}, \"args\": {\"region_name\": \"foo-bar-1\"}, \"kwargs\": {}}",
+  "return": "baz"
+ },
+ "runs": 1,
+ "matching_calls": 0,
+ "outputs": [],
+ "nearest_calls": []
+}

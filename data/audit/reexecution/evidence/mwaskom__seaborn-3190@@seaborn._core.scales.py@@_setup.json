@@ -1,0 +1,29 @@
+{
+ "id": "mwaskom__seaborn-3190@@seaborn._core.scales.py@@_setup",
+ "source": "SWE-bench",
+ "label": "reference_wrong",
+ "evidence": "rerun outcome",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "Returns Continuous(values=None, norm=None, trans='log'); the reference is its attribute dict.",
+ "re2_record": {
+  "inputs": "{\"self\": {\"values\": null, \"norm\": null, \"trans\": \"log\", \"_tick_params\": null, \"_label_params\": {\"formatter\": null, \"like\": null, \"base\": null, \"unit\": null}, \"_legend\": null}, \"args\": {\"data\": {\"_is_copy\": null, \"_mgr\": {\"axes\": null, \"blocks\": [{}]}, \"_item_cache\": {}, \"_attrs\": {}, \"_flags\": {\"_allows_duplicate_labels\": true}, \"_name\": \"x\"}, \"prop\": {\"variable\": \"coordinate\"}}, \"kwargs\": {}}",
+  "return": "{\"values\": null, \"norm\": null, \"trans\": \"log\", \"_tick_params\": {\"locator\": null, \"at\": null, \"upto\": null, \"count\": null, \"every\": null, \"between\": null, \"minor\": null}, \"_label_params\": {\"formatter\": null, \"like\": null, \"base\": null, \"unit\": null}, \"_legend\": null, \"_matplotlib_scale\": {\"_transform\": {\"_parents\": {}, \"_invalid\": 1, \"_shorthand_name\": \"\", \"_forward\": {}, \"_inverse\": {}}}, \"_pipeline\": null, \"_spacer\": {}}"
+ },
+ "re2_records_matched": "8 of 8",
+ "runs": 1,
+ "matching_calls": 1,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "Continuous(values=None, norm=None, trans='log')",
+   "return_as_re2_records_it": "{\"values\": null, \"norm\": null, \"trans\": \"log\", \"_tick_params\": {\"locator\": null, \"at\": null, \"upto\": null, \"count\": null, \"every\": null, \"between\": null, \"minor\": null}, \"_label_params\": {\"formatter\": null, \"like\": null, \"base\": null, \"unit\": null}, \"_legend\": null, \"_matplotlib_scale\": {\"_transform\": {\"_parents\": {}, \"_invalid\": 1, \"_shorthand_name\": \"\", \"_forward\": {}, \"_inverse\": {}}}, \"_pipeline\": null, \"_spacer\": {}}",
+   "return_with_list_bug_fixed": "{\"values\": null, \"norm\": null, \"trans\": \"log\", \"_tick_params\": {\"locator\": null, \"at\": null, \"upto\": null, \"count\": null, \"every\": null, \"between\": null, \"minor\": null}, \"_label_params\": {\"formatter\": null, \"like\": null, \"base\": null, \"unit\": null}, \"_legend\": null, \"_matplotlib_scale\": {\"_transform\": {\"_parents\": {}, \"_invalid\": 1, \"_shorthand_name\": \"\", \"_forward\": {}, \"_inverse\": {}}}, \"_pipeline\": [{}, null, {}], \"_spacer\": {}}",
+   "input_with_list_bug_fixed": "{\"self\": {\"values\": null, \"norm\": null, \"trans\": \"log\", \"_tick_params\": null, \"_label_params\": {\"formatter\": null, \"like\": null, \"base\": null, \"unit\": null}, \"_legend\": null}, \"args\": {\"data\": {\"_is_copy\": null, \"_mgr\": {\"axes\": [{\"_range\": \"range(0, 3)\", \"_name\": null, \"_cache\": {}, \"_id\": \"<object object at 0x797e03198af0>\", \"_references\": null}], \"blocks\": [{}]}, \"_item_cache\": {}, \"_attrs\": {}, \"_flags\": {\"_allows_duplicate_labels\": true}, \"_name\": \"x\"}, \"prop\": {\"variable\": \"coordinate\"}}, \"kwargs\": {}}",
+   "tests": [
+    "tests/_core/test_scales.py::TestContinuous::test_log_tick_format_disabled"
+   ],
+   "raw_reprs": []
+  }
+ ]
+}

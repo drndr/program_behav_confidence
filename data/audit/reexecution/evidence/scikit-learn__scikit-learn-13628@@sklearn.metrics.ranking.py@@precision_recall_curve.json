@@ -1,0 +1,41 @@
+{
+ "id": "scikit-learn__scikit-learn-13628@@sklearn.metrics.ranking.py@@precision_recall_curve",
+ "source": "SWE-bench",
+ "label": "input_lost",
+ "evidence": "rerun outcome",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "2 calls recorded with y_true and probas_pred as null had different lists and return different outputs.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"y_true\": null, \"probas_pred\": null}, \"kwargs\": {\"pos_label\": 1, \"sample_weight\": null}}",
+  "return": "[\"[1. 1. 1. 1. 1.]\", \"[1.         0.85714286 0.57142857 0.28571429 0.        ]\", \"[0.5 0.6 0.9 1. ]\"]"
+ },
+ "re2_records_matched": "1 of 1",
+ "runs": 1,
+ "matching_calls": 2,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "(array([1., 1., 1., 1., 1.]), array([1.        , 0.85714286, 0.57142857, 0.28571429, 0.        ]), array([0.5, 0.6, 0.9, 1. ]))",
+   "return_as_re2_records_it": "[\"[1. 1. 1. 1. 1.]\", \"[1.         0.85714286 0.57142857 0.28571429 0.        ]\", \"[0.5 0.6 0.9 1. ]\"]",
+   "return_with_list_bug_fixed": "[\"[1. 1. 1. 1. 1.]\", \"[1.         0.85714286 0.57142857 0.28571429 0.        ]\", \"[0.5 0.6 0.9 1. ]\"]",
+   "input_with_list_bug_fixed": "{\"self\": {}, \"args\": {\"y_true\": [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1], \"probas_pred\": [0, 0.1, 0.1, 0.4, 0.5, 0.6, 0.6, 0.9, 0.9, 1, 1]}, \"kwargs\": {\"pos_label\": 1, \"sample_weight\": null}}",
+   "tests": [
+    "sklearn/metrics/tests/test_classification.py::test_average_precision_score_duplicate_values"
+   ],
+   "raw_reprs": []
+  },
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "(array([0.66666667, 1.        , 1.        ]), array([1. , 0.5, 0. ]), array([0.5, 0.6]))",
+   "return_as_re2_records_it": "[\"[0.66666667 1.         1.        ]\", \"[1.  0.5 0. ]\", \"[0.5 0.6]\"]",
+   "return_with_list_bug_fixed": "[\"[0.66666667 1.         1.        ]\", \"[1.  0.5 0. ]\", \"[0.5 0.6]\"]",
+   "input_with_list_bug_fixed": "{\"self\": {}, \"args\": {\"y_true\": [0, 1, 1], \"probas_pred\": [0.5, 0.5, 0.6]}, \"kwargs\": {\"pos_label\": 1, \"sample_weight\": null}}",
+   "tests": [
+    "sklearn/metrics/tests/test_classification.py::test_average_precision_score_tied_values"
+   ],
+   "raw_reprs": []
+  }
+ ]
+}

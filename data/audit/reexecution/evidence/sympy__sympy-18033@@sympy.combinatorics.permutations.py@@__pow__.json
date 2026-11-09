@@ -1,0 +1,27 @@
+{
+ "id": "sympy__sympy-18033@@sympy.combinatorics.permutations.py@@__pow__",
+ "source": "SWE-bench",
+ "label": "reference_wrong",
+ "evidence": "rerun outcome",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "Returns Permutation(0, 2, 5)(3, 4, 6); the reference is an attribute dict with the array form null. RE2's records differ from the rerun only by an attribute our logging's repr() caches.",
+ "re2_record": {
+  "inputs": "{\"self\": {\"_array_form\": null, \"_size\": 7, \"_cyclic_form\": null}, \"args\": {\"n\": -2}, \"kwargs\": {}}",
+  "return": "{\"_array_form\": null, \"_size\": 7}"
+ },
+ "re2_records_matched": "0 of 10",
+ "runs": 1,
+ "matching_calls": 2,
+ "outputs": [
+  {
+   "count": 2,
+   "status": "returned",
+   "repr": "Permutation(0, 2, 5)(3, 4, 6)",
+   "return_as_re2_records_it": "{\"_array_form\": null, \"_size\": 7, \"_cyclic_form\": null}",
+   "return_with_list_bug_fixed": "{\"_array_form\": [2, 1, 5, 4, 6, 0, 3], \"_size\": 7, \"_cyclic_form\": [[0, 2, 5], [3, 4, 6]]}",
+   "input_with_list_bug_fixed": "{\"self\": {\"_array_form\": [3, 1, 4, 5, 0, 6, 2], \"_size\": 7, \"_cyclic_form\": [[0, 3, 5, 6, 2, 4]]}, \"args\": {\"n\": -2}, \"kwargs\": {}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}

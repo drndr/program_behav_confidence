@@ -1,0 +1,20 @@
+{
+ "id": "ClassEval_49@JobMarketplace.withdraw_resume",
+ "source": "Exercises",
+ "label": "input_lost",
+ "evidence": "rerun outcome",
+ "method": "RE2's ClassEval file and tests",
+ "observation": "Before the call, resumes holds the withdrawn resume; RE2 recorded the state after the call (empty).",
+ "re2_record": {
+  "inputs": "{\"self\": {\"job_listings\": [{\"job_title\": \"Software Engineer\", \"company\": \"ABC Company\", \"requirements\": [\"skill1\", \"skill2\"]}], \"resumes\": []}, \"args\": {\"resume\": {\"name\": \"Tom\", \"skills\": [\"skill1\", \"skill2\"], \"experience\": \"experience\"}}, \"kwargs\": {}}",
+  "return": "null"
+ },
+ "re2_records_matched": "6 of 6",
+ "matching_calls": 1,
+ "calls": [
+  {
+   "state_before_call": "{'self': {'job_listings': [{'job_title': 'Software Engineer', 'company': 'ABC Company', 'requirements': ['skill1', 'skill2']}], 'resumes': [{'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'}]}, 'args': ({'name': 'Tom', 'skills': ['skill1', 'skill2'], 'experience': 'experience'},), 'kwargs': {}}",
+   "repr": "None"
+  }
+ ]
+}

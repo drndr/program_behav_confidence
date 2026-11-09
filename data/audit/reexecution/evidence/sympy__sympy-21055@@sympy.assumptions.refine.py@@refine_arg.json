@@ -1,0 +1,27 @@
+{
+ "id": "sympy__sympy-21055@@sympy.assumptions.refine.py@@refine_arg",
+ "source": "SWE-bench",
+ "label": "solvable",
+ "evidence": "rerun outcome",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "The call with the recorded input returns the reference, 0.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"expr\": {\"nargs\": {\"_args_set\": [\"1\"]}}, \"assumptions\": \"Q.positive(x)\"}, \"kwargs\": {}}",
+  "return": "0"
+ },
+ "re2_records_matched": "2 of 2",
+ "runs": 1,
+ "matching_calls": 1,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "0",
+   "return_as_re2_records_it": "0",
+   "return_with_list_bug_fixed": "0",
+   "input_with_list_bug_fixed": "{\"self\": {}, \"args\": {\"expr\": {\"nargs\": {\"_args_set\": [\"1\"]}}, \"assumptions\": \"Q.positive(x)\"}, \"kwargs\": {}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}

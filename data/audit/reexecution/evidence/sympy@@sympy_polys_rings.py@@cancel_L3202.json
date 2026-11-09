@@ -1,0 +1,35 @@
+{
+ "id": "sympy@@sympy_polys_rings.py@@cancel_L3202",
+ "source": "Projects",
+ "label": "input_lost",
+ "evidence": "verified omission",
+ "method": "library tests",
+ "observation": "self is recorded as its ring only, without the polynomial's terms; in another test, one such recorded input gives 4 different outputs.",
+ "re2_record": {
+  "inputs": "{\"self\": {\"ring\": \"Polynomial ring in x, y, z, w over ZZ with lex order\"}, \"args\": {\"g\": {\"(0, 0, 0, 0)\": 1}}, \"kwargs\": {}}",
+  "return": "[{\"(0, 0, 0, 2)\": 1, \"(2, 0, 0, 0)\": 1, \"(0, 2, 0, 0)\": -1, \"(0, 0, 2, 0)\": -1}, {\"(0, 0, 0, 0)\": 1}]"
+ },
+ "runs": 1,
+ "matching_calls": 0,
+ "outputs": [],
+ "nearest_calls": [
+  {
+   "closeness": 0.5,
+   "test": "sympy/polys/tests/test_fields.py::test_sfield",
+   "inputs": "{\"self\": {\"ring\": \"Polynomial ring in x, exp(1/x), log(x), x**(1/3) over ZZ with lex order\"}, \"args\": {\"g\": {\"(0, 0, 0, 0)\": 1}}, \"kwargs\": {}}",
+   "repr": "(4*x**2, 1)"
+  },
+  {
+   "closeness": 0.5,
+   "test": "sympy/polys/tests/test_fields.py::test_sfield",
+   "inputs": "{\"self\": {\"ring\": \"Polynomial ring in x, exp(1/x), log(x), x**(1/3) over ZZ with lex order\"}, \"args\": {\"g\": {\"(0, 0, 0, 0)\": 1}}, \"kwargs\": {}}",
+   "repr": "(4*x**2*(exp(1/x)), 1)"
+  },
+  {
+   "closeness": 0.5,
+   "test": "sympy/polys/tests/test_fields.py::test_sfield",
+   "inputs": "{\"self\": {\"ring\": \"Polynomial ring in x, exp(1/x), log(x), x**(1/3) over ZZ with lex order\"}, \"args\": {\"g\": {\"(0, 0, 0, 0)\": 1}}, \"kwargs\": {}}",
+   "repr": "(x*(exp(1/x)), 1)"
+  }
+ ]
+}

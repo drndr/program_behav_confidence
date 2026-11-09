@@ -15,11 +15,14 @@ data/       Datasets and results:
   predictions/          model runs
   verifications/        self-verification runs
   evaluations/          scores and verdicts
-  audit/                LLM-drafted audit of the RE2 items no condition with reasoning solved, and its review
+  audit/                LLM-drafted audit of the RE2 items no condition with reasoning solved, its review,
+                        and the re-execution check of the reviewed sample
   analysis/             analysis results behind the paper
   tables/               the paper's data tables (Tables III and VI to IX) as LaTeX
   figures/              the paper's figures (Figs. 1 and 2)
-  provenance.json, re2_*_review.json   download provenance and RE2 review decisions
+  provenance.json       download provenance
+  re2_*_review.json     first screening of RE2 (14 Sep 2026): step 2 uses it to repair ten malformed
+                        inputs; its exclusion recommendations were superseded by the audit in audit/
 ```
 
 ## Setup
@@ -52,7 +55,8 @@ model calls. The study's conditions are listed in `src/runs.py`.
 8. `generate_verification_prompts.py`, `run_predictions.py`, `evaluate_verifications.py`: have
    each model judge its own answers with the same settings, and read the verdicts.
 9. `make_audit_review.py`, `audit_agreement.py`: draw the audit's review sample and compute the
-   reviewers' agreement.
+   agreement of the audit, the reviewers, and the re-execution check
+   (`data/audit/reexecution/README.md`).
 10. `analyze.py`: compute accuracy, signals and program properties.
 11. `error_triage.py`, `paired_differences.py`: compute the fixed-budget triage and the paired
     AUROC differences.

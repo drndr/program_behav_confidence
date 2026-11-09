@@ -1,0 +1,27 @@
+{
+ "id": "django__django-15018@@django.core.management.__init__.py@@call_command",
+ "source": "SWE-bench",
+ "label": "input_lost",
+ "evidence": "verified omission",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "The call reproduces the reference; the output comes from the test-only 'transaction' command, whose code is not given.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"command_name\": \"transaction\"}, \"kwargs\": {\"stdout\": {}, \"no_color\": true}}",
+  "return": "BEGIN;\nHello!\nCOMMIT;"
+ },
+ "re2_records_matched": "1 of 1",
+ "runs": 1,
+ "matching_calls": 1,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "'BEGIN;\\nHello!\\nCOMMIT;'",
+   "return_as_re2_records_it": "BEGIN;\nHello!\nCOMMIT;",
+   "return_with_list_bug_fixed": "BEGIN;\nHello!\nCOMMIT;",
+   "input_with_list_bug_fixed": "{\"self\": {}, \"args\": {\"command_name\": \"transaction\"}, \"kwargs\": {\"stdout\": {}, \"no_color\": true}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}

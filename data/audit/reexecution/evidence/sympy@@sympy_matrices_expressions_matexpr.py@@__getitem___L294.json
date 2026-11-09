@@ -1,0 +1,47 @@
+{
+ "id": "sympy@@sympy_matrices_expressions_matexpr.py@@__getitem___L294",
+ "source": "Projects",
+ "label": "input_lost",
+ "evidence": "rerun outcome",
+ "method": "library tests",
+ "observation": "11 calls with the recorded input return A[1, 2], u[1, 2] and Z[1, 2]; self is recorded as {}.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"key\": [1, 2]}, \"kwargs\": {}}",
+  "return": "X[1, 2]"
+ },
+ "runs": 1,
+ "matching_calls": 11,
+ "outputs": [
+  {
+   "count": 8,
+   "status": "returned",
+   "repr": "A[1, 2]",
+   "return": "A[1, 2]",
+   "tests": [
+    "sympy/matrices/expressions/tests/test_matexpr.py::test_matexpr_indexing",
+    "sympy/matrices/expressions/tests/test_matexpr.py::test_MatrixSymbol_determinant"
+   ],
+   "raw_reprs": []
+  },
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "u[1, 2]",
+   "return": "u[1, 2]",
+   "tests": [
+    "sympy/matrices/expressions/tests/test_matexpr.py::test_issue_24859"
+   ],
+   "raw_reprs": []
+  },
+  {
+   "count": 2,
+   "status": "returned",
+   "repr": "Z[1, 2]",
+   "return": "Z[1, 2]",
+   "tests": [
+    "sympy/matrices/expressions/tests/test_matexpr.py::test_as_explicit"
+   ],
+   "raw_reprs": []
+  }
+ ]
+}

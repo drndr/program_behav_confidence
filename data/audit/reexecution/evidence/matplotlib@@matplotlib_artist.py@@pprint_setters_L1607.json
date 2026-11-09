@@ -1,0 +1,28 @@
+{
+ "id": "matplotlib@@matplotlib_artist.py@@pprint_setters_L1607",
+ "source": "Projects",
+ "label": "input_lost",
+ "evidence": "verified omission",
+ "method": "library tests",
+ "observation": "All 7 calls with the recorded input return the reference; one output line comes from the test-only TestArtist class, which is recorded only by name.",
+ "re2_record": {
+  "inputs": "{\"self\": {\"oorig\": \"<class 'matplotlib.tests.test_artist.test_artist_inspector_get_valid_values.<locals>.TestArtist'>\", \"o\": \"<class 'matplotlib.tests.test_artist.test_artist_inspector_get_valid_values.<locals>.TestArtist'>\", \"aliasd\": {}}, \"args\": {\"prop\": null, \"leadingspace\": 4}, \"kwargs\": {}}",
+  "return": "[\"    agg_filter: a filter function, which takes a (m, n, 3) float array and a dpi value, and returns a (m, n, 3) array and two offsets from the bottom left corner of the image\", \"    alpha: float or None\", \"    animated: bool\", \"    clip_box: `~matplotlib.transforms.BboxBase` or None\", \"    clip_on: bool\", \"    clip_path: Patch or (Path, Transform) or None\", \"    f: unknown\", \"    figure: `~matplotlib.figure.Figure` or `~matplotlib.figure.SubFigure`\", \"    gid: str\", \"    in_layout: bool\", \"    label: object\", \"    mouseover: bool\", \"    path_effects: list of `.AbstractPathEffect`\", \"    picker: None or bool or float or callable\", \"    rasterized: bool\", \"    sketch_params: (scale: float, length: float, randomness: float)\", \"    snap: bool or None\", \"    transform: `~matplotlib.transforms.Transform`\", \"    url: str\", \"    visible: bool\", \"    zorder: float\"]"
+ },
+ "runs": 1,
+ "matching_calls": 7,
+ "outputs": [
+  {
+   "count": 7,
+   "status": "returned",
+   "repr": "['    agg_filter: a filter function, which takes a (m, n, 3) float array and a dpi value, and returns a (m, n, 3) array and two offsets from the bottom left corner of the image', '    alpha: float or None', '    animated: bool', '    clip_box: `~matplotlib.transforms.BboxBase` or None', '    clip_on: bool', '    clip_path: Patch or (Path, Transform) or None', '    f: unknown', '    figure: `~matplotlib.figure.Figure` or `~matplotlib.figure.SubFigure`', '    gid: str', '    in_layout: bool', '    label: object', '    mouseover: bool', '    path_effects: list of `.AbstractPathEffect`', '    picker: None or bool or float or callable', '    rasterized: bool', '    sketch_params: (scale: float, length: float, randomness: float)', '    snap: bool or None', '    transform: `~matplotlib.transforms.Transform`', '    url: str', '    visible: bool', '    zorder: float']",
+   "return": "[\"    agg_filter: a filter function, which takes a (m, n, 3) float array and a dpi value, and returns a (m, n, 3) array and two offsets from the bottom left corner of the image\", \"    alpha: float or None\", \"    animated: bool\", \"    clip_box: `~matplotlib.transforms.BboxBase` or None\", \"    clip_on: bool\", \"    clip_path: Patch or (Path, Transform) or None\", \"    f: unknown\", \"    figure: `~matplotlib.figure.Figure` or `~matplotlib.figure.SubFigure`\", \"    gid: str\", \"    in_layout: bool\", \"    label: object\", \"    mouseover: bool\", \"    path_effects: list of `.AbstractPathEffect`\", \"    picker: None or bool or float or callable\", \"    rasterized: bool\", \"    sketch_params: (scale: float, length: float, randomness: float)\", \"    snap: bool or None\", \"    transform: `~matplotlib.transforms.Transform`\", \"    url: str\", \"    visible: bool\", \"    zorder: float\"]",
+   "tests": [
+    "matplotlib/tests/test_artist.py::test_artist_inspector_get_valid_values[-unknown]",
+    "matplotlib/tests/test_artist.py::test_artist_inspector_get_valid_values[ACCEPTS:",
+    "matplotlib/tests/test_artist.py::test_artist_inspector_get_valid_values[.."
+   ],
+   "raw_reprs": []
+  }
+ ]
+}

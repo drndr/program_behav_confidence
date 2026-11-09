@@ -1,0 +1,15 @@
+{
+ "id": "sympy@@sympy_core_operations.py@@_eval_evalf_L387",
+ "source": "Projects",
+ "label": "solvable",
+ "evidence": "rerun outcome",
+ "method": "input rebuilt and run",
+ "observation": "The rebuilt input -sqrt(30)/30 at precision 2 returns the reference, -0.e-1.",
+ "re2_record": {
+  "inputs": "{\"self\": \"-sqrt(30)/30\", \"args\": {\"prec\": 2}, \"kwargs\": {}}",
+  "return": "-0.e-1"
+ },
+ "rebuilt_input": "AssocOp._eval_evalf(-sqrt(30)/30, 2)",
+ "self": "-sqrt(30)/30",
+ "repr": "-0.e-1"
+}

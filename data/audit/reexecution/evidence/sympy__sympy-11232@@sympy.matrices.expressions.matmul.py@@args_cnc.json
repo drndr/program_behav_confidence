@@ -1,0 +1,37 @@
+{
+ "id": "sympy__sympy-11232@@sympy.matrices.expressions.matmul.py@@args_cnc",
+ "source": "SWE-bench",
+ "label": "input_lost",
+ "evidence": "rerun outcome",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "4 calls with the recorded input return 2 different outputs.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {}, \"kwargs\": {\"cset\": true}}",
+  "return": "[[\"2\"], null]"
+ },
+ "re2_records_matched": "2 of 2",
+ "runs": 1,
+ "matching_calls": 4,
+ "outputs": [
+  {
+   "count": 2,
+   "status": "returned",
+   "repr": "(set(), [A.T, A, A, y])",
+   "return_as_re2_records_it": "[[], null]",
+   "return_with_list_bug_fixed": "[[], [{}, {}, {}, {}]]",
+   "input_with_list_bug_fixed": "{\"self\": {}, \"args\": {}, \"kwargs\": {\"cset\": true}}",
+   "tests": [],
+   "raw_reprs": []
+  },
+  {
+   "count": 2,
+   "status": "returned",
+   "repr": "({2}, [A^-1, A.T^-1, A, y])",
+   "return_as_re2_records_it": "[[\"2\"], null]",
+   "return_with_list_bug_fixed": "[[\"2\"], [{}, {}, {}, {}]]",
+   "input_with_list_bug_fixed": "{\"self\": {}, \"args\": {}, \"kwargs\": {\"cset\": true}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}

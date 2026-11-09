@@ -1,0 +1,27 @@
+{
+ "id": "sympy__sympy-14038@@sympy.concrete.products.py@@_eval_product",
+ "source": "SWE-bench",
+ "label": "input_lost",
+ "evidence": "verified omission",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "The calls reproduce the reference (nan); the recorded limits lack the variable, which the serializer drops.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"term\": \"1 + n**(-2/3)\", \"limits\": [\"1\", \"oo\"]}, \"kwargs\": {}}",
+  "return": "nan"
+ },
+ "re2_records_matched": "52 of 70",
+ "runs": 1,
+ "matching_calls": 2,
+ "outputs": [
+  {
+   "count": 2,
+   "status": "returned",
+   "repr": "nan",
+   "return_as_re2_records_it": "nan",
+   "return_with_list_bug_fixed": "nan",
+   "input_with_list_bug_fixed": "{\"self\": {}, \"args\": {\"term\": \"1 + n**(-2/3)\", \"limits\": [\"1\", \"oo\"]}, \"kwargs\": {}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}

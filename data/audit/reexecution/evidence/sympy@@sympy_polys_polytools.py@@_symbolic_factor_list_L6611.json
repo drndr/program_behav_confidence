@@ -1,0 +1,28 @@
+{
+ "id": "sympy@@sympy_polys_polytools.py@@_symbolic_factor_list_L6611",
+ "source": "Projects",
+ "label": "solvable",
+ "evidence": "rerun outcome",
+ "method": "library tests",
+ "observation": "All 36 calls with the recorded input return the reference.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"expr\": \"cos(phi)\", \"opt\": {\"fraction\": true}, \"method\": \"factor\"}, \"kwargs\": {}}",
+  "return": "[\"1\", [[\"Poly((cos(phi)), cos(phi), domain='ZZ')\", 1]]]"
+ },
+ "runs": 1,
+ "matching_calls": 36,
+ "outputs": [
+  {
+   "count": 36,
+   "status": "returned",
+   "repr": "(1, [(Poly((cos(phi)), cos(phi), domain='ZZ'), 1)])",
+   "return": "[\"1\", [[\"Poly((cos(phi)), cos(phi), domain='ZZ')\", 1]]]",
+   "tests": [
+    "sympy/algebras/tests/test_quaternion.py::test_quaternion_construction",
+    "sympy/vector/tests/test_integrals.py::test_parametric_surfaceintegrals",
+    "sympy/vector/tests/test_integrals.py::test_parametric_volumeintegrals"
+   ],
+   "raw_reprs": []
+  }
+ ]
+}

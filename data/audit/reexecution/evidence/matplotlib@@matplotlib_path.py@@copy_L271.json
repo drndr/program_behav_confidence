@@ -1,0 +1,26 @@
+{
+ "id": "matplotlib@@matplotlib_path.py@@copy_L271",
+ "source": "Projects",
+ "label": "solvable",
+ "evidence": "rerun outcome",
+ "method": "library tests",
+ "observation": "The call with the recorded input returns the reference.",
+ "re2_record": {
+  "inputs": "{\"self\": {\"_vertices\": \"array([[0., 0.],\\n       [1., 1.]])\", \"_codes\": \"array([1, 2], dtype=uint8)\", \"_interpolation_steps\": 1, \"_simplify_threshold\": 0.1111111111111111, \"_should_simplify\": false, \"_readonly\": false}, \"args\": {}, \"kwargs\": {}}",
+  "return": "Path(array([[0., 0.],\n       [1., 1.]]), array([1, 2], dtype=uint8))"
+ },
+ "runs": 1,
+ "matching_calls": 1,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "Path(array([[0., 0.],\n       [1., 1.]]), array([1, 2], dtype=uint8))",
+   "return": "Path(array([[0., 0.],\n       [1., 1.]]), array([1, 2], dtype=uint8))",
+   "tests": [
+    "matplotlib/tests/test_path.py::test_path_shallowcopy"
+   ],
+   "raw_reprs": []
+  }
+ ]
+}

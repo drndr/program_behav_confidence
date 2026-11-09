@@ -1,0 +1,20 @@
+{
+ "id": "ClassEval_95@Warehouse.change_order_status",
+ "source": "Exercises",
+ "label": "input_lost",
+ "evidence": "rerun outcome",
+ "method": "RE2's ClassEval file and tests",
+ "observation": "Before the call, the keys are integers and the status is 'Shipped'; RE2 recorded string keys and the status after the call.",
+ "re2_record": {
+  "inputs": "{\"self\": {\"inventory\": {\"1\": {\"name\": \"product 1\", \"quantity\": 5}}, \"orders\": {\"1\": {\"product_id\": 1, \"quantity\": 5, \"status\": \"Delivered\"}}}, \"args\": {\"order_id\": 1, \"status\": \"Delivered\"}, \"kwargs\": {}}",
+  "return": "null"
+ },
+ "re2_records_matched": "6 of 6",
+ "matching_calls": 1,
+ "calls": [
+  {
+   "state_before_call": "{'self': {'inventory': {1: {'name': 'product 1', 'quantity': 5}}, 'orders': {1: {'product_id': 1, 'quantity': 5, 'status': 'Shipped'}}}, 'args': (1, 'Delivered'), 'kwargs': {}}",
+   "repr": "None"
+  }
+ ]
+}

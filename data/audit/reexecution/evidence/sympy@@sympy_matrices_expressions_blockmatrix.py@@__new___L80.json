@@ -1,0 +1,26 @@
+{
+ "id": "sympy@@sympy_matrices_expressions_blockmatrix.py@@__new___L80",
+ "source": "Projects",
+ "label": "solvable",
+ "evidence": "rerun outcome",
+ "method": "library tests",
+ "observation": "The call with the recorded input returns the reference.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"cls\": \"<class 'sympy.matrices.expressions.blockmatrix.BlockMatrix'>\", \"args\": [[[\"Matrix([\\n[4, 2],\\n[2, 3],\\n[7, 5]])\", \"Matrix([\\n[1, 1, 1],\\n[1, 1, 1],\\n[1, 1, 1]])\"], [\"Matrix([\\n[1, 0],\\n[0, 1]])\", \"Matrix([\\n[1, 2, 3],\\n[3, 5, 4]])\"]]]}, \"kwargs\": {}}",
+  "return": "Matrix([\n[Matrix([\n[4, 2],\n[2, 3],\n[7, 5]]), Matrix([\n[1, 1, 1],\n[1, 1, 1],\n[1, 1, 1]])],\n[        Matrix([\n[1, 0],\n[0, 1]]),            Matrix([\n[1, 2, 3],\n[3, 5, 4]])]])"
+ },
+ "runs": 1,
+ "matching_calls": 1,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "Matrix([\n[Matrix([\n[4, 2],\n[2, 3],\n[7, 5]]), Matrix([\n[1, 1, 1],\n[1, 1, 1],\n[1, 1, 1]])],\n[        Matrix([\n[1, 0],\n[0, 1]]),            Matrix([\n[1, 2, 3],\n[3, 5, 4]])]])",
+   "return": "Matrix([\n[Matrix([\n[4, 2],\n[2, 3],\n[7, 5]]), Matrix([\n[1, 1, 1],\n[1, 1, 1],\n[1, 1, 1]])],\n[        Matrix([\n[1, 0],\n[0, 1]]),            Matrix([\n[1, 2, 3],\n[3, 5, 4]])]])",
+   "tests": [
+    "sympy/assumptions/tests/test_matrices.py::test_invertible_BlockMatrix"
+   ],
+   "raw_reprs": []
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+{
+ "id": "sympy__sympy-15011@@sympy.utilities.lambdify.py@@_preprocess",
+ "source": "SWE-bench",
+ "label": "reference_wrong",
+ "evidence": "rerun outcome",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "Returns (['x'], sin(x)**2); the reference is [null, \"sin(x)**2\"]; the symbol x is also missing from the recorded input.",
+ "re2_record": {
+  "inputs": "{\"self\": {\"_dummify\": false, \"_exprrepr\": {}, \"_argrepr\": {}}, \"args\": {\"args\": [], \"expr\": \"sin(x)**2\"}, \"kwargs\": {}}",
+  "return": "[null, \"sin(x)**2\"]"
+ },
+ "re2_records_matched": "46 of 48",
+ "runs": 1,
+ "matching_calls": 2,
+ "outputs": [
+  {
+   "count": 2,
+   "status": "returned",
+   "repr": "(['x'], sin(x)**2)",
+   "return_as_re2_records_it": "[null, \"sin(x)**2\"]",
+   "return_with_list_bug_fixed": "[[\"x\"], \"sin(x)**2\"]",
+   "input_with_list_bug_fixed": "{\"self\": {\"_dummify\": false, \"_exprrepr\": {}, \"_argrepr\": {}}, \"args\": {\"args\": [], \"expr\": \"sin(x)**2\"}, \"kwargs\": {}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}

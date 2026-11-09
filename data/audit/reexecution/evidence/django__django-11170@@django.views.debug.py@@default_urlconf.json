@@ -1,0 +1,27 @@
+{
+ "id": "django__django-11170@@django.views.debug.py@@default_urlconf",
+ "source": "SWE-bench",
+ "label": "reference_wrong",
+ "evidence": "rerun outcome",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "Returns <HttpResponse status_code=200, \"text/html\">; the reference is its attribute dict.",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"request\": null}, \"kwargs\": {}}",
+  "return": "{\"_headers\": {\"content-type\": [\"Content-Type\", \"text/html\"]}, \"_closable_objects\": null, \"_handler_class\": null, \"cookies\": {}, \"closed\": false, \"_reason_phrase\": null, \"_charset\": null, \"_container\": null}"
+ },
+ "re2_records_matched": "1 of 1",
+ "runs": 1,
+ "matching_calls": 1,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "<HttpResponse status_code=200, \"text/html\">",
+   "return_as_re2_records_it": "{\"_headers\": {\"content-type\": [\"Content-Type\", \"text/html\"]}, \"_closable_objects\": null, \"_handler_class\": null, \"cookies\": {}, \"closed\": false, \"_reason_phrase\": null, \"_charset\": null, \"_container\": null}",
+   "return_with_list_bug_fixed": "{\"_headers\": {\"content-type\": [\"Content-Type\", \"text/html\"]}, \"_closable_objects\": [], \"_handler_class\": null, \"cookies\": {}, \"closed\": false, \"_reason_phrase\": null, \"_charset\": null, \"_container\": [\"b\\\"<MagicMock name='open().__enter__().read()' id='136610046314704'>\\\"\"]}",
+   "input_with_list_bug_fixed": "{\"self\": {}, \"args\": {\"request\": null}, \"kwargs\": {}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}

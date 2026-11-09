@@ -1,0 +1,27 @@
+{
+ "id": "django__django-15248@@django.db.models.base.py@@delete",
+ "source": "SWE-bench",
+ "label": "input_lost",
+ "evidence": "verified omission",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "The call reproduces the reference; its key 'signals.Person' names the test model class, which the recorded self does not show.",
+ "re2_record": {
+  "inputs": "{\"self\": {\"_state\": {\"db\": \"default\", \"adding\": false}, \"id\": 99998, \"first_name\": \"James\", \"last_name\": \"Jones\"}, \"args\": {}, \"kwargs\": {}}",
+  "return": "[1, {\"signals.Person\": 1}]"
+ },
+ "re2_records_matched": "1 of 1",
+ "runs": 1,
+ "matching_calls": 1,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "(1, {'signals.Person': 1})",
+   "return_as_re2_records_it": "[1, {\"signals.Person\": 1}]",
+   "return_with_list_bug_fixed": "[1, {\"signals.Person\": 1}]",
+   "input_with_list_bug_fixed": "{\"self\": {\"_state\": {\"db\": \"default\", \"adding\": false}, \"id\": 99998, \"first_name\": \"James\", \"last_name\": \"Jones\"}, \"args\": {}, \"kwargs\": {}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}

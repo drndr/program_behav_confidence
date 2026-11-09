@@ -1,0 +1,27 @@
+{
+ "id": "sympy__sympy-21208@@sympy.matrices.expressions.matexpr.py@@_matrix_derivative",
+ "source": "SWE-bench",
+ "label": "input_lost",
+ "evidence": "rerun outcome",
+ "method": "SWE-bench image, RE2's patch and tests",
+ "observation": "The matrix entries [x, y, z, w], recorded as null, determine the output Matrix([[1, 0], [0, 0]]).",
+ "re2_record": {
+  "inputs": "{\"self\": {}, \"args\": {\"expr\": {\"_rows\": 2, \"_cols\": 2, \"_mat\": null}, \"x\": \"x\"}, \"kwargs\": {}}",
+  "return": "{\"_rows\": 2, \"_cols\": 2, \"_mat\": null}"
+ },
+ "re2_records_matched": "2 of 2",
+ "runs": 1,
+ "matching_calls": 1,
+ "outputs": [
+  {
+   "count": 1,
+   "status": "returned",
+   "repr": "Matrix([\n[1, 0],\n[0, 0]])",
+   "return_as_re2_records_it": "{\"_rows\": 2, \"_cols\": 2, \"_mat\": null}",
+   "return_with_list_bug_fixed": "{\"_rows\": 2, \"_cols\": 2, \"_mat\": [\"1\", \"0\", \"0\", \"0\"]}",
+   "input_with_list_bug_fixed": "{\"self\": {}, \"args\": {\"expr\": {\"_rows\": 2, \"_cols\": 2, \"_mat\": [\"x\", \"y\", \"z\", \"w\"]}, \"x\": \"x\"}, \"kwargs\": {}}",
+   "tests": [],
+   "raw_reprs": []
+  }
+ ]
+}
