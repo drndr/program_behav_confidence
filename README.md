@@ -36,7 +36,10 @@ python -m pip install -e ".[properties,figures]"
 Model outputs and results are committed under `data/`, so steps 10 to 12 rerun without
 model calls. The study's conditions are listed in `src/runs.py`.
 
-1. `download_datasets.py`: download the pinned CRUXEval and RE2-Bench-lite sources.
+1. `download_datasets.py`: download the pinned CRUXEval and RE2-Bench-lite sources. RE2-Bench's
+   original repository has since been removed; the script's comments give the paper and a copy
+   that still serves the pinned revision. The derived RE2 files in `data/raw/re2/` are committed,
+   so the pipeline also runs from step 2 without this download.
 2. `filter_re2.py`: remove the RE2 examples taken from CRUXEval and repair malformed inputs.
 3. `measure_program_properties.py`: measure program size and complexity.
 4. `measure_execution.py`: measure trace lengths by running the dataset programs, never model

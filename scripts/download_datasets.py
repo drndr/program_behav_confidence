@@ -27,6 +27,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 CRUXEVAL_REPO = "cruxeval-org/cruxeval"
 CRUXEVAL_REVISION = "b96af0450242eb4da433032b90998f25588a5d0f"  # The commit data/raw/cruxeval/cruxeval.csv came from.
+# RE2-Bench: Liu et al., "Evaluating Code Reasoning Abilities of Large Language Models Under Real-World
+# Settings", arXiv:2512.14917 (https://arxiv.org/abs/2512.14917). The pinned revision was downloaded on
+# 10 Sep 2026 from the anonymous repository below, which has since been removed (404 on 9 Nov 2026). The
+# paper names https://github.com/Intelligent-CAT-Lab/RE2-Bench as its artifact; that was not public on
+# 9 Nov 2026 either. The same revision could still be downloaded through a third-party copy,
+# https://github.com/kangjz1203/RE2-Bench, as https://codeload.github.com/kangjz1203/RE2-Bench/zip/<revision>,
+# although no branch of that copy contains it. The files derived from it (data/raw/re2/re2_full.csv and
+# re2_filtered.csv) are committed, so the later pipeline steps do not need this download.
 RE2_REPOSITORY = "https://github.com/AnonyRepo2025/RE2-Bench"
 RE2_REVISION = "57b971f18567c879a7180bb6bd5b8e544dd9a47e"
 RE2_ORDERING_SEED = 20260806
