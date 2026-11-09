@@ -1,8 +1,9 @@
 """Fixed-budget error triage on RE2's solvable items (no model calls): python scripts/error_triage.py
 
 For every study condition and signal, the share of errors caught by checking only the 10% and
-20% of answers that the signal ranks as most likely to be wrong. Signals are compared on the
-answers that have all of them, and unscored answers are left out. Tied answers share the budget
+20% of answers that the signal ranks as most likely to be wrong, rounded down to whole answers.
+Signals are compared on the answers that have all of them, and unscored answers are left out.
+Tied answers share the budget
 evenly, which is the expected result of breaking ties at random, so checking at random catches
 the budget itself. The ranking covers all answers, not answers of similar source and size.
 
@@ -12,6 +13,7 @@ the most any ranking could catch at that budget.
 
 import csv
 from itertools import groupby
+import math
 from pathlib import Path
 import sys
 
@@ -27,12 +29,17 @@ TRIAGE_SIGNALS = ("reasoning tokens", "generated tokens", "answer logprob", "sta
 FIELDS = ["model", "reasoning", "answers", "errors", "signal", "budget", "errors_caught", "most_possible"]
 
 
+def checked(budget, answers):
+    """How many answers a budget share allows checking, rounded down to whole answers."""
+    return math.floor(budget * answers + 1e-9)
+
+
 def errors_caught(scores, correct, budget):
     """Share of the errors among the lowest-scoring `budget` share of answers; None without errors."""
     errors = sum(not right for right in correct)
     if not errors:
         return None
-    room, found = budget * len(scores), 0.0
+    room, found = checked(budget, len(scores)), 0.0
     ranked = sorted(zip(scores, correct), key=lambda pair: pair[0])
     for _, tied in groupby(ranked, key=lambda pair: pair[0]):
         tied = list(tied)
@@ -55,7 +62,7 @@ def condition_triage(spec, data_dir):
     return [{"model": spec["model"], "reasoning": spec["reasoning"], "answers": len(answers), "errors": errors,
              "signal": name, "budget": budget,
              "errors_caught": errors_caught([SIGNALS[name](row) for row in answers], correct, budget),
-             "most_possible": min(1.0, budget * len(answers) / errors)}
+             "most_possible": min(1.0, checked(budget, len(answers)) / errors)}
             for name in present for budget in BUDGETS]
 
 
