@@ -1,0 +1,30 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Median program properties per dataset, on the 332 solvable RE2 examples.}
+\label{tab:dataset-statistics}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+ & & \multicolumn{2}{c}{RE2} \\
+\cmidrule(l){3-4}
+ & CRUXEval & Exercises & Repository \\
+\midrule
+Examples & 800 & 117 & 215 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\emph{Size}} \\
+Code tokens & 37 & 44 & 1113 \\
+Input tokens & 9 & 33 & 70 \\
+Executable lines & 5 & 6 & 71 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\emph{Complexity}} \\
+Cyclomatic complexity & 2 & 2 & 25 \\
+\quad target only & 2 & 2 & 6 \\
+Halstead difficulty & 11 & 12 & 46 \\
+\quad target only & 11 & 10 & 23 \\
+Information flow (target) & 9 & 9 & 400 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\emph{Execution}} \\
+Trace length & 5 & 4 & -- \\
+\bottomrule
+\end{tabular}
+\end{table}

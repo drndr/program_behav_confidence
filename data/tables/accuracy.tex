@@ -1,0 +1,24 @@
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{Accuracy (\%) per condition on CRUXEval and on the 332 solvable RE2 examples (Section~\ref{sec:audit}). Best result per column in bold.}
+\label{tab:accuracy}
+\begin{tabular}{@{}llr|rrr@{}}
+\toprule
+ & & & \multicolumn{3}{c}{RE2} \\
+\cmidrule(l){4-6}
+Model & Effort & CRUXEval & Exer. & Repo. & All \\
+ & & (800) & (117) & (215) & (332) \\
+\midrule
+Luna     & none   & 70.4 & 82.9 & 56.7 & 66.0 \\
+         & low    & 96.6 & 96.6 & 67.0 & 77.4 \\
+         & medium & 97.0 & 92.3 & 68.4 & 76.8 \\
+         & high   & 96.9 & 94.9 & 71.6 & 79.8 \\
+\midrule
+DeepSeek & low    & \textbf{99.9} & 96.6 & \textbf{73.5} & \textbf{81.6} \\
+Qwen     & low    & 95.0 & 96.6 & 65.1 & 76.2 \\
+Haiku    & low    & 98.0 & \textbf{97.4} & 62.3 & 74.7 \\
+\bottomrule
+\end{tabular}
+\end{table}

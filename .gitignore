@@ -33,3 +33,6 @@ __pycache__/
 
 # Local inspection notebooks.
 /notebook/
+
+# Local replication run of the package.
+/replication/

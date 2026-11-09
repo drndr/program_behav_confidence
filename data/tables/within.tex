@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{AUROC within source and code-size third on the 332 solvable RE2 examples, with \qty{95}{\percent} intervals. Bold: highest value in each row. Program properties use their shared subset. Confidence signals use separate subsets based on availability. $\dagger$: reliably above code size on the same answers, with a \qty{95}{\percent} interval of the difference that rules out equal AUROCs. Wrong approved: share of incorrect answers judged correct.}
+\label{tab:within}
+\begin{tabular}{@{}lcccccccr@{}}
+\toprule
+ & \multicolumn{4}{c}{Program properties} & \multicolumn{3}{c}{Confidence signals} & \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-8}
+ & Code & Cyclomatic & Halstead & Information & Answer & Reasoning & Stated & Wrong \\
+Condition & size & complexity & difficulty & flow & log-prob. & tokens & confidence & approved \\
+\midrule
+Luna, none & 0.56 [.48, .63] & 0.50 [.42, .58] & 0.51 [.43, .59] & 0.54 [.46, .62] & \textbf{0.80$^\dagger$} [.74, .86] & -- & 0.73$^\dagger$ [.67, .79] & \qty{44}{\percent} \\
+Luna, low & 0.61 [.53, .70] & 0.56 [.47, .65] & 0.59 [.51, .67] & 0.58 [.49, .66] & -- & \textbf{0.76$^\dagger$} [.69, .83] & 0.71 [.64, .78] & \qty{73}{\percent} \\
+Luna, medium & 0.57 [.49, .66] & 0.54 [.46, .63] & 0.57 [.49, .65] & 0.58 [.50, .67] & -- & \textbf{0.77$^\dagger$} [.70, .84] & 0.70$^\dagger$ [.63, .77] & \qty{84}{\percent} \\
+Luna, high & 0.59 [.51, .69] & 0.55 [.45, .65] & 0.58 [.49, .67] & 0.54 [.45, .63] & -- & \textbf{0.75$^\dagger$} [.68, .82] & 0.68$^\dagger$ [.61, .76] & \qty{78}{\percent} \\
+DeepSeek, low & 0.48 [.38, .61] & 0.44 [.32, .55] & 0.50 [.38, .62] & 0.49 [.37, .61] & 0.48 [.36, .60] & \textbf{0.74$^\dagger$} [.64, .83] & 0.65$^\dagger$ [.54, .75] & \qty{76}{\percent} \\
+Qwen, low & 0.56 [.47, .66] & 0.53 [.43, .62] & 0.52 [.43, .62] & 0.47 [.37, .57] & 0.62 [.53, .72] & 0.66$^\dagger$ [.57, .74] & \textbf{0.67$^\dagger$} [.60, .75] & \qty{93}{\percent} \\
+Haiku, low & 0.61 [.52, .69] & 0.56 [.47, .65] & 0.56 [.47, .64] & 0.56 [.48, .64] & -- & 0.67$^\dagger$ [.59, .74] & \textbf{0.79$^\dagger$} [.71, .85] & \qty{59}{\percent} \\
+\bottomrule
+\end{tabular}
+\end{table*}

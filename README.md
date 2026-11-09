@@ -17,6 +17,8 @@ data/       Datasets and results:
   evaluations/          scores and verdicts
   audit/                LLM-drafted audit of the RE2 items no condition with reasoning solved, and its review
   analysis/             analysis results behind the paper
+  tables/               the paper's data tables (Tables III and VI to IX) as LaTeX
+  figures/              the paper's figures (Figs. 1 and 2)
   provenance.json, re2_*_review.json   download provenance and RE2 review decisions
 ```
 
@@ -26,12 +28,12 @@ Python 3.12+ (program properties depend on its tokenizer). Put `OPENROUTER_API_K
 `.env` (see `.env.example`) to make model calls.
 
 ```sh
-python -m pip install -e ".[properties]"
+python -m pip install -e ".[properties,figures]"
 ```
 
 ## Pipeline
 
-Model outputs and results are committed under `data/`, so steps 10 and 11 rerun without
+Model outputs and results are committed under `data/`, so steps 10 to 12 rerun without
 model calls. The study's conditions are listed in `src/runs.py`.
 
 1. `download_datasets.py`: download the pinned CRUXEval and RE2-Bench-lite sources.
@@ -51,6 +53,7 @@ model calls. The study's conditions are listed in `src/runs.py`.
 10. `analyze.py`: compute accuracy, signals and program properties.
 11. `error_triage.py`, `paired_differences.py`: compute the fixed-budget triage and the paired
     AUROC differences.
+12. `make_tables.py`, `make_figures.py`: write the paper's data tables and figures.
 
 To browse everything, run `python explorer/serve.py` and open http://127.0.0.1:8000.
 

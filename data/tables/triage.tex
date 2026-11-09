@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Errors caught (\%) when checking the 20\% of answers each signal ranks as most likely to be wrong, on solvable RE2 answers that have all signals. Random checking catches 20\%.}
+\label{tab:triage}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Condition & Size & Reasoning & Stated & Log-prob. \\
+\midrule
+Luna, none & 34 & -- & 41 & 45 \\
+Luna, low & 40 & 53 & 45 & -- \\
+Luna, medium & 42 & 54 & 45 & -- \\
+Luna, high & 40 & 58 & 41 & -- \\
+DeepSeek, low & 30 & 58 & 46 & 21 \\
+Qwen, low & 41 & 47 & 47 & 34 \\
+Haiku, low & 36 & 41 & 53 & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
